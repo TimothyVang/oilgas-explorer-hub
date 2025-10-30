@@ -69,7 +69,7 @@ const Contact = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Get In Touch
+            Contact Us
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Ready to power your operations? Contact us today to discuss your energy needs
