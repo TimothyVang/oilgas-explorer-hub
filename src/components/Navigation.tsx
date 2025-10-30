@@ -25,38 +25,48 @@ const Navigation = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md shadow-lg" : "bg-transparent"
+        isScrolled ? "bg-background/95 backdrop-blur-md shadow-lg" : "bg-primary/80 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-gradient">BAH Energy</h1>
+            <h1 className={`text-2xl font-bold ${isScrolled ? "text-gradient" : "text-accent"}`}>
+              BAH Energy
+            </h1>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <button
               onClick={() => scrollToSection("home")}
-              className="text-foreground hover:text-accent transition-colors font-medium"
+              className={`${
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              } hover:text-accent transition-colors font-medium`}
             >
               Home
             </button>
             <button
               onClick={() => scrollToSection("about")}
-              className="text-foreground hover:text-accent transition-colors font-medium"
+              className={`${
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              } hover:text-accent transition-colors font-medium`}
             >
               About
             </button>
             <button
               onClick={() => scrollToSection("services")}
-              className="text-foreground hover:text-accent transition-colors font-medium"
+              className={`${
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              } hover:text-accent transition-colors font-medium`}
             >
               Services
             </button>
             <button
               onClick={() => scrollToSection("contact")}
-              className="text-foreground hover:text-accent transition-colors font-medium"
+              className={`${
+                isScrolled ? "text-foreground" : "text-primary-foreground"
+              } hover:text-accent transition-colors font-medium`}
             >
               Contact
             </button>
@@ -71,6 +81,7 @@ const Navigation = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={!isScrolled ? "text-primary-foreground hover:text-accent" : ""}
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
             </Button>
