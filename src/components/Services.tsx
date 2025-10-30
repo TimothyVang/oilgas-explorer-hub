@@ -1,4 +1,4 @@
-import { Drill, Factory, Truck, Leaf, BarChart3, Wrench } from "lucide-react";
+import { Drill, Lightbulb, Factory, Scale, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Services = () => {
@@ -9,29 +9,24 @@ const Services = () => {
       description: "Advanced exploration technologies and sustainable extraction methods for optimal resource recovery.",
     },
     {
+      icon: Lightbulb,
+      title: "EOR Driven Consulting",
+      description: "Enhanced Oil Recovery consulting services providing expert guidance and innovative solutions to maximize reservoir production.",
+    },
+    {
       icon: Factory,
-      title: "Refining & Processing",
-      description: "State-of-the-art refining facilities delivering high-quality petroleum products with maximum efficiency.",
+      title: "Operations - Owned and Operated",
+      description: "Fully owned and operated energy facilities ensuring complete control, quality, and operational excellence.",
     },
     {
-      icon: Truck,
-      title: "Distribution & Logistics",
-      description: "Comprehensive supply chain management ensuring reliable delivery of energy products worldwide.",
+      icon: Scale,
+      title: "Landmen & Legal",
+      description: "Comprehensive land management and legal services for mineral rights, leases, and regulatory compliance.",
     },
     {
-      icon: Leaf,
+      icon: ShieldCheck,
       title: "Environmental Management",
-      description: "Committed to sustainable practices and minimizing environmental impact across all operations.",
-    },
-    {
-      icon: BarChart3,
-      title: "Energy Analytics",
-      description: "Data-driven insights and predictive analytics to optimize operations and reduce costs.",
-    },
-    {
-      icon: Wrench,
-      title: "Technical Services",
-      description: "Expert maintenance, engineering support, and technical solutions for energy infrastructure.",
+      description: "Expert guidance through environmental approvals, permits, and regulatory compliance for energy projects.",
     },
   ];
 
