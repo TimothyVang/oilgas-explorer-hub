@@ -18,11 +18,27 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Build mailto URL with form data
+    const subject = encodeURIComponent(`Contact Form Submission from ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\n` +
+      `Email: ${formData.email}\n` +
+      `Company: ${formData.company || 'N/A'}\n\n` +
+      `Message:\n${formData.message}`
+    );
+    
+    const mailtoUrl = `mailto:contact@bahenergy.com?subject=${subject}&body=${body}`;
+    
+    // Open email client
+    window.location.href = mailtoUrl;
+    
+    // Show toast notification
     toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you within 24 hours.",
+      title: "Opening Email Client",
+      description: "Your default email app will open. Please send the email from there.",
     });
     
+    // Clear form
     setFormData({ name: "", email: "", company: "", message: "" });
   };
 
