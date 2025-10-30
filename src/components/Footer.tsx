@@ -17,7 +17,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <h3 className="text-2xl font-bold text-gradient mb-4">BAH Energy</h3>
+            <h3 className="text-2xl font-bold text-gradient mb-4">BAH Oil and Gas</h3>
             <p className="text-primary-foreground/80 mb-6 max-w-sm">
               Leading the energy industry with innovation, sustainability, and excellence for over 45 years.
             </p>
@@ -61,7 +61,7 @@ const Footer = () => {
         <div className="pt-8 border-t border-primary-foreground/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-primary-foreground/70 text-sm">
-              © {currentYear} BAH Energy. All rights reserved.
+              © {currentYear} BAH Oil and Gas. All rights reserved.
             </p>
             <p className="text-primary-foreground/70 text-sm">
               Powering Tomorrow's Energy Solutions

@@ -51,7 +51,7 @@ const About = () => {
               Leading the Energy Industry Forward
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              BAH Energy has been at the forefront of the oil and gas industry for over four decades, 
+              BAH Oil and Gas has been at the forefront of the oil and gas industry for over four decades,
               delivering reliable energy solutions that power communities and industries worldwide.
             </p>
             <p className="text-lg text-muted-foreground mb-8">

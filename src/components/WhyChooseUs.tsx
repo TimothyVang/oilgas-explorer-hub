@@ -29,7 +29,7 @@ const WhyChooseUs = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Why Choose BAH Energy
+            Why Choose BAH Oil and Gas
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Partner with an industry leader committed to excellence, innovation, and sustainability

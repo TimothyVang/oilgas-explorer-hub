@@ -32,7 +32,7 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
             <h1 className={`text-2xl font-bold ${isScrolled ? "text-gradient" : "text-accent"}`}>
-              BAH Energy
+              BAH Oil and Gas
             </h1>
           </div>
 
