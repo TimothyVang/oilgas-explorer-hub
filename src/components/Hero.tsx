@@ -48,7 +48,7 @@ const Hero = () => {
               className="text-lg px-8 py-6 h-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
               onClick={() => scrollToSection("contact")}
             >
-              Contact Us
+              Get in touch
             </Button>
           </div>
         </div>

@@ -7,7 +7,7 @@ const Footer = () => {
       { label: "Our Services", href: "#services" },
     ],
     support: [
-      { label: "Contact Us", href: "#contact" },
+      { label: "Get in touch", href: "#contact" },
     ],
   };
 
