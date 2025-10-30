@@ -1,5 +1,3 @@
-import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -13,13 +11,6 @@ const Footer = () => {
     ],
   };
 
-  const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-  ];
-
   return (
     <footer className="bg-primary text-primary-foreground pt-16 pb-8">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,18 +21,6 @@ const Footer = () => {
             <p className="text-primary-foreground/80 mb-6 max-w-sm">
               Leading the energy industry with innovation, sustainability, and excellence for over 45 years.
             </p>
-            <div className="flex gap-4">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-accent flex items-center justify-center transition-colors"
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* Links Sections */}
