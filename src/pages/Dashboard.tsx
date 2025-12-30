@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, User, Building2, Phone, LogOut } from "lucide-react";
+import { ArrowLeft, User, Building2, Phone, LogOut, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Profile {
@@ -149,8 +149,13 @@ const Dashboard = () => {
               Quick Actions
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Button variant="outline" className="w-full" disabled>
-                View Documents
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => navigate("/profile")}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Account Settings
               </Button>
               <Button variant="outline" className="w-full" disabled>
                 Contact Support
