@@ -49,7 +49,7 @@ const HowWeWork = () => {
               
               {/* Icon */}
               <div className="flex justify-center mb-6">
-                <pillar.icon className="w-16 h-16 text-accent group-hover:scale-110 transition-transform duration-300" />
+                <pillar.icon className={`w-16 h-16 text-accent group-hover:scale-110 transition-transform duration-300 ${pillar.icon === Gauge ? 'group-hover:animate-spin-slow' : ''}`} />
               </div>
               
               {/* Content */}
