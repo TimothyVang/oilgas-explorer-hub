@@ -296,6 +296,7 @@ const AdminDashboard = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
                   <TableHead>Company</TableHead>
                   <TableHead>Phone</TableHead>
                   <TableHead>Joined</TableHead>
@@ -306,13 +307,13 @@ const AdminDashboard = () => {
               <TableBody>
                 {loadingData ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8">
+                    <TableCell colSpan={7} className="text-center py-8">
                       Loading users...
                     </TableCell>
                   </TableRow>
                 ) : profiles.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8">
+                    <TableCell colSpan={7} className="text-center py-8">
                       No users found.
                     </TableCell>
                   </TableRow>
@@ -330,6 +331,9 @@ const AdminDashboard = () => {
                               You
                             </Badge>
                           )}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {profile.email || "—"}
                         </TableCell>
                         <TableCell>{profile.company_name || "—"}</TableCell>
                         <TableCell>{profile.phone || "—"}</TableCell>
