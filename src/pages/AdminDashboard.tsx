@@ -32,12 +32,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Clock } from "lucide-react";
+import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Clock, Eye } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserFilters } from "@/components/admin/UserFilters";
 import { ActivityLogTable } from "@/components/admin/ActivityLogTable";
 import { DocumentsManager } from "@/components/admin/DocumentsManager";
 import { UserActionsDropdown } from "@/components/admin/UserActionsDropdown";
+import { UserDetailModal } from "@/components/admin/UserDetailModal";
 
 interface UserProfile {
   id: string;
@@ -47,6 +48,7 @@ interface UserProfile {
   phone: string | null;
   created_at: string;
   email?: string;
+  avatar_url: string | null;
   nda_signed: boolean;
   nda_signed_at: string | null;
 }
@@ -72,6 +74,10 @@ const AdminDashboard = () => {
   // Activity filter by user
   const [activityUserFilter, setActivityUserFilter] = useState<string | null>(null);
   
+  // User detail modal
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -79,6 +85,11 @@ const AdminDashboard = () => {
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handleViewUserDetail = (profile: UserProfile) => {
+    setSelectedUser(profile);
+    setDetailModalOpen(true);
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -541,6 +552,15 @@ const AdminDashboard = () => {
                                   </SelectContent>
                                 </Select>
                                 
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => handleViewUserDetail(profile)}
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                
                                 {!isCurrentUser && (
                                   <UserActionsDropdown
                                     user={profile}
@@ -620,6 +640,14 @@ const AdminDashboard = () => {
             </TabsContent>
           </Tabs>
         </div>
+
+        {/* User Detail Modal */}
+        <UserDetailModal
+          open={detailModalOpen}
+          onOpenChange={setDetailModalOpen}
+          user={selectedUser}
+          userRole={selectedUser ? getUserRole(selectedUser.user_id) : null}
+        />
 
         {/* Footer */}
         <p className="text-center text-primary-foreground/60 mt-8 text-sm">

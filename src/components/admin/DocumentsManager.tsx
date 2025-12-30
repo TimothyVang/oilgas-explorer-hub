@@ -23,12 +23,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, MoreHorizontal, Pencil, Trash2, Download, FileText, Loader2, RefreshCw } from "lucide-react";
+import { Plus, MoreHorizontal, Pencil, Trash2, Download, FileText, Loader2, RefreshCw, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { DocumentForm } from "./DocumentForm";
+import { DocumentUserAssignment } from "./DocumentUserAssignment";
 import { logActivity } from "@/lib/logActivity";
 
 interface InvestorDocument {
@@ -38,6 +40,7 @@ interface InvestorDocument {
   file_url: string;
   created_at: string;
   updated_at: string;
+  assigned_count?: number;
 }
 
 export const DocumentsManager = () => {
@@ -48,17 +51,40 @@ export const DocumentsManager = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [documentToDelete, setDocumentToDelete] = useState<InvestorDocument | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [assignmentOpen, setAssignmentOpen] = useState(false);
+  const [assigningDocument, setAssigningDocument] = useState<InvestorDocument | null>(null);
 
   const fetchDocuments = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      // Fetch documents
+      const { data: docsData, error: docsError } = await supabase
         .from("investor_documents")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      setDocuments(data || []);
+      if (docsError) throw docsError;
+
+      // Fetch assignment counts for each document
+      const { data: countData, error: countError } = await supabase
+        .from("user_document_access")
+        .select("document_id");
+
+      if (countError) throw countError;
+
+      // Count assignments per document
+      const countMap = new Map<string, number>();
+      (countData || []).forEach((item) => {
+        countMap.set(item.document_id, (countMap.get(item.document_id) || 0) + 1);
+      });
+
+      // Merge counts into documents
+      const docsWithCounts = (docsData || []).map((doc) => ({
+        ...doc,
+        assigned_count: countMap.get(doc.id) || 0,
+      }));
+
+      setDocuments(docsWithCounts);
     } catch (error: any) {
       console.error("Error fetching documents:", error);
       toast({
@@ -88,6 +114,11 @@ export const DocumentsManager = () => {
   const handleDeleteClick = (doc: InvestorDocument) => {
     setDocumentToDelete(doc);
     setDeleteDialogOpen(true);
+  };
+
+  const handleAssignUsers = (doc: InvestorDocument) => {
+    setAssigningDocument(doc);
+    setAssignmentOpen(true);
   };
 
   const deleteFileFromStorage = async (fileUrl: string) => {
@@ -187,6 +218,7 @@ export const DocumentsManager = () => {
               <TableHead>Title</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Type</TableHead>
+              <TableHead>Assigned</TableHead>
               <TableHead>Created</TableHead>
               <TableHead className="w-[80px]">Actions</TableHead>
             </TableRow>
@@ -194,13 +226,13 @@ export const DocumentsManager = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
+                <TableCell colSpan={6} className="text-center py-8">
                   <Loader2 className="w-6 h-6 animate-spin mx-auto text-muted-foreground" />
                 </TableCell>
               </TableRow>
             ) : documents.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
+                <TableCell colSpan={6} className="text-center py-8">
                   <FileText className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
                   <p className="text-muted-foreground">No documents yet</p>
                   <Button variant="link" size="sm" onClick={handleAddDocument}>
@@ -220,6 +252,16 @@ export const DocumentsManager = () => {
                       {getFileExtension(doc.file_url)}
                     </Badge>
                   </TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant={doc.assigned_count && doc.assigned_count > 0 ? "default" : "outline"}
+                      className="cursor-pointer"
+                      onClick={() => handleAssignUsers(doc)}
+                    >
+                      <Users className="w-3 h-3 mr-1" />
+                      {doc.assigned_count || 0} users
+                    </Badge>
+                  </TableCell>
                   <TableCell className="text-muted-foreground">
                     {formatDate(doc.created_at)}
                   </TableCell>
@@ -231,6 +273,10 @@ export const DocumentsManager = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleAssignUsers(doc)}>
+                          <Users className="w-4 h-4 mr-2" />
+                          Assign Users
+                        </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <a
                             href={doc.file_url}
@@ -242,6 +288,7 @@ export const DocumentsManager = () => {
                             Download
                           </a>
                         </DropdownMenuItem>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleEditDocument(doc)}>
                           <Pencil className="w-4 h-4 mr-2" />
                           Edit
@@ -310,6 +357,17 @@ export const DocumentsManager = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* User Assignment Dialog */}
+      {assigningDocument && (
+        <DocumentUserAssignment
+          open={assignmentOpen}
+          onOpenChange={setAssignmentOpen}
+          documentId={assigningDocument.id}
+          documentTitle={assigningDocument.title}
+          onSuccess={fetchDocuments}
+        />
+      )}
     </div>
   );
 };
