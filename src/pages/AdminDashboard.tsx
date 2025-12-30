@@ -20,7 +20,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Shield, Users, RefreshCw } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { ArrowLeft, Shield, Users, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface UserProfile {
@@ -46,6 +57,7 @@ const AdminDashboard = () => {
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+  const [deletingUser, setDeletingUser] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -189,6 +201,43 @@ const AdminDashboard = () => {
     }
 
     setUpdatingRole(null);
+  };
+
+  const handleDeleteUser = async (userId: string, userName: string | null) => {
+    setDeletingUser(userId);
+
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const response = await supabase.functions.invoke("delete-user", {
+        body: { user_id: userId },
+        headers: {
+          Authorization: `Bearer ${sessionData.session?.access_token}`,
+        },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      if (response.data?.error) {
+        throw new Error(response.data.error);
+      }
+
+      toast({
+        title: "User Deleted",
+        description: `${userName || "User"} has been deleted successfully.`,
+      });
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete user.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingUser(null);
+    }
   };
 
   const getRoleBadgeVariant = (role: string | null) => {
@@ -346,23 +395,58 @@ const AdminDashboard = () => {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Select
-                            value={role || "none"}
-                            onValueChange={(value) =>
-                              handleRoleChange(profile.user_id, value)
-                            }
-                            disabled={isCurrentUser || updatingRole === profile.user_id}
-                          >
-                            <SelectTrigger className="w-32">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="none">No Role</SelectItem>
-                              <SelectItem value="user">User</SelectItem>
-                              <SelectItem value="moderator">Moderator</SelectItem>
-                              <SelectItem value="admin">Admin</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <div className="flex items-center gap-2">
+                            <Select
+                              value={role || "none"}
+                              onValueChange={(value) =>
+                                handleRoleChange(profile.user_id, value)
+                              }
+                              disabled={isCurrentUser || updatingRole === profile.user_id}
+                            >
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">No Role</SelectItem>
+                                <SelectItem value="user">User</SelectItem>
+                                <SelectItem value="moderator">Moderator</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                  disabled={isCurrentUser || deletingUser === profile.user_id}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete User</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete{" "}
+                                    <strong>{profile.full_name || profile.email || "this user"}</strong>?
+                                    This action cannot be undone and will permanently remove their account
+                                    and all associated data.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleDeleteUser(profile.user_id, profile.full_name)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
