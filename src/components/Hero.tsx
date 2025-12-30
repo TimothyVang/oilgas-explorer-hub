@@ -12,24 +12,29 @@ const Hero = () => {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
+      {/* Background Image with Darker Overlay */}
       <div className="absolute inset-0 z-0">
         <img
           src={heroImage}
           alt="Offshore oil rigs at sunset"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/70 to-primary/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/80 to-primary/95" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto animate-fade-in-up">
+          {/* Accent Line */}
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-1 bg-accent rounded-full" />
+          </div>
+          
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Powering Tomorrow's
+            Powering <em className="not-italic font-light">Tomorrow's</em>
             <span className="block text-gradient mt-2">Energy Solutions</span>
           </h1>
-          <p className="text-xl sm:text-2xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl sm:text-2xl text-primary-foreground/90 mb-10 max-w-2xl mx-auto leading-relaxed">
             Leading the energy industry with innovation, sustainability, and unwavering commitment to excellence
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
