@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminRole } from "@/hooks/useAdminRole";
@@ -31,8 +31,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Shield, Users, RefreshCw, Trash2 } from "lucide-react";
+import { ArrowLeft, Shield, Users, RefreshCw, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { UserFilters } from "@/components/admin/UserFilters";
+import { ActivityLogTable } from "@/components/admin/ActivityLogTable";
 
 interface UserProfile {
   id: string;
@@ -49,6 +51,8 @@ interface UserRole {
   role: "admin" | "moderator" | "user";
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const AdminDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdminRole();
@@ -58,6 +62,13 @@ const AdminDashboard = () => {
   const [loadingData, setLoadingData] = useState(true);
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
   const [deletingUser, setDeletingUser] = useState<string | null>(null);
+  
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -116,10 +127,42 @@ const AdminDashboard = () => {
     }
   }, [isAdmin, user]);
 
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, roleFilter]);
+
   const getUserRole = (userId: string): "admin" | "moderator" | "user" | null => {
     const role = userRoles.find((r) => r.user_id === userId);
     return role?.role || null;
   };
+
+  // Filter and search profiles
+  const filteredProfiles = useMemo(() => {
+    return profiles.filter((profile) => {
+      // Search filter
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = searchQuery === "" || 
+        (profile.full_name?.toLowerCase().includes(searchLower)) ||
+        (profile.email?.toLowerCase().includes(searchLower)) ||
+        (profile.company_name?.toLowerCase().includes(searchLower));
+      
+      // Role filter
+      const role = getUserRole(profile.user_id);
+      const matchesRole = roleFilter === "all" ||
+        (roleFilter === "none" && !role) ||
+        role === roleFilter;
+      
+      return matchesSearch && matchesRole;
+    });
+  }, [profiles, userRoles, searchQuery, roleFilter]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredProfiles.length / ITEMS_PER_PAGE);
+  const paginatedProfiles = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProfiles.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProfiles, currentPage]);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     if (userId === user?.id) {
@@ -299,7 +342,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Admin Card */}
-        <div className="bg-card rounded-lg shadow-2xl p-8 max-w-5xl mx-auto">
+        <div className="bg-card rounded-lg shadow-2xl p-8 max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <div className="w-14 h-14 bg-destructive/20 rounded-full flex items-center justify-center">
               <Shield className="w-7 h-7 text-destructive" />
@@ -339,6 +382,14 @@ const AdminDashboard = () => {
             </div>
           </div>
 
+          {/* Search and Filter */}
+          <UserFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            roleFilter={roleFilter}
+            onRoleFilterChange={setRoleFilter}
+          />
+
           {/* Users Table */}
           <div className="border rounded-lg overflow-hidden">
             <Table>
@@ -360,14 +411,16 @@ const AdminDashboard = () => {
                       Loading users...
                     </TableCell>
                   </TableRow>
-                ) : profiles.length === 0 ? (
+                ) : paginatedProfiles.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-8">
-                      No users found.
+                      {filteredProfiles.length === 0 && profiles.length > 0
+                        ? "No users match your search criteria."
+                        : "No users found."}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  profiles.map((profile) => {
+                  paginatedProfiles.map((profile) => {
                     const role = getUserRole(profile.user_id);
                     const isCurrentUser = profile.user_id === user?.id;
 
@@ -455,6 +508,43 @@ const AdminDashboard = () => {
               </TableBody>
             </Table>
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-4">
+              <p className="text-sm text-muted-foreground">
+                Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
+                {Math.min(currentPage * ITEMS_PER_PAGE, filteredProfiles.length)} of{" "}
+                {filteredProfiles.length} users
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Activity Logs Section */}
+          <ActivityLogTable profiles={profiles} />
         </div>
 
         {/* Footer */}
