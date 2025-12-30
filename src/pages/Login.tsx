@@ -242,12 +242,12 @@ const Login = () => {
                   <input type="checkbox" className="rounded border-border" />
                   <span className="text-muted-foreground">Remember me</span>
                 </label>
-                <button 
-                  type="button" 
+                <Link 
+                  to="/forgot-password" 
                   className="text-accent hover:underline"
                 >
                   Forgot password?
-                </button>
+                </Link>
               </div>
             )}
 
