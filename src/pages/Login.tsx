@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Lock, Mail, User } from "lucide-react";
+import { ArrowLeft, Lock, Mail, User, CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [showVerificationMessage, setShowVerificationMessage] = useState(false);
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -64,14 +65,15 @@ const Login = () => {
             toast.error(error.message);
           }
         } else {
-          toast.success("Account created successfully!");
-          navigate("/dashboard");
+          setShowVerificationMessage(true);
         }
       } else {
         const { error } = await signIn(email, password);
         if (error) {
           if (error.message.includes("Invalid login credentials")) {
             toast.error("Invalid email or password. Please try again.");
+          } else if (error.message.includes("Email not confirmed")) {
+            toast.error("Please verify your email before signing in. Check your inbox for the verification link.");
           } else {
             toast.error(error.message);
           }
@@ -118,15 +120,47 @@ const Login = () => {
 
         {/* Login Card */}
         <div className="bg-card rounded-lg shadow-2xl p-8">
-          {/* Header */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-card-foreground mb-2">
-              Client Portal
-            </h1>
-            <p className="text-muted-foreground">
-              {isSignUp ? "Create your account" : "Sign in to access your account"}
-            </p>
-          </div>
+          {showVerificationMessage ? (
+            /* Email Verification Message */
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-8 h-8 text-green-500" />
+              </div>
+              <h1 className="text-2xl font-bold text-card-foreground">
+                Check your email
+              </h1>
+              <p className="text-muted-foreground text-sm">
+                We've sent a verification link to <strong className="text-card-foreground">{email}</strong>. 
+                Please click the link in your email to verify your account.
+              </p>
+              <p className="text-muted-foreground text-xs">
+                Didn't receive the email? Check your spam folder or try again.
+              </p>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => {
+                  setShowVerificationMessage(false);
+                  setEmail("");
+                  setPassword("");
+                  setFullName("");
+                  setIsSignUp(false);
+                }}
+              >
+                Back to Sign In
+              </Button>
+            </div>
+          ) : (
+            <>
+              {/* Header */}
+              <div className="text-center mb-6">
+                <h1 className="text-3xl font-bold text-card-foreground mb-2">
+                  Client Portal
+                </h1>
+                <p className="text-muted-foreground">
+                  {isSignUp ? "Create your account" : "Sign in to access your account"}
+                </p>
+              </div>
 
           {/* Google Sign In Button */}
           <Button
@@ -275,6 +309,8 @@ const Login = () => {
               </button>
             </p>
           </div>
+            </>
+          )}
         </div>
 
         {/* Company Name */}
