@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      investor_documents: {
+        Row: {
+          created_at: string
+          description: string | null
+          file_url: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          file_url: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          file_url?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -22,6 +73,8 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          nda_signed: boolean
+          nda_signed_at: string | null
           phone: string | null
           updated_at: string
           user_id: string
@@ -33,6 +86,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          nda_signed?: boolean
+          nda_signed_at?: string | null
           phone?: string | null
           updated_at?: string
           user_id: string
@@ -44,6 +99,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          nda_signed?: boolean
+          nda_signed_at?: string | null
           phone?: string | null
           updated_at?: string
           user_id?: string

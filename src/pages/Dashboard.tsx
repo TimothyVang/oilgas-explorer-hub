@@ -3,13 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, User, Building2, Phone, LogOut, Settings, Shield } from "lucide-react";
+import { ArrowLeft, User, Building2, Phone, LogOut, Settings, Shield, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Profile {
   full_name: string | null;
   company_name: string | null;
   phone: string | null;
+  nda_signed: boolean;
 }
 
 const Dashboard = () => {
@@ -31,7 +32,7 @@ const Dashboard = () => {
       
       const { data, error } = await supabase
         .from("profiles")
-        .select("full_name, company_name, phone")
+        .select("full_name, company_name, phone, nda_signed")
         .eq("user_id", user.id)
         .maybeSingle();
       
@@ -159,24 +160,27 @@ const Dashboard = () => {
                 <Settings className="w-4 h-4 mr-2" />
                 Account Settings
               </Button>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => navigate("/investor-documents")}
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Investor Documents
+              </Button>
               {isAdmin && (
                 <Button 
                   variant="outline" 
-                  className="w-full border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                  className="w-full border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground sm:col-span-2"
                   onClick={() => navigate("/admin")}
                 >
                   <Shield className="w-4 h-4 mr-2" />
                   Admin Dashboard
                 </Button>
               )}
-              {!isAdmin && (
-                <Button variant="outline" className="w-full" disabled>
-                  Contact Support
-                </Button>
-              )}
             </div>
             <p className="text-center text-muted-foreground text-sm mt-4">
-              More features coming soon
+              {!profile?.nda_signed && "Sign the NDA to access investor documents"}
             </p>
           </div>
         </div>
