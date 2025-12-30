@@ -1,4 +1,4 @@
-import { Drill, Lightbulb, Factory, Scale, ShieldCheck } from "lucide-react";
+import { Drill, Flame, Factory, Scale, Leaf } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Services = () => {
@@ -9,7 +9,7 @@ const Services = () => {
       description: "Advanced exploration technologies and sustainable extraction methods for optimal resource recovery.",
     },
     {
-      icon: Lightbulb,
+      icon: Flame,
       title: "EOR Driven Consulting",
       description: "Enhanced Oil Recovery consulting services providing expert guidance and innovative solutions to maximize reservoir production.",
     },
@@ -24,7 +24,7 @@ const Services = () => {
       description: "Comprehensive land management and legal services for mineral rights, leases, and regulatory compliance.",
     },
     {
-      icon: ShieldCheck,
+      icon: Leaf,
       title: "Environmental Management",
       description: "Expert guidance through environmental approvals, permits, and regulatory compliance for energy projects.",
     },

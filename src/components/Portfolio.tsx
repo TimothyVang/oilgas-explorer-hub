@@ -1,4 +1,4 @@
-import { MapPin, Calendar, BarChart3 } from "lucide-react";
+import { MapPin, Calendar, Droplet } from "lucide-react";
 
 const Portfolio = () => {
   const projects = [
@@ -87,7 +87,7 @@ const Portfolio = () => {
                     {project.year}
                   </span>
                   <span className="flex items-center gap-1">
-                    <BarChart3 className="w-4 h-4" />
+                    <Droplet className="w-4 h-4" />
                     {project.stats}
                   </span>
                 </div>
