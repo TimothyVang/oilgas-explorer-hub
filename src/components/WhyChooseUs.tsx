@@ -45,7 +45,7 @@ const WhyChooseUs = () => {
             >
               <div className="flex items-start gap-6">
                 <div className="flex-shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-accent to-[hsl(var(--energy-orange))] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="w-8 h-8 text-primary" />
+                  <feature.icon className={`w-8 h-8 text-primary transition-all duration-300 ${feature.icon === Gauge ? 'group-hover:animate-spin-slow' : ''}`} />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold text-foreground mb-3">
