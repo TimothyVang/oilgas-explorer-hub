@@ -155,7 +155,7 @@ const Login = () => {
               {/* Header */}
               <div className="text-center mb-6">
                 <h1 className="text-3xl font-bold text-card-foreground mb-2">
-                  Client Portal
+                  Investor Portal
                 </h1>
                 <p className="text-muted-foreground">
                   {isSignUp ? "Create your account" : "Sign in to access your account"}
