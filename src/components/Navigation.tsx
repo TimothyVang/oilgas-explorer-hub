@@ -87,7 +87,7 @@ const Navigation = () => {
               Contact
             </button>
             
-            {/* Client Portal / User Button */}
+            {/* Investor Portal / User Button */}
             {user ? (
               <div className="flex items-center gap-2">
                 <Link to="/dashboard">
@@ -129,7 +129,7 @@ const Navigation = () => {
                   }`}
                 >
                   <User className="w-4 h-4 mr-2" />
-                  Client Portal
+                  Investor Portal
                 </Button>
               </Link>
             )}
@@ -203,7 +203,7 @@ const Navigation = () => {
               <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="outline" className="w-full border-accent text-accent">
                   <User className="w-4 h-4 mr-2" />
-                  Client Portal
+                  Investor Portal
                 </Button>
               </Link>
             )}
