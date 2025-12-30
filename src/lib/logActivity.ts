@@ -6,7 +6,11 @@ export type ActivityAction =
   | "profile_update"
   | "document_access"
   | "nda_signed"
-  | "nda_sign_initiated";
+  | "nda_sign_initiated"
+  | "admin_nda_reset"
+  | "admin_document_created"
+  | "admin_document_updated"
+  | "admin_document_deleted";
 
 interface ActivityMetadata {
   [key: string]: string | number | boolean | null | undefined;

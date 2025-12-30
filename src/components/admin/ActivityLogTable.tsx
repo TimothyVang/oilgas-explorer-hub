@@ -26,13 +26,14 @@ interface ActivityLogTableProps {
   profiles: Array<{
     user_id: string;
     full_name: string | null;
-    email?: string;
+    email?: string | null;
   }>;
+  userIdFilter?: string | null;
 }
 
 const ITEMS_PER_PAGE = 10;
 
-export const ActivityLogTable = ({ profiles }: ActivityLogTableProps) => {
+export const ActivityLogTable = ({ profiles, userIdFilter }: ActivityLogTableProps) => {
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,11 +45,16 @@ export const ActivityLogTable = ({ profiles }: ActivityLogTableProps) => {
     const from = (currentPage - 1) * ITEMS_PER_PAGE;
     const to = from + ITEMS_PER_PAGE - 1;
 
-    const { data, error, count } = await supabase
+    let query = supabase
       .from("activity_logs")
       .select("*", { count: "exact" })
-      .order("created_at", { ascending: false })
-      .range(from, to);
+      .order("created_at", { ascending: false });
+    
+    if (userIdFilter) {
+      query = query.eq("user_id", userIdFilter);
+    }
+    
+    const { data, error, count } = await query.range(from, to);
 
     if (error) {
       console.error("Error fetching activity logs:", error);
@@ -74,7 +80,7 @@ export const ActivityLogTable = ({ profiles }: ActivityLogTableProps) => {
     if (profiles.length > 0) {
       fetchLogs();
     }
-  }, [profiles, currentPage]);
+  }, [profiles, currentPage, userIdFilter]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 

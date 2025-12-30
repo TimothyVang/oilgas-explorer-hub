@@ -21,20 +21,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { ArrowLeft, Shield, Users, RefreshCw, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Clock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserFilters } from "@/components/admin/UserFilters";
 import { ActivityLogTable } from "@/components/admin/ActivityLogTable";
+import { DocumentsManager } from "@/components/admin/DocumentsManager";
+import { UserActionsDropdown } from "@/components/admin/UserActionsDropdown";
 
 interface UserProfile {
   id: string;
@@ -44,6 +47,8 @@ interface UserProfile {
   phone: string | null;
   created_at: string;
   email?: string;
+  nda_signed: boolean;
+  nda_signed_at: string | null;
 }
 
 interface UserRole {
@@ -62,10 +67,15 @@ const AdminDashboard = () => {
   const [loadingData, setLoadingData] = useState(true);
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
   const [deletingUser, setDeletingUser] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("users");
+  
+  // Activity filter by user
+  const [activityUserFilter, setActivityUserFilter] = useState<string | null>(null);
   
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
+  const [ndaFilter, setNdaFilter] = useState("all");
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -130,7 +140,7 @@ const AdminDashboard = () => {
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, roleFilter]);
+  }, [searchQuery, roleFilter, ndaFilter]);
 
   const getUserRole = (userId: string): "admin" | "moderator" | "user" | null => {
     const role = userRoles.find((r) => r.user_id === userId);
@@ -153,9 +163,14 @@ const AdminDashboard = () => {
         (roleFilter === "none" && !role) ||
         role === roleFilter;
       
-      return matchesSearch && matchesRole;
+      // NDA filter
+      const matchesNda = ndaFilter === "all" ||
+        (ndaFilter === "signed" && profile.nda_signed) ||
+        (ndaFilter === "pending" && !profile.nda_signed);
+      
+      return matchesSearch && matchesRole && matchesNda;
     });
-  }, [profiles, userRoles, searchQuery, roleFilter]);
+  }, [profiles, userRoles, searchQuery, roleFilter, ndaFilter]);
 
   // Pagination
   const totalPages = Math.ceil(filteredProfiles.length / ITEMS_PER_PAGE);
@@ -163,6 +178,9 @@ const AdminDashboard = () => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredProfiles.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProfiles, currentPage]);
+
+  // Stats
+  const ndaSignedCount = profiles.filter(p => p.nda_signed).length;
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     if (userId === user?.id) {
@@ -283,6 +301,11 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleViewActivity = (userId: string) => {
+    setActivityUserFilter(userId);
+    setActiveTab("activity");
+  };
+
   const getRoleBadgeVariant = (role: string | null) => {
     switch (role) {
       case "admin":
@@ -352,13 +375,13 @@ const AdminDashboard = () => {
                 Admin Dashboard
               </h1>
               <p className="text-muted-foreground">
-                Manage users and their roles
+                Manage users, documents, and view activity
               </p>
             </div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             <div className="bg-muted/50 rounded-lg p-4 text-center">
               <Users className="w-6 h-6 text-accent mx-auto mb-2" />
               <p className="text-2xl font-bold text-card-foreground">
@@ -380,171 +403,222 @@ const AdminDashboard = () => {
               </p>
               <p className="text-sm text-muted-foreground">Moderators</p>
             </div>
+            <div className="bg-muted/50 rounded-lg p-4 text-center">
+              <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
+              <p className="text-2xl font-bold text-card-foreground">
+                {ndaSignedCount}
+              </p>
+              <p className="text-sm text-muted-foreground">NDAs Signed</p>
+            </div>
           </div>
 
-          {/* Search and Filter */}
-          <UserFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            roleFilter={roleFilter}
-            onRoleFilterChange={setRoleFilter}
-          />
+          {/* Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="mb-6">
+              <TabsTrigger value="users" className="gap-2">
+                <Users className="w-4 h-4" />
+                Users
+              </TabsTrigger>
+              <TabsTrigger value="documents" className="gap-2">
+                <FileText className="w-4 h-4" />
+                Documents
+              </TabsTrigger>
+              <TabsTrigger value="activity" className="gap-2">
+                <Activity className="w-4 h-4" />
+                Activity
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Users Table */}
-          <div className="border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loadingData ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      Loading users...
-                    </TableCell>
-                  </TableRow>
-                ) : paginatedProfiles.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      {filteredProfiles.length === 0 && profiles.length > 0
-                        ? "No users match your search criteria."
-                        : "No users found."}
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginatedProfiles.map((profile) => {
-                    const role = getUserRole(profile.user_id);
-                    const isCurrentUser = profile.user_id === user?.id;
+            {/* Users Tab */}
+            <TabsContent value="users">
+              {/* Search and Filter */}
+              <UserFilters
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                roleFilter={roleFilter}
+                onRoleFilterChange={setRoleFilter}
+                ndaFilter={ndaFilter}
+                onNdaFilterChange={setNdaFilter}
+              />
 
-                    return (
-                      <TableRow key={profile.id}>
-                        <TableCell className="font-medium">
-                          {profile.full_name || "—"}
-                          {isCurrentUser && (
-                            <Badge variant="outline" className="ml-2 text-xs">
-                              You
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {profile.email || "—"}
-                        </TableCell>
-                        <TableCell>{profile.company_name || "—"}</TableCell>
-                        <TableCell>{profile.phone || "—"}</TableCell>
-                        <TableCell>
-                          {new Date(profile.created_at).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant={getRoleBadgeVariant(role)}>
-                            {role || "No Role"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Select
-                              value={role || "none"}
-                              onValueChange={(value) =>
-                                handleRoleChange(profile.user_id, value)
-                              }
-                              disabled={isCurrentUser || updatingRole === profile.user_id}
-                            >
-                              <SelectTrigger className="w-32">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">No Role</SelectItem>
-                                <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="moderator">Moderator</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                  disabled={isCurrentUser || deletingUser === profile.user_id}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete User</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Are you sure you want to delete{" "}
-                                    <strong>{profile.full_name || profile.email || "this user"}</strong>?
-                                    This action cannot be undone and will permanently remove their account
-                                    and all associated data.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDeleteUser(profile.user_id, profile.full_name)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
+              {/* Users Table */}
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Company</TableHead>
+                      <TableHead>Joined</TableHead>
+                      <TableHead>NDA</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead className="w-[140px]">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {loadingData ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-8">
+                          Loading users...
                         </TableCell>
                       </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                    ) : paginatedProfiles.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-8">
+                          {filteredProfiles.length === 0 && profiles.length > 0
+                            ? "No users match your search criteria."
+                            : "No users found."}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      paginatedProfiles.map((profile) => {
+                        const role = getUserRole(profile.user_id);
+                        const isCurrentUser = profile.user_id === user?.id;
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4">
-              <p className="text-sm text-muted-foreground">
-                Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
-                {Math.min(currentPage * ITEMS_PER_PAGE, filteredProfiles.length)} of{" "}
-                {filteredProfiles.length} users
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  Previous
-                </Button>
-                <span className="text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
+                        return (
+                          <TableRow key={profile.id}>
+                            <TableCell className="font-medium">
+                              {profile.full_name || "—"}
+                              {isCurrentUser && (
+                                <Badge variant="outline" className="ml-2 text-xs">
+                                  You
+                                </Badge>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground">
+                              {profile.email || "—"}
+                            </TableCell>
+                            <TableCell>{profile.company_name || "—"}</TableCell>
+                            <TableCell>
+                              {new Date(profile.created_at).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    {profile.nda_signed ? (
+                                      <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                        Signed
+                                      </Badge>
+                                    ) : (
+                                      <Badge variant="secondary" className="bg-amber-100 text-amber-800 hover:bg-amber-200">
+                                        <Clock className="w-3 h-3 mr-1" />
+                                        Pending
+                                      </Badge>
+                                    )}
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {profile.nda_signed && profile.nda_signed_at
+                                      ? `Signed on ${new Date(profile.nda_signed_at).toLocaleDateString()}`
+                                      : "Not yet signed"}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={getRoleBadgeVariant(role)}>
+                                {role || "No Role"}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Select
+                                  value={role || "none"}
+                                  onValueChange={(value) =>
+                                    handleRoleChange(profile.user_id, value)
+                                  }
+                                  disabled={isCurrentUser || updatingRole === profile.user_id}
+                                >
+                                  <SelectTrigger className="w-28">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="none">No Role</SelectItem>
+                                    <SelectItem value="user">User</SelectItem>
+                                    <SelectItem value="moderator">Moderator</SelectItem>
+                                    <SelectItem value="admin">Admin</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                
+                                {!isCurrentUser && (
+                                  <UserActionsDropdown
+                                    user={profile}
+                                    onResetNda={fetchData}
+                                    onViewActivity={handleViewActivity}
+                                    onDeleteUser={() => handleDeleteUser(profile.user_id, profile.full_name)}
+                                    isDeleting={deletingUser === profile.user_id}
+                                  />
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )}
+                  </TableBody>
+                </Table>
               </div>
-            </div>
-          )}
 
-          {/* Activity Logs Section */}
-          <ActivityLogTable profiles={profiles} />
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-4">
+                  <p className="text-sm text-muted-foreground">
+                    Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
+                    {Math.min(currentPage * ITEMS_PER_PAGE, filteredProfiles.length)} of{" "}
+                    {filteredProfiles.length} users
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      Previous
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            {/* Documents Tab */}
+            <TabsContent value="documents">
+              <DocumentsManager />
+            </TabsContent>
+
+            {/* Activity Tab */}
+            <TabsContent value="activity">
+              {activityUserFilter && (
+                <div className="mb-4 flex items-center gap-2">
+                  <Badge variant="secondary">
+                    Filtering by user: {profiles.find(p => p.user_id === activityUserFilter)?.full_name || activityUserFilter}
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setActivityUserFilter(null)}
+                  >
+                    Clear filter
+                  </Button>
+                </div>
+              )}
+              <ActivityLogTable profiles={profiles} userIdFilter={activityUserFilter} />
+            </TabsContent>
+          </Tabs>
         </div>
 
         {/* Footer */}

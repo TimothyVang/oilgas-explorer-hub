@@ -13,6 +13,8 @@ interface UserFiltersProps {
   onSearchChange: (value: string) => void;
   roleFilter: string;
   onRoleFilterChange: (value: string) => void;
+  ndaFilter: string;
+  onNdaFilterChange: (value: string) => void;
 }
 
 export const UserFilters = ({
@@ -20,6 +22,8 @@ export const UserFilters = ({
   onSearchChange,
   roleFilter,
   onRoleFilterChange,
+  ndaFilter,
+  onNdaFilterChange,
 }: UserFiltersProps) => {
   return (
     <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -42,6 +46,16 @@ export const UserFilters = ({
           <SelectItem value="moderator">Moderators</SelectItem>
           <SelectItem value="user">Users</SelectItem>
           <SelectItem value="none">No Role</SelectItem>
+        </SelectContent>
+      </Select>
+      <Select value={ndaFilter} onValueChange={onNdaFilterChange}>
+        <SelectTrigger className="w-full sm:w-40">
+          <SelectValue placeholder="NDA Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All NDA</SelectItem>
+          <SelectItem value="signed">NDA Signed</SelectItem>
+          <SelectItem value="pending">NDA Pending</SelectItem>
         </SelectContent>
       </Select>
     </div>
