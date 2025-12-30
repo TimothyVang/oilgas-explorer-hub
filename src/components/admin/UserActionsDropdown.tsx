@@ -52,15 +52,21 @@ export const UserActionsDropdown = ({
   const handleResetNda = async () => {
     setIsResettingNda(true);
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .update({
           nda_signed: false,
           nda_signed_at: null,
         })
-        .eq("user_id", user.user_id);
+        .eq("user_id", user.user_id)
+        .select();
 
       if (error) throw error;
+
+      // Check if any rows were actually updated
+      if (!data || data.length === 0) {
+        throw new Error("Update failed - no rows affected. You may not have permission to update this user.");
+      }
 
       await logActivity("admin_nda_reset", {
         target_user_id: user.user_id,
@@ -77,7 +83,7 @@ export const UserActionsDropdown = ({
       console.error("Error resetting NDA:", error);
       toast({
         title: "Error",
-        description: "Failed to reset NDA status.",
+        description: error.message || "Failed to reset NDA status.",
         variant: "destructive",
       });
     } finally {
