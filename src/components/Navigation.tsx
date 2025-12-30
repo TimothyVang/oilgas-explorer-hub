@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const isHomePage = location.pathname === "/";
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+    setIsMobileMenuOpen(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,21 +87,52 @@ const Navigation = () => {
               Contact
             </button>
             
-            {/* Client Portal Button */}
-            <Link to="/login">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className={`${
-                  isScrolled 
-                    ? "border-accent text-accent hover:bg-accent hover:text-accent-foreground" 
-                    : "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                }`}
-              >
-                <User className="w-4 h-4 mr-2" />
-                Client Portal
-              </Button>
-            </Link>
+            {/* Client Portal / User Button */}
+            {user ? (
+              <div className="flex items-center gap-2">
+                <Link to="/dashboard">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className={`${
+                      isScrolled 
+                        ? "border-accent text-accent hover:bg-accent hover:text-accent-foreground" 
+                        : "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                    }`}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={handleSignOut}
+                  className={`${
+                    isScrolled 
+                      ? "text-muted-foreground hover:text-foreground" 
+                      : "text-primary-foreground/80 hover:text-primary-foreground"
+                  }`}
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <Link to="/login">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className={`${
+                    isScrolled 
+                      ? "border-accent text-accent hover:bg-accent hover:text-accent-foreground" 
+                      : "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                  }`}
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Client Portal
+                </Button>
+              </Link>
+            )}
             
             <Button variant="hero" size="lg" onClick={() => scrollToSection("contact")}>
               Get Started
@@ -142,12 +182,31 @@ const Navigation = () => {
             >
               Contact
             </button>
-            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button variant="outline" className="w-full border-accent text-accent">
-                <User className="w-4 h-4 mr-2" />
-                Client Portal
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full border-accent text-accent">
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  className="w-full text-muted-foreground"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="outline" className="w-full border-accent text-accent">
+                  <User className="w-4 h-4 mr-2" />
+                  Client Portal
+                </Button>
+              </Link>
+            )}
             <Button variant="hero" className="w-full" onClick={() => scrollToSection("contact")}>
               Get Started
             </Button>
