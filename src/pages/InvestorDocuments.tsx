@@ -20,12 +20,21 @@ interface ProfileNdaStatus {
   nda_signed_at: string | null;
 }
 
+const DOCUSIGN_NDA_URL = "https://demo.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=fe62249a-9ae4-4146-9473-730060811d53&env=demo&acct=31150f9e-848b-4280-bbd7-cc8dcbaecef2&v=2";
+
 const InvestorDocuments = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [ndaStatus, setNdaStatus] = useState<ProfileNdaStatus | null>(null);
   const [documents, setDocuments] = useState<InvestorDocument[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+
+  const handleSignNda = async () => {
+    await logActivity("nda_sign_initiated", {
+      redirect_url: DOCUSIGN_NDA_URL,
+    });
+    window.open(DOCUSIGN_NDA_URL, "_blank");
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -149,7 +158,7 @@ const InvestorDocuments = () => {
                 Pending NDA Signature
               </Badge>
               <div className="mt-6">
-                <Button className="gap-2">
+              <Button className="gap-2" onClick={handleSignNda}>
                   <ExternalLink className="w-4 h-4" />
                   Sign NDA via DocuSign
                 </Button>

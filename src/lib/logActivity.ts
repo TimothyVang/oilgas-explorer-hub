@@ -5,7 +5,8 @@ export type ActivityAction =
   | "sign_out"
   | "profile_update"
   | "document_access"
-  | "nda_signed";
+  | "nda_signed"
+  | "nda_sign_initiated";
 
 interface ActivityMetadata {
   [key: string]: string | number | boolean | null | undefined;
