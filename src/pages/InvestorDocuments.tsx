@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, FileText, Lock, CheckCircle, ExternalLink, Download } from "lucide-react";
+import { ArrowLeft, FileText, Lock, CheckCircle, ExternalLink, Download, AlertCircle } from "lucide-react";
 import { logActivity } from "@/lib/logActivity";
 
 interface InvestorDocument {
@@ -154,6 +154,25 @@ const InvestorDocuments = () => {
                 Before accessing investor documents, you must sign our Non-Disclosure Agreement. 
                 This protects both parties and ensures confidentiality of sensitive information.
               </p>
+              
+              {/* Email reminder alert */}
+              <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 max-w-md mx-auto mb-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                      Important: Use your registered email
+                    </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                      When signing the NDA, please use: <strong className="font-semibold">{user?.email}</strong>
+                    </p>
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                      Using a different email will prevent automatic access.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
               <Badge variant="outline" className="mb-6">
                 Pending NDA Signature
               </Badge>
