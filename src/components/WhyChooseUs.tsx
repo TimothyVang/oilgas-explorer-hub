@@ -1,14 +1,14 @@
-import { CheckCircle2, Zap, Shield, TrendingUp } from "lucide-react";
+import { Leaf, Gauge, HardHat, TrendingUp } from "lucide-react";
 
 const WhyChooseUs = () => {
   const features = [
     {
-      icon: Shield,
+      icon: HardHat,
       title: "Safety First Culture",
       description: "Zero-incident safety record with industry-leading protocols and continuous training programs to protect our workforce and communities.",
     },
     {
-      icon: Zap,
+      icon: Gauge,
       title: "Cutting-Edge Technology",
       description: "Leveraging advanced AI, IoT sensors, and automation to maximize efficiency, reduce costs, and minimize environmental impact.",
     },
@@ -18,7 +18,7 @@ const WhyChooseUs = () => {
       description: "45+ years of consistent performance, reliability, and growth in the energy sector with major global partnerships.",
     },
     {
-      icon: CheckCircle2,
+      icon: Leaf,
       title: "Sustainability Commitment",
       description: "Leading the transition to cleaner energy while maintaining operational excellence in traditional energy production.",
     },

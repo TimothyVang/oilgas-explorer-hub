@@ -1,19 +1,19 @@
-import { Search, Target, TrendingUp } from "lucide-react";
+import { Compass, Crosshair, Gauge } from "lucide-react";
 
 const HowWeWork = () => {
   const pillars = [
     {
-      icon: Search,
+      icon: Compass,
       title: "Identify",
       description: "We identify promising opportunities in the oil and gas sector through rigorous market analysis and industry expertise.",
     },
     {
-      icon: Target,
+      icon: Crosshair,
       title: "Execute",
       description: "Our experienced team executes strategic acquisitions and developments with precision and operational excellence.",
     },
     {
-      icon: TrendingUp,
+      icon: Gauge,
       title: "Optimize",
       description: "We optimize asset performance through innovative technologies and sustainable operational practices.",
     },

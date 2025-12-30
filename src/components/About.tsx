@@ -1,10 +1,10 @@
-import { Shield, Award, Globe, Users } from "lucide-react";
+import { HardHat, Award, Globe, Users } from "lucide-react";
 import pumpJacksImage from "@/assets/pump-jacks.jpg";
 
 const About = () => {
   const highlights = [
     {
-      icon: Shield,
+      icon: HardHat,
       title: "Safety First",
       description: "Industry-leading safety standards and protocols",
     },
