@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +18,10 @@ const Navigation = () => {
   }, []);
 
   const scrollToSection = (id: string) => {
+    if (!isHomePage) {
+      window.location.href = `/#${id}`;
+      return;
+    }
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -31,9 +38,9 @@ const Navigation = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex-shrink-0">
-            <h1 className={`text-2xl font-bold ${isScrolled ? "text-gradient" : "text-accent"}`}>
+            <Link to="/" className={`text-2xl font-bold ${isScrolled ? "text-gradient" : "text-accent"}`}>
               BAH Oil and Gas
-            </h1>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -46,14 +53,14 @@ const Navigation = () => {
             >
               Home
             </button>
-            <button
-              onClick={() => scrollToSection("about")}
+            <Link
+              to="/about"
               className={`${
                 isScrolled ? "text-foreground" : "text-primary-foreground"
               } hover:text-accent transition-colors font-medium`}
             >
               About
-            </button>
+            </Link>
             <button
               onClick={() => scrollToSection("services")}
               className={`${
@@ -70,6 +77,23 @@ const Navigation = () => {
             >
               Contact
             </button>
+            
+            {/* Client Portal Button */}
+            <Link to="/login">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className={`${
+                  isScrolled 
+                    ? "border-accent text-accent hover:bg-accent hover:text-accent-foreground" 
+                    : "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                }`}
+              >
+                <User className="w-4 h-4 mr-2" />
+                Client Portal
+              </Button>
+            </Link>
+            
             <Button variant="hero" size="lg" onClick={() => scrollToSection("contact")}>
               Get Started
             </Button>
@@ -99,12 +123,13 @@ const Navigation = () => {
             >
               Home
             </button>
-            <button
-              onClick={() => scrollToSection("about")}
+            <Link
+              to="/about"
               className="text-left text-foreground hover:text-accent transition-colors font-medium py-2"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               About
-            </button>
+            </Link>
             <button
               onClick={() => scrollToSection("services")}
               className="text-left text-foreground hover:text-accent transition-colors font-medium py-2"
@@ -117,6 +142,12 @@ const Navigation = () => {
             >
               Contact
             </button>
+            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+              <Button variant="outline" className="w-full border-accent text-accent">
+                <User className="w-4 h-4 mr-2" />
+                Client Portal
+              </Button>
+            </Link>
             <Button variant="hero" className="w-full" onClick={() => scrollToSection("contact")}>
               Get Started
             </Button>
