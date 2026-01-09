@@ -49,7 +49,6 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Validate inputs
       emailSchema.parse(email);
       passwordSchema.parse(password);
       if (isSignUp) {
@@ -93,52 +92,56 @@ const Login = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="text-primary-foreground">Loading...</div>
+      <div className="min-h-screen bg-midnight flex items-center justify-center">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-primary flex items-center justify-center px-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
+    <div className="min-h-screen bg-midnight flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[#020410]" />
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
       <div className="w-full max-w-md relative z-10">
         {/* Back Link */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
 
-        {/* Login Card */}
-        <div className="bg-card rounded-lg shadow-2xl p-8">
+        {/* Login Card - Glassmorphism */}
+        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl p-8 relative overflow-hidden">
+          {/* Top highlight */}
+          <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          
           {showVerificationMessage ? (
-            /* Email Verification Message */
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-green-500" />
+              <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-8 h-8 text-emerald-400" />
               </div>
-              <h1 className="text-2xl font-bold text-card-foreground">
+              <h1 className="text-2xl font-bold text-white">
                 Check your email
               </h1>
-              <p className="text-muted-foreground text-sm">
-                We've sent a verification link to <strong className="text-card-foreground">{email}</strong>.
+              <p className="text-gray-400 text-sm">
+                We've sent a verification link to <strong className="text-white">{email}</strong>.
                 Please click the link in your email to verify your account.
               </p>
-              <p className="text-muted-foreground text-xs">
+              <p className="text-gray-500 text-xs">
                 Didn't receive the email? Check your spam folder or try again.
               </p>
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full border-white/20 text-white hover:bg-white/10"
                 onClick={() => {
                   setShowVerificationMessage(false);
                   setEmail("");
@@ -154,10 +157,13 @@ const Login = () => {
             <>
               {/* Header */}
               <div className="text-center mb-6">
-                <h1 className="text-3xl font-bold text-card-foreground mb-2">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-xl text-white shadow-[0_4px_20px_rgba(0,102,255,0.4)]">
+                  B
+                </div>
+                <h1 className="text-3xl font-bold text-white mb-2">
                   Investor Portal
                 </h1>
-                <p className="text-muted-foreground">
+                <p className="text-gray-400">
                   {isSignUp ? "Create your account" : "Sign in to access your account"}
                 </p>
               </div>
@@ -166,7 +172,7 @@ const Login = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full mb-6 h-12 text-card-foreground border-border hover:bg-muted"
+                className="w-full mb-6 h-12 bg-white/5 border-white/20 text-white hover:bg-white/10"
                 onClick={handleGoogleSignIn}
                 disabled={isGoogleLoading}
               >
@@ -200,10 +206,10 @@ const Login = () => {
               {/* Divider */}
               <div className="relative mb-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border"></div>
+                  <div className="w-full border-t border-white/10"></div>
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">or continue with email</span>
+                  <span className="bg-[#0a0d14] px-2 text-gray-500">or continue with email</span>
                 </div>
               </div>
 
@@ -211,18 +217,18 @@ const Login = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {isSignUp && (
                   <div className="space-y-2">
-                    <Label htmlFor="fullName" className="text-card-foreground">
+                    <Label htmlFor="fullName" className="text-gray-300">
                       Full Name
                     </Label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                       <Input
                         id="fullName"
                         type="text"
                         placeholder="John Doe"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:bg-white/20"
+                        className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
                         required={isSignUp}
                       />
                     </div>
@@ -230,41 +236,41 @@ const Login = () => {
                 )}
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white">
+                  <Label htmlFor="email" className="text-gray-300">
                     Email Address
                   </Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                     <Input
                       id="email"
                       type="email"
                       placeholder="you@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:bg-white/20"
+                      className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-white">
+                  <Label htmlFor="password" className="text-gray-300">
                     Password
                   </Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                     <Input
                       id="password"
                       type="password"
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus:bg-white/20"
+                      className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
                       required
                     />
                   </div>
                   {isSignUp && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-gray-500">
                       Password must be at least 6 characters
                     </p>
                   )}
@@ -273,12 +279,12 @@ const Login = () => {
                 {!isSignUp && (
                   <div className="flex items-center justify-between text-sm">
                     <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" className="rounded border-border" />
-                      <span className="text-muted-foreground">Remember me</span>
+                      <input type="checkbox" className="rounded border-white/20 bg-white/5" />
+                      <span className="text-gray-400">Remember me</span>
                     </label>
                     <Link
                       to="/forgot-password"
-                      className="text-accent hover:underline"
+                      className="text-primary hover:text-primary/80 transition-colors"
                     >
                       Forgot password?
                     </Link>
@@ -287,9 +293,7 @@ const Login = () => {
 
                 <Button
                   type="submit"
-                  variant="hero"
-                  className="w-full"
-                  size="lg"
+                  className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-[0_4px_20px_rgba(0,102,255,0.4)] transition-all duration-300"
                   disabled={isLoading}
                 >
                   {isLoading ? "Please wait..." : (isSignUp ? "Create Account" : "Sign In")}
@@ -297,13 +301,13 @@ const Login = () => {
               </form>
 
               {/* Toggle Sign In/Up */}
-              <div className="mt-8 pt-6 border-t border-border text-center">
-                <p className="text-muted-foreground text-sm">
+              <div className="mt-8 pt-6 border-t border-white/10 text-center">
+                <p className="text-gray-400 text-sm">
                   {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
                   <button
                     type="button"
                     onClick={() => setIsSignUp(!isSignUp)}
-                    className="text-accent hover:underline font-medium"
+                    className="text-primary hover:text-primary/80 font-medium transition-colors"
                   >
                     {isSignUp ? "Sign in" : "Create one"}
                   </button>
@@ -314,7 +318,7 @@ const Login = () => {
         </div>
 
         {/* Company Name */}
-        <p className="text-center text-primary-foreground/60 mt-8 text-sm">
+        <p className="text-center text-gray-600 mt-8 text-sm">
           © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
         </p>
       </div>

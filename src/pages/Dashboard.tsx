@@ -7,25 +7,26 @@ import {
   HomeIcon,
   DocsIcon,
   ActivityIcon,
-  MoneyIcon,
-  SettingsIcon,
   TrendUpIcon,
-  ChartIcon
 } from "@/components/Icons";
 import {
   LogOut,
-  Menu,
   Zap,
-  FileText,
   CheckCircle,
-  Clock,
-  AlertCircle
+  AlertCircle,
+  User,
+  Shield
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DocumentsTab } from "@/components/dashboard/DocumentsTab";
-import heroImage from "@/assets/pump-jacks.jpg";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -33,59 +34,41 @@ const Dashboard = () => {
   const { stats, loading: statsLoading } = useInvestorDashboard();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Overview");
-  const [chartRange, setChartRange] = useState("24H");
-
-  // Real activity data visualization - show activity over time periods
-  const getChartData = (range: string) => {
-    // These will be replaced with real data in a future iteration
-    // For now, show a visual representation based on user's activity count
-    const baseActivity = stats.recentActivity.length * 10;
-    const variance = () => Math.floor(Math.random() * 20) + baseActivity;
-    return Array.from({ length: 12 }, () => Math.min(variance(), 100));
-  };
-
-  const chartData = getChartData(chartRange);
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
 
+  // Streamlined menu - only real, functional items
   const menuItems = [
-    { icon: HomeIcon, label: "Overview" },
-    { icon: DocsIcon, label: "Documents" },
-    { icon: ActivityIcon, label: "Live Ops" },
-    { icon: MoneyIcon, label: "Financials" },
-    { icon: SettingsIcon, label: "System" },
+    { icon: HomeIcon, label: "Overview", action: () => setActiveTab("Overview") },
+    { icon: DocsIcon, label: "Documents", action: () => setActiveTab("Documents") },
+    { icon: User, label: "Profile", action: () => navigate("/profile") },
+    ...(isAdmin ? [{ icon: Shield, label: "Admin", action: () => navigate("/admin") }] : []),
   ];
-
-  // Use role-based access control instead of hard-coded email
-  const isLevel6 = isAdmin;
 
   return (
     <div className="min-h-screen bg-midnight text-white font-sans selection:bg-cyan-500/30 overflow-hidden relative">
 
-      {/* Premium Background - No external dependencies */}
+      {/* Premium Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#020410]" />
-        {/* Inline SVG noise pattern */}
         <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
         <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
         <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
-        {/* Grid Overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
       <div className="relative z-10 flex h-dvh md:h-screen p-4 md:p-6 gap-6 flex-col md:flex-row">
 
-        {/* 2. FLOATING SIDEBAR (Desktop) - Premium 2025 */}
+        {/* FLOATING SIDEBAR (Desktop) */}
         <motion.aside
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="w-20 hidden md:flex flex-col items-center py-8 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl relative overflow-hidden"
         >
-          {/* Top highlight */}
           <div className="absolute top-0 left-[20%] right-[20%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           
           {/* Brand Mark */}
@@ -95,45 +78,63 @@ const Dashboard = () => {
           </div>
 
           {/* Nav Items */}
-          <nav className="flex-1 flex flex-col gap-3 w-full px-3">
-            {menuItems.map((item, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveTab(item.label)}
-                className={`relative group flex items-center justify-center p-3 rounded-xl transition-all duration-300 ${activeTab === item.label
-                  ? "bg-gradient-to-r from-primary/30 to-primary/10 text-white shadow-[0_0_20px_rgba(0,102,255,0.3)] border border-primary/30"
-                  : "text-gray-500 hover:text-white hover:bg-white/[0.08]"
-                  }`}
-              >
-                <item.icon className="w-5 h-5" />
-                {/* Active indicator */}
-                {activeTab === item.label && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-primary rounded-r-full shadow-[0_0_10px_rgba(0,102,255,0.5)]" />
-                )}
-                {/* Tooltip */}
-                <span className="absolute left-16 bg-gray-900/95 backdrop-blur-xl text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap border border-white/10 pointer-events-none font-medium shadow-xl z-50">
-                  {item.label}
-                </span>
-              </button>
-            ))}
-          </nav>
+          <TooltipProvider delayDuration={0}>
+            <nav className="flex-1 flex flex-col gap-3 w-full px-3">
+              {menuItems.map((item, index) => {
+                const isActive = (item.label === "Overview" || item.label === "Documents") && activeTab === item.label;
+                return (
+                  <Tooltip key={index}>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={item.action}
+                        className={`relative group flex items-center justify-center p-3 rounded-xl transition-all duration-300 ${isActive
+                          ? "bg-gradient-to-r from-primary/30 to-primary/10 text-white shadow-[0_0_20px_rgba(0,102,255,0.3)] border border-primary/30"
+                          : "text-gray-500 hover:text-white hover:bg-white/[0.08]"
+                          }`}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        {isActive && (
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-primary rounded-r-full shadow-[0_0_10px_rgba(0,102,255,0.5)]" />
+                        )}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="bg-gray-900/95 backdrop-blur-xl border-white/10">
+                      {item.label}
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })}
+            </nav>
+          </TooltipProvider>
 
-          {/* Logout */}
-          <button onClick={handleSignOut} className="p-3 text-gray-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all duration-300 mt-auto">
-            <LogOut className="w-5 h-5" />
-          </button>
+          {/* Logout Button - Clear and Labeled */}
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  onClick={handleSignOut} 
+                  className="flex flex-col items-center gap-1 p-3 text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all duration-300 mt-auto group"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="text-[10px] font-medium opacity-70 group-hover:opacity-100">Logout</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-gray-900/95 backdrop-blur-xl border-white/10">
+                Sign out of your account
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </motion.aside>
 
-        {/* 3. MAIN HUD AREA */}
+        {/* MAIN HUD AREA */}
         <div className="flex-1 flex flex-col gap-4 md:gap-6 overflow-hidden">
 
-          {/* Header HUD - Premium 2025 */}
+          {/* Header HUD */}
           <motion.header
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className="relative flex items-center justify-between bg-gradient-to-r from-white/[0.08] to-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-2xl px-4 md:px-8 py-3.5 md:py-4 shadow-2xl shrink-0 overflow-hidden"
           >
-            {/* Subtle top highlight */}
             <div className="absolute top-0 left-[5%] right-[5%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
             
             <div>
@@ -154,11 +155,11 @@ const Dashboard = () => {
 
               <div className="flex items-center gap-4 pl-6 border-l border-white/10">
                 <div className="text-right hidden sm:block">
-                  <p className="text-sm font-semibold text-white leading-none">{user?.user_metadata?.full_name || "Tim Vang"}</p>
-                  <p className="text-[11px] text-gray-500 mt-1.5 font-medium">{isLevel6 ? "Level 6 Access" : "Level 5 Access"}</p>
+                  <p className="text-sm font-semibold text-white leading-none">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</p>
+                  <p className="text-[11px] text-gray-500 mt-1.5 font-medium">{isAdmin ? "Admin Access" : "Investor Access"}</p>
                 </div>
                 <div className="relative w-11 h-11 rounded-full ring-2 ring-primary/40 ring-offset-2 ring-offset-[#020410] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(0,102,255,0.3)]">
-                  {user?.email?.[0]?.toUpperCase() || "T"}
+                  {user?.email?.[0]?.toUpperCase() || "U"}
                   <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#020410]" />
                 </div>
               </div>
@@ -178,7 +179,7 @@ const Dashboard = () => {
                   transition={{ duration: 0.3 }}
                   className="space-y-6"
                 >
-                  {/* KPI ROW - Real Data Cards */}
+                  {/* KPI ROW */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 perspective-1000">
                     <StatsCard 
                       delay={0.1} 
@@ -214,9 +215,9 @@ const Dashboard = () => {
                     />
                   </div>
 
-                  {/* MAIN DATA VISUALIZATION - The "Hologram" */}
+                  {/* MAIN DATA VISUALIZATION */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[500px]">
-                    {/* ... (Chart Hologram) ... */}
+                    {/* Activity Timeline instead of fake chart */}
                     <HolographicCard className="lg:col-span-2 flex flex-col p-6" delay={0.5} variant="elevated">
                       <div className="flex justify-between items-start mb-8 flex-wrap gap-4">
                         <div>
@@ -224,55 +225,51 @@ const Dashboard = () => {
                             <div className="p-2 rounded-lg bg-accent/20">
                               <Zap className="w-4 h-4 text-accent" />
                             </div>
-                            Production Output
+                            Activity Timeline
                           </h3>
-                          <p className="text-sm text-gray-500 mt-1">Real-time barrel analytics</p>
-                        </div>
-                        <div className="flex gap-1.5 bg-white/[0.05] p-1 rounded-xl border border-white/[0.08]">
-                          {['1H', '24H', '7D', '30D'].map(range => (
-                            <button
-                              key={range}
-                              onClick={() => setChartRange(range)}
-                              className={`px-4 py-1.5 text-xs font-medium rounded-lg transition-all duration-300 ${chartRange === range
-                                ? "bg-primary text-white shadow-[0_0_15px_rgba(0,102,255,0.4)]"
-                                : "text-gray-400 hover:text-white hover:bg-white/[0.08]"
-                                }`}
-                            >
-                              {range}
-                            </button>
-                          ))}
+                          <p className="text-sm text-gray-500 mt-1">Your recent portal activity</p>
                         </div>
                       </div>
 
-                      {/* Animated Bars - Premium Style */}
-                      <div className="flex-1 flex items-end justify-between gap-3 px-2 relative min-h-[200px]">
-                        {/* Grid Lines */}
-                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                          {[1, 2, 3, 4].map(i => (
-                            <div key={i} className="w-full h-[1px] bg-gradient-to-r from-white/5 via-white/10 to-white/5" />
-                          ))}
-                        </div>
-
-                        {chartData.map((h, i) => (
-                          <motion.div
-                            key={`${chartRange}-${i}`}
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: `${h}%`, opacity: 1 }}
-                            transition={{ duration: 0.8, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                            className="w-full bg-gradient-to-t from-primary/20 via-primary/60 to-cyan-400 relative group cursor-crosshair rounded-t-md"
-                          >
-                            {/* Glow top */}
-                            <div className="absolute top-0 left-0 right-0 h-1 bg-cyan-300 shadow-[0_0_15px_rgba(0,255,255,0.8),0_0_30px_rgba(0,255,255,0.4)] rounded-t-md" />
-                            {/* Tooltip */}
-                            <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-gray-900/95 backdrop-blur-xl border border-cyan-500/30 px-3 py-2 rounded-lg text-cyan-400 text-xs opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap z-20 shadow-xl">
-                              <span className="font-bold text-white">{Math.floor(h * 12)}</span> BPD
+                      {/* Activity list instead of mock chart */}
+                      <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+                        {statsLoading ? (
+                          <div className="flex items-center justify-center h-full">
+                            <div className="animate-pulse text-gray-500">Loading activity...</div>
+                          </div>
+                        ) : stats.recentActivity.length === 0 ? (
+                          <div className="flex flex-col items-center justify-center h-full text-center">
+                            <div className="w-16 h-16 rounded-2xl bg-gray-800/50 flex items-center justify-center mb-4">
+                              <ActivityIcon className="w-8 h-8 text-gray-500" />
                             </div>
-                          </motion.div>
-                        ))}
+                            <p className="text-gray-400 font-medium">No activity yet</p>
+                            <p className="text-gray-500 text-sm mt-1">Start by exploring your documents</p>
+                          </div>
+                        ) : (
+                          stats.recentActivity.map((activity, index) => (
+                            <motion.div
+                              key={activity.id}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                              className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] transition-all duration-300"
+                            >
+                              <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_rgba(0,102,255,0.5)]" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm text-gray-200 font-medium truncate">
+                                  {activity.action.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+                                </p>
+                                <p className="text-xs text-gray-500 mt-0.5">
+                                  {new Date(activity.created_at).toLocaleString()}
+                                </p>
+                              </div>
+                            </motion.div>
+                          ))
+                        )}
                       </div>
                     </HolographicCard>
 
-                    {/* Action Center - Real Tasks - Premium 2025 */}
+                    {/* Action Center */}
                     <HolographicCard className="flex flex-col p-6" delay={0.6} variant="elevated">
                       <div className="flex items-center gap-3 mb-6">
                         <div className="p-2 rounded-lg bg-rose-500/20">
@@ -337,36 +334,40 @@ const Dashboard = () => {
                     </HolographicCard>
                   </div>
 
-                  {/* Bottom Row - Recent Activity - Premium 2025 */}
+                  {/* Bottom Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
                     <HolographicCard className="p-6 h-52 flex flex-col" delay={0.7}>
                       <div className="flex items-center gap-3 mb-5">
                         <div className="p-2 rounded-lg bg-primary/20">
                           <ActivityIcon className="w-4 h-4 text-primary" />
                         </div>
-                        <p className="text-sm font-semibold text-white">Recent Activity</p>
+                        <p className="text-sm font-semibold text-white">Quick Actions</p>
                       </div>
-                      {stats.recentActivity.length === 0 ? (
-                        <div className="flex-1 flex items-center justify-center text-gray-500">
-                          <p className="text-sm">No recent activity</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-2 overflow-y-auto flex-1 pr-1">
-                          {stats.recentActivity.slice(0, 3).map((activity) => (
-                            <div key={activity.id} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.06] transition-all duration-300">
-                              <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(0,102,255,0.5)]" />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs text-gray-300 truncate font-medium">
-                                  {activity.action.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
-                                </p>
-                                <p className="text-[10px] text-gray-500 mt-0.5">
-                                  {new Date(activity.created_at).toLocaleString()}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      <div className="flex-1 flex flex-col gap-2">
+                        <button 
+                          onClick={() => navigate("/investor-documents")}
+                          className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.06] hover:border-primary/30 transition-all duration-300 text-left"
+                        >
+                          <DocsIcon className="w-5 h-5 text-primary" />
+                          <span className="text-sm text-gray-300">View Documents</span>
+                        </button>
+                        <button 
+                          onClick={() => navigate("/profile")}
+                          className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.06] hover:border-primary/30 transition-all duration-300 text-left"
+                        >
+                          <User className="w-5 h-5 text-primary" />
+                          <span className="text-sm text-gray-300">Edit Profile</span>
+                        </button>
+                        {isAdmin && (
+                          <button 
+                            onClick={() => navigate("/admin")}
+                            className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.06] hover:border-primary/30 transition-all duration-300 text-left"
+                          >
+                            <Shield className="w-5 h-5 text-rose-400" />
+                            <span className="text-sm text-gray-300">Admin Dashboard</span>
+                          </button>
+                        )}
+                      </div>
                     </HolographicCard>
                     
                     <HolographicCard className="p-6 h-52 flex items-center justify-center" delay={0.8}>
@@ -395,81 +396,48 @@ const Dashboard = () => {
               )}
 
               {activeTab === "Documents" && <DocumentsTab />}
-
-              {(activeTab === "Live Ops" || activeTab === "Financials" || activeTab === "System") && (
-                isLevel6 ? (
-                  // Placeholder for unlocked views simply re-using "Overview" logic or placeholder for now to prove unlock
-                  <motion.div
-                    key={activeTab}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="h-full flex flex-col items-center justify-center text-center p-12"
-                  >
-                    <div className="w-24 h-24 rounded-full bg-green-500/10 flex items-center justify-center mb-6">
-                      <Zap className="w-12 h-12 text-green-400" />
-                    </div>
-                    <h2 className="text-3xl font-bold text-white mb-2">{activeTab} Unlocked</h2>
-                    <p className="text-green-400/80 max-w-md">
-                      Level 6 Clearance Verified. Module Active.
-                    </p>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key={activeTab}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full flex flex-col items-center justify-center text-center p-12"
-                  >
-                    <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mb-6 animate-pulse">
-                      {activeTab === "Live Ops" && <ActivityIcon className="w-12 h-12 text-gray-400" />}
-                      {activeTab === "Financials" && <MoneyIcon className="w-12 h-12 text-gray-400" />}
-                      {activeTab === "System" && <SettingsIcon className="w-12 h-12 text-gray-400" />}
-                    </div>
-                    <h2 className="text-3xl font-bold text-white mb-2">{activeTab} Module</h2>
-                    <p className="text-gray-400 max-w-md">
-                      This module is currently locked or under development. <br />
-                      Please contact your system administrator for Level 6 access.
-                    </p>
-                  </motion.div>
-                ))}
             </AnimatePresence>
 
           </main>
         </div>
       </div>
-      {/* MOBILE FLOATING COMMAND DECK - Premium 2025 */}
+
+      {/* MOBILE FLOATING COMMAND DECK */}
       <motion.div
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         transition={{ delay: 1, type: "spring", stiffness: 200, damping: 20 }}
         className="md:hidden fixed bottom-6 left-4 right-4 z-50 p-1.5 rounded-2xl bg-gradient-to-r from-gray-900/95 to-gray-950/95 backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_40px_-12px_rgba(0,0,0,0.9)] flex items-center justify-between"
       >
-        {/* Top highlight */}
         <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent rounded-full" />
         
-        {menuItems.map((item, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveTab(item.label)}
-            className={`relative p-3 rounded-xl transition-all duration-300 flex-1 flex justify-center ${activeTab === item.label
-              ? "text-white bg-gradient-to-br from-primary/30 to-primary/10 shadow-[0_0_20px_rgba(0,102,255,0.3)]"
-              : "text-gray-500 hover:text-white"
-              }`}
-          >
-            <item.icon className="w-5 h-5" />
-            {activeTab === item.label && (
-              <span className="absolute -top-0.5 right-3 w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-            )}
-          </button>
-        ))}
-        {/* Mobile Logout */}
+        {menuItems.map((item, index) => {
+          const isActive = (item.label === "Overview" || item.label === "Documents") && activeTab === item.label;
+          return (
+            <button
+              key={index}
+              onClick={item.action}
+              className={`relative p-3 rounded-xl transition-all duration-300 flex-1 flex flex-col items-center gap-1 ${isActive
+                ? "text-white bg-gradient-to-br from-primary/30 to-primary/10 shadow-[0_0_20px_rgba(0,102,255,0.3)]"
+                : "text-gray-500 hover:text-white"
+                }`}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-[9px] font-medium">{item.label}</span>
+              {isActive && (
+                <span className="absolute -top-0.5 right-3 w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+              )}
+            </button>
+          );
+        })}
+
+        {/* Mobile Logout - Clear and Labeled */}
         <button
           onClick={handleSignOut}
-          className="p-3 text-gray-500 hover:text-rose-400 flex-1 flex justify-center border-l border-white/[0.08] ml-1 transition-colors duration-300"
+          className="p-3 text-gray-400 hover:text-rose-400 flex-1 flex flex-col items-center gap-1 border-l border-white/[0.08] ml-1 transition-colors duration-300"
         >
           <LogOut className="w-5 h-5" />
+          <span className="text-[9px] font-medium">Logout</span>
         </button>
       </motion.div>
 
@@ -477,7 +445,7 @@ const Dashboard = () => {
   );
 };
 
-// Helper for the KPI Cards - Premium 2025 Style
+// Helper for the KPI Cards
 const StatsCard = ({ title, displayValue, sub, icon: Icon, trend, delay }: any) => (
   <HolographicCard delay={delay} variant="elevated" className="p-6 group/card">
     <div className="flex justify-between items-start mb-5">
@@ -489,7 +457,6 @@ const StatsCard = ({ title, displayValue, sub, icon: Icon, trend, delay }: any) 
             : 'bg-gradient-to-br from-primary/25 to-primary/5 text-primary group-hover/card:shadow-[0_0_25px_rgba(0,102,255,0.3)]'
       }`}>
         <Icon className="w-6 h-6" />
-        {/* Glow effect */}
         <div className={`absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover/card:opacity-50 transition-opacity duration-500 ${
           trend === 'up' ? 'bg-emerald-500/30' : trend === 'down' ? 'bg-rose-500/30' : 'bg-primary/30'
         }`} />
@@ -520,4 +487,3 @@ const StatsCard = ({ title, displayValue, sub, icon: Icon, trend, delay }: any) 
 );
 
 export default Dashboard;
-

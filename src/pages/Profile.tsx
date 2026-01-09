@@ -112,13 +112,11 @@ const Profile = () => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    // Validate file type
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
 
-    // Validate file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
       toast.error("Image must be less than 2MB");
       return;
@@ -129,7 +127,6 @@ const Profile = () => {
       const fileExt = file.name.split(".").pop();
       const fileName = `${user.id}/avatar.${fileExt}`;
 
-      // Upload to storage
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(fileName, file, { upsert: true });
@@ -140,12 +137,10 @@ const Profile = () => {
         return;
       }
 
-      // Get public URL
       const { data: urlData } = supabase.storage
         .from("avatars")
         .getPublicUrl(fileName);
 
-      // Update profile with new avatar URL
       const { error: updateError } = await supabase
         .from("profiles")
         .update({
@@ -167,7 +162,6 @@ const Profile = () => {
       toast.error("An error occurred");
     } finally {
       setIsUploadingAvatar(false);
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -188,53 +182,55 @@ const Profile = () => {
 
   if (authLoading || isLoading) {
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="text-primary-foreground">Loading...</div>
+      <div className="min-h-screen bg-midnight flex items-center justify-center">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-primary">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
+    <div className="min-h-screen bg-midnight relative overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[#020410]" />
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8 max-w-2xl">
         {/* Back Button */}
         <button
           onClick={() => navigate("/dashboard")}
-          className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </button>
 
-        {/* Profile Card */}
-        <div className="bg-card rounded-lg shadow-2xl p-8">
-          <h1 className="text-2xl font-bold text-card-foreground mb-6">
+        {/* Profile Card - Glassmorphism */}
+        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl p-8 relative overflow-hidden">
+          {/* Top highlight */}
+          <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          
+          <h1 className="text-2xl font-bold text-white mb-6">
             Account Settings
           </h1>
 
           {/* Avatar Section */}
-          <div className="flex items-center gap-6 mb-8 pb-8 border-b border-border">
+          <div className="flex items-center gap-6 mb-8 pb-8 border-b border-white/10">
             <div className="relative">
-              <Avatar className="w-24 h-24 border-4 border-border">
+              <Avatar className="w-24 h-24 border-4 border-white/10">
                 <AvatarImage src={profile?.avatar_url || undefined} alt="Profile" />
-                <AvatarFallback className="bg-accent text-accent-foreground text-2xl">
+                <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-2xl">
                   {getInitials()}
                 </AvatarFallback>
               </Avatar>
               <button
                 onClick={handleAvatarClick}
                 disabled={isUploadingAvatar}
-                className="absolute bottom-0 right-0 bg-accent text-accent-foreground p-2 rounded-full hover:bg-accent/90 transition-colors disabled:opacity-50"
+                className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full hover:bg-primary/80 transition-colors disabled:opacity-50 shadow-[0_4px_15px_rgba(0,102,255,0.4)]"
               >
                 {isUploadingAvatar ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -251,11 +247,11 @@ const Profile = () => {
               />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-card-foreground">
+              <h2 className="text-lg font-semibold text-white">
                 {fullName || "Your Name"}
               </h2>
-              <p className="text-muted-foreground text-sm">{user?.email}</p>
-              <p className="text-muted-foreground text-xs mt-1">
+              <p className="text-gray-400 text-sm">{user?.email}</p>
+              <p className="text-gray-500 text-xs mt-1">
                 Click the camera icon to update your photo
               </p>
             </div>
@@ -264,80 +260,78 @@ const Profile = () => {
           {/* Profile Form */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-card-foreground">
+              <Label htmlFor="fullName" className="text-gray-300">
                 Full Name
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <Input
                   id="fullName"
                   type="text"
                   placeholder="John Doe"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-card-foreground">
+              <Label htmlFor="email" className="text-gray-300">
                 Email Address
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <Input
                   id="email"
                   type="email"
                   value={user?.email || ""}
                   disabled
-                  className="pl-10 bg-muted cursor-not-allowed"
+                  className="pl-10 bg-white/5 border-white/10 text-gray-400 cursor-not-allowed"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-gray-500">
                 Email cannot be changed
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="companyName" className="text-card-foreground">
+              <Label htmlFor="companyName" className="text-gray-300">
                 Company Name
               </Label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <Input
                   id="companyName"
                   type="text"
                   placeholder="Your Company"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-card-foreground">
+              <Label htmlFor="phone" className="text-gray-300">
                 Phone Number
               </Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <Input
                   id="phone"
                   type="tel"
                   placeholder="+1 (555) 123-4567"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
                 />
               </div>
             </div>
 
             <Button
               onClick={handleSaveProfile}
-              variant="hero"
-              size="lg"
-              className="w-full"
+              className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-[0_4px_20px_rgba(0,102,255,0.4)] transition-all duration-300"
               disabled={isSaving}
             >
               {isSaving ? (
@@ -353,7 +347,7 @@ const Profile = () => {
         </div>
 
         {/* Company Name */}
-        <p className="text-center text-primary-foreground/60 mt-8 text-sm">
+        <p className="text-center text-gray-600 mt-8 text-sm">
           © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
         </p>
       </div>
