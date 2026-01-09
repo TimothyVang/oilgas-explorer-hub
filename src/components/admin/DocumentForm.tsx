@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,9 +11,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Upload, File, X, Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Upload, File, X, Loader2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface UserProfile {
+  user_id: string;
+  full_name: string | null;
+  email: string | null;
+  nda_signed: boolean;
+}
 
 interface DocumentFormProps {
   open: boolean;
@@ -25,6 +40,7 @@ interface DocumentFormProps {
     file_url: string;
   } | null;
   onSuccess: () => void;
+  preSelectedUserId?: string | null;
 }
 
 export const DocumentForm = ({
@@ -32,21 +48,61 @@ export const DocumentForm = ({
   onOpenChange,
   document,
   onSuccess,
+  preSelectedUserId,
 }: DocumentFormProps) => {
+  const { user } = useAuth();
   const [title, setTitle] = useState(document?.title || "");
   const [description, setDescription] = useState(document?.description || "");
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // User selection state
+  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string>(preSelectedUserId || "");
+  const [loadingUsers, setLoadingUsers] = useState(false);
 
   const isEditing = !!document;
+
+  // Fetch users with signed NDA for assignment
+  useEffect(() => {
+    if (open && !isEditing) {
+      fetchUsers();
+    }
+  }, [open, isEditing]);
+
+  // Update selectedUserId when preSelectedUserId changes
+  useEffect(() => {
+    if (preSelectedUserId) {
+      setSelectedUserId(preSelectedUserId);
+    }
+  }, [preSelectedUserId]);
+
+  const fetchUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, email, nda_signed")
+        .eq("nda_signed", true)
+        .order("full_name");
+
+      if (error) throw error;
+      setUsers(data || []);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
 
   const resetForm = () => {
     setTitle("");
     setDescription("");
     setFile(null);
     setIsUploading(false);
+    setSelectedUserId(preSelectedUserId || "");
   };
 
   const handleClose = () => {
@@ -202,18 +258,49 @@ export const DocumentForm = ({
           description: "The document has been updated successfully.",
         });
       } else {
-        const { error } = await supabase.from("investor_documents").insert({
-          title: title.trim(),
-          description: description.trim() || null,
-          file_url: fileUrl,
-        });
+        // Insert the document
+        const { data: newDoc, error } = await supabase
+          .from("investor_documents")
+          .insert({
+            title: title.trim(),
+            description: description.trim() || null,
+            file_url: fileUrl,
+          })
+          .select("id")
+          .single();
 
         if (error) throw error;
 
-        toast({
-          title: "Document added",
-          description: "The document has been added successfully.",
-        });
+        // If a user is selected, create the assignment
+        if (selectedUserId && newDoc && user) {
+          const { error: assignError } = await supabase
+            .from("user_document_access")
+            .insert({
+              document_id: newDoc.id,
+              user_id: selectedUserId,
+              assigned_by: user.id,
+            });
+
+          if (assignError) {
+            console.error("Error assigning document:", assignError);
+            toast({
+              title: "Document added",
+              description: "Document was added but assignment failed. You can assign it manually.",
+              variant: "destructive",
+            });
+          } else {
+            const assignedUser = users.find(u => u.user_id === selectedUserId);
+            toast({
+              title: "Document added & assigned",
+              description: `Document assigned to ${assignedUser?.full_name || assignedUser?.email || "user"}.`,
+            });
+          }
+        } else {
+          toast({
+            title: "Document added",
+            description: "The document has been added successfully.",
+          });
+        }
       }
 
       handleClose();
@@ -230,14 +317,15 @@ export const DocumentForm = ({
     }
   };
 
-  // Reset form when document changes
-  useState(() => {
+  // Reset form when dialog opens
+  useEffect(() => {
     if (open) {
       setTitle(document?.title || "");
       setDescription(document?.description || "");
       setFile(null);
+      setSelectedUserId(preSelectedUserId || "");
     }
-  });
+  }, [open, document, preSelectedUserId]);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -275,6 +363,35 @@ export const DocumentForm = ({
                 rows={3}
               />
             </div>
+
+            {/* User Assignment (only for new documents) */}
+            {!isEditing && (
+              <div className="grid gap-2">
+                <Label htmlFor="assign-user">
+                  <User className="w-4 h-4 inline mr-1" />
+                  Assign to User (optional)
+                </Label>
+                <Select value={selectedUserId} onValueChange={setSelectedUserId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={loadingUsers ? "Loading users..." : "Select a user (NDA signed only)"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">No assignment</SelectItem>
+                    {users.map((u) => (
+                      <SelectItem key={u.user_id} value={u.user_id}>
+                        {u.full_name || u.email || "Unknown user"}
+                        {u.email && u.full_name && (
+                          <span className="text-muted-foreground ml-1">({u.email})</span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Only users who have signed the NDA can be assigned documents.
+                </p>
+              </div>
+            )}
 
             <div className="grid gap-2">
               <Label>
