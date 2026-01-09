@@ -9,6 +9,7 @@ import {
   ActivityIcon,
   TrendUpIcon,
 } from "@/components/Icons";
+import { Home } from "lucide-react";
 import {
   LogOut,
   Zap,
@@ -71,11 +72,23 @@ const Dashboard = () => {
         >
           <div className="absolute top-0 left-[20%] right-[20%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           
-          {/* Brand Mark */}
-          <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-lg text-white shadow-[0_4px_20px_rgba(0,102,255,0.4)] mb-10">
-            B
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent" />
-          </div>
+          {/* Brand Mark - Links to Home */}
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link 
+                  to="/" 
+                  className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-lg text-white shadow-[0_4px_20px_rgba(0,102,255,0.4)] mb-10 hover:scale-105 transition-transform duration-300"
+                >
+                  B
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-gray-900/95 backdrop-blur-xl border-white/10">
+                Go to Homepage
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
           {/* Nav Items */}
           <TooltipProvider delayDuration={0}>
@@ -411,6 +424,15 @@ const Dashboard = () => {
       >
         <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent rounded-full" />
         
+        {/* Home Button */}
+        <Link
+          to="/"
+          className="p-3 rounded-xl transition-all duration-300 flex-1 flex flex-col items-center gap-1 text-gray-500 hover:text-white"
+        >
+          <Home className="w-5 h-5" />
+          <span className="text-[9px] font-medium">Home</span>
+        </Link>
+
         {menuItems.map((item, index) => {
           const isActive = (item.label === "Overview" || item.label === "Documents") && activeTab === item.label;
           return (
