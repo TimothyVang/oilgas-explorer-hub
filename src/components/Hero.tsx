@@ -13,8 +13,6 @@ const Hero = () => {
       {/* Abstract Background - Dark & Moody */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-midnight to-midnight" />
-        {/* Removed external noise.svg dependency - using CSS grain effect instead */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-noise-pattern" />
       </div>
 
       {/* THE RADICAL HERO TEXT */}
@@ -62,10 +60,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Custom Video Overlay for Texture (if needed) */}
-      <div className="absolute inset-0 pointer-events-none z-30 mix-blend-overlay opacity-10">
-        <div className="w-full h-full bg-noise" />
-      </div>
     </section>
   );
 };
