@@ -1,68 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { useInView, useMotionValue, useSpring, motion } from "framer-motion";
+import { useEffect } from "react";
 
 const Stats = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-
   const stats = [
-    { value: 45, suffix: "+", label: "Years in Operation", duration: 2000 },
-    { value: 500000, suffix: "+", label: "Barrels Per Day", duration: 2500 },
-    { value: 35, suffix: "+", label: "Countries Served", duration: 2000 },
-    { value: 12000, suffix: "+", label: "Employees Worldwide", duration: 2500 },
+    { value: 45, suffix: "+", label: "Years in Operation" },
+    { value: 500, suffix: "K+", label: "Barrels Per Day" }, // Changed to 500 w/ K suffix for cleaner math
+    { value: 35, suffix: "", label: "Countries Served" },
+    { value: 12, suffix: "K", label: "Employees Worldwide" },
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
-
   return (
-    <section ref={sectionRef} className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
-      </div>
+    <section className="py-24 bg-midnight relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 border-t border-b border-white/10 py-12">
           {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="text-center animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="mb-2">
-                {isVisible && (
-                  <Counter
-                    end={stat.value}
-                    duration={stat.duration}
-                    suffix={stat.suffix}
-                  />
-                )}
-              </div>
-              <p className="text-primary-foreground/80 text-sm sm:text-base">
-                {stat.label}
-              </p>
-            </div>
+            <StatItem key={index} stat={stat} index={index} />
           ))}
         </div>
       </div>
@@ -70,42 +25,50 @@ const Stats = () => {
   );
 };
 
-const Counter = ({ end, duration, suffix }: { end: number; duration: number; suffix: string }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTime: number;
-    let animationFrame: number;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-
-      setCount(Math.floor(progress * end));
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, [end, duration]);
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + "M";
-    } else if (num >= 1000) {
-      return (num / 1000).toFixed(0) + "K";
-    }
-    return num.toString();
-  };
+const StatItem = ({ stat, index }: { stat: any; index: number }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <span className="text-4xl sm:text-5xl font-bold text-accent">
-      {formatNumber(count)}
-      {suffix}
+    <div ref={ref} className="text-center group">
+      <div className="mb-2 flex justify-center items-baseline gap-1">
+        <Counter value={stat.value} isInView={isInView} />
+        <span className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50">
+          {stat.suffix}
+        </span>
+      </div>
+      <p className="text-white/60 font-medium tracking-wide uppercase text-sm group-hover:text-primary transition-colors duration-300">
+        {stat.label}
+      </p>
+    </div>
+  );
+};
+
+const Counter = ({ value, isInView }: { value: number; isInView: boolean }) => {
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, { damping: 30, stiffness: 100 });
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (isInView) {
+      motionValue.set(value);
+    }
+  }, [isInView, value, motionValue]);
+
+  useEffect(() => {
+    return springValue.on("change", (latest) => {
+      if (ref.current) {
+        ref.current.textContent = Math.floor(latest).toLocaleString();
+      }
+    });
+  }, [springValue]);
+
+  return (
+    <span
+      ref={ref}
+      className="text-5xl sm:text-6xl lg:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-primary to-accent drop-shadow-2xl"
+    >
+      0
     </span>
   );
 };

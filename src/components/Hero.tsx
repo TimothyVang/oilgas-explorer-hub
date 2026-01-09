@@ -1,69 +1,70 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown } from "lucide-react";
 import heroImage from "@/assets/hero-oil-rigs.jpg";
 
 const Hero = () => {
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Darker Overlay */}
+    <section id="home" className="relative h-screen w-full overflow-hidden bg-midnight flex items-center justify-center">
+
+      {/* Abstract Background - Dark & Moody */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={heroImage}
-          alt="Offshore oil rigs at sunset"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/80 to-primary/95" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-midnight to-midnight" />
+        {/* Removed external noise.svg dependency - using CSS grain effect instead */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-20 bg-noise-pattern" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="max-w-4xl mx-auto animate-fade-in-up">
-          {/* Accent Line */}
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-1 bg-accent rounded-full" />
-          </div>
-          
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-            Powering <em className="not-italic font-light">Tomorrow's</em>
-            <span className="block text-gradient mt-2">Energy Solutions</span>
+      {/* THE RADICAL HERO TEXT */}
+      <div className="relative z-10 w-full px-4 md:px-20">
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative"
+        >
+          <h1 className="text-[12vw] leading-[0.85] font-black uppercase text-center tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 relative z-20 mix-blend-difference">
+            Energy <br />
+            <span className="relative">
+              Evolved
+              {/* Removed external Giphy GIF dependency - using CSS gradient animation instead */}
+              <div className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient opacity-50 mix-blend-overlay">
+                Evolved
+              </div>
+            </span>
           </h1>
-          <p className="text-xl sm:text-2xl text-primary-foreground/90 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Leading the energy industry with innovation, sustainability, and unwavering commitment to excellence
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button
-              variant="hero"
-              size="lg"
-              className="text-lg px-8 py-6 h-auto"
-              onClick={() => scrollToSection("services")}
-            >
-              Our Services
-              <ArrowRight className="ml-2" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="text-lg px-8 py-6 h-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-              onClick={() => scrollToSection("contact")}
-            >
-              Get in touch
-            </Button>
-          </div>
+
+          {/* Floating 3D Elements (Simulated with CSS for now or use the assets) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] bg-primary/20 rounded-full blur-[100px] -z-10 animate-pulse-glow pointer-events-none" />
+        </motion.div>
+
+        <div className="mt-12 flex justify-between items-end w-full max-w-7xl mx-auto border-t border-white/10 pt-8">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-gray-400 max-w-md text-lg font-light leading-relaxed"
+          >
+            Redefining exploration with AI-driven precision and sustainable infrastructure. Welcome to the new era of BAH Energy.
+          </motion.p>
+
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="hidden md:flex flex-col items-center gap-2 text-white/50 hover:text-white transition-colors"
+            onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            <div className="w-[1px] h-12 bg-current" />
+            <span className="text-xs uppercase tracking-widest">Scroll</span>
+          </motion.button>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-        <div className="w-6 h-10 border-2 border-primary-foreground rounded-full flex items-start justify-center p-2">
-          <div className="w-1 h-3 bg-primary-foreground rounded-full" />
-        </div>
+      {/* Custom Video Overlay for Texture (if needed) */}
+      <div className="absolute inset-0 pointer-events-none z-30 mix-blend-overlay opacity-10">
+        <div className="w-full h-full bg-noise" />
       </div>
     </section>
   );

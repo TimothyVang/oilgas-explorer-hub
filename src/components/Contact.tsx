@@ -1,185 +1,173 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import { Send, MapPin, Mail, Phone } from "lucide-react";
+import { toast } from "sonner";
+import { siteConfig } from "@/constants/siteConfig";
 
 const Contact = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    company: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [30, -30]);
+  const rotateY = useTransform(x, [-100, 100], [-30, 30]);
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct * 200);
+    y.set(yPct * 200);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Build mailto URL with form data
-    const subject = encodeURIComponent(`Contact Form Submission from ${formData.name}`);
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\n` +
-      `Email: ${formData.email}\n` +
-      `Company: ${formData.company || 'N/A'}\n\n` +
-      `Message:\n${formData.message}`
-    );
-    
-    const mailtoUrl = `mailto:contact@bahenergy.com?subject=${subject}&body=${body}`;
-    
-    // Open email client
-    window.location.href = mailtoUrl;
-    
-    // Show toast notification
-    toast({
-      title: "Opening Email Client",
-      description: "Your default email app will open. Please send the email from there.",
-    });
-    
-    // Clear form
-    setFormData({ name: "", email: "", company: "", message: "" });
-  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Please fill in all fields");
+      return;
+    }
 
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: "Phone",
-      detail: "+1 (555) 123-4567",
-    },
-    {
-      icon: Mail,
-      title: "Email",
-      detail: "contact@bahenergy.com",
-    },
-    {
-      icon: MapPin,
-      title: "Headquarters",
-      detail: "Houston, Texas, USA",
-    },
-  ];
+    setIsSubmitting(true);
+
+    try {
+      // TODO: Replace with actual API endpoint when backend is ready
+      // For now, we'll simulate a submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      toast.success("Message sent successfully! We'll get back to you soon.");
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error(`Failed to send message. Please try again or email us directly at ${siteConfig.contact.email}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <section id="contact" className="py-24 bg-muted/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Get in touch
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Ready to power your operations? Contact us today to discuss your energy needs
-          </p>
-        </div>
+    <section id="contact" className="relative min-h-screen py-32 bg-midnight flex items-center justify-center overflow-hidden">
+      {/* Background Ambience */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-midnight to-midnight opacity-50" />
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Form */}
-          <div className="animate-fade-in">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="mt-2"
-                  placeholder="John Doe"
-                />
-              </div>
+      <div className="container mx-auto px-4 perspective-1000">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
 
-              <div>
-                <Label htmlFor="email">Email Address *</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="mt-2"
-                  placeholder="john@company.com"
-                />
-              </div>
+          {/* Text Content */}
+          <div className="space-y-8 z-10">
+            <motion.h2
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/50"
+            >
+              Let's <br /> Collaborate
+            </motion.h2>
+            <p className="text-xl text-gray-400 max-w-md">
+              Ready to redefine your energy infrastructure?
+              Connect with our expert team directly.
+            </p>
 
-              <div>
-                <Label htmlFor="company">Company</Label>
-                <Input
-                  id="company"
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  className="mt-2"
-                  placeholder="Your Company Name"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="message">Message *</Label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  className="mt-2 min-h-[150px]"
-                  placeholder="Tell us about your energy needs..."
-                />
-              </div>
-
-              <Button type="submit" variant="hero" size="lg" className="w-full">
-                Send Message
-                <Send className="ml-2" />
-              </Button>
-            </form>
-          </div>
-
-          {/* Contact Information */}
-          <div className="space-y-8 animate-fade-in">
-            <div className="glass-effect rounded-2xl p-8 border border-border">
-              <h3 className="text-2xl font-semibold text-foreground mb-6">
-                Contact Information
-              </h3>
-              <div className="space-y-6">
-                {contactInfo.map((item, index) => (
-                  <div key={index} className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
-                      <item.icon className="w-6 h-6 text-accent" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">{item.title}</p>
-                      <p className="text-muted-foreground">{item.detail}</p>
-                    </div>
+            <div className="space-y-6 pt-8">
+              {[
+                { icon: Phone, text: siteConfig.contact.phoneDisplay },
+                { icon: Mail, text: siteConfig.contact.email },
+                { icon: MapPin, text: siteConfig.location.displayAddress }
+              ].map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + idx * 0.1 }}
+                  className="flex items-center gap-4 text-gray-300 group"
+                >
+                  <div className="p-3 rounded-full border border-white/10 bg-white/5 group-hover:bg-primary/20 group-hover:border-primary transition-colors">
+                    <item.icon className="w-5 h-5" />
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="glass-effect rounded-2xl p-8 border border-border">
-              <h3 className="text-2xl font-semibold text-foreground mb-4">
-                Business Hours
-              </h3>
-              <div className="space-y-2 text-muted-foreground">
-                <p className="flex justify-between">
-                  <span>Monday - Friday:</span>
-                  <span className="font-medium text-foreground">8:00 AM - 6:00 PM</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Saturday:</span>
-                  <span className="font-medium text-foreground">9:00 AM - 4:00 PM</span>
-                </p>
-                <p className="flex justify-between">
-                  <span>Sunday:</span>
-                  <span className="font-medium text-foreground">Closed</span>
-                </p>
-              </div>
+                  <span className="text-lg group-hover:text-white transition-colors">{item.text}</span>
+                </motion.div>
+              ))}
             </div>
           </div>
+
+          {/* 3D Holographic Form */}
+          <motion.div
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            className="relative w-full max-w-md mx-auto"
+          >
+            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full -z-10 animate-pulse-glow" />
+
+            <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[2rem] shadow-2xl relative z-10">
+              <div className="space-y-6">
+                <div>
+                  <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Name</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all"
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Email</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all"
+                    placeholder="name@company.com"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Message</label>
+                  <textarea
+                    rows={4}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all resize-none"
+                    placeholder="Tell us about your project..."
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-4 bg-gradient-to-r from-primary to-accent rounded-lg text-black font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                >
+                  {isSubmitting ? "Sending..." : "Send Signal"}
+                  {!isSubmitting && <Send className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* Decorative Glass Elements */}
+              <div className="absolute -top-10 -right-10 w-20 h-20 bg-accent/20 rounded-full blur-xl" />
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/20 rounded-full blur-xl" />
+            </form>
+          </motion.div>
+
         </div>
       </div>
     </section>

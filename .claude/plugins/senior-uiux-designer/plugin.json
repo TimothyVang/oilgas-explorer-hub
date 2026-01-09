@@ -1,0 +1,45 @@
+{
+  "name": "senior-uiux-designer",
+  "version": "1.0.0",
+  "description": "Senior Website UI/UX Designer for 2026 - Comprehensive design review, accessibility audits, responsive design validation, and performance optimization for modern React/TypeScript/Tailwind projects",
+  "author": {
+    "name": "Claude Code Community",
+    "email": "community@claude.com"
+  },
+  "repository": "https://github.com/claude-code/senior-uiux-designer-plugin",
+  "keywords": [
+    "ui",
+    "ux",
+    "design",
+    "accessibility",
+    "a11y",
+    "wcag",
+    "responsive",
+    "performance",
+    "tailwind",
+    "shadcn",
+    "react",
+    "2026"
+  ],
+  "claude": {
+    "minVersion": "1.0.0"
+  },
+  "mcpServers": {
+    "playwright": {
+      "path": "./mcp/playwright.mcp.json"
+    }
+  },
+  "autoDiscovery": {
+    "skills": true,
+    "commands": true,
+    "agents": true,
+    "hooks": true
+  },
+  "settings": {
+    "feedbackStyle": "detailed",
+    "includeLineNumbers": true,
+    "includeCodeExamples": true,
+    "browserTesting": true,
+    "strictMode": false
+  }
+}

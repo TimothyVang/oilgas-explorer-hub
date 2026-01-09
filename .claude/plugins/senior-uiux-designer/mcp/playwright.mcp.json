@@ -1,0 +1,43 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp-server"
+      ],
+      "env": {
+        "PLAYWRIGHT_BROWSER": "chromium",
+        "PLAYWRIGHT_HEADLESS": "true"
+      }
+    }
+  },
+  "playwright": {
+    "browser": "chromium",
+    "headless": true,
+    "viewportSizes": [
+      {
+        "width": 375,
+        "height": 667,
+        "name": "Mobile"
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "name": "Tablet"
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "name": "Desktop"
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "name": "Desktop HD"
+      }
+    ],
+    "baseURL": "http://localhost:5173",
+    "testTimeout": 30000
+  }
+}
