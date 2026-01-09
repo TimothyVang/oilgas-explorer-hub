@@ -336,7 +336,7 @@ const Dashboard = () => {
 
                   {/* Bottom Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
-                    <HolographicCard className="p-6 h-52 flex flex-col" delay={0.7}>
+                    <HolographicCard className="p-6 min-h-[200px] flex flex-col" delay={0.7}>
                       <div className="flex items-center gap-3 mb-5">
                         <div className="p-2 rounded-lg bg-primary/20">
                           <ActivityIcon className="w-4 h-4 text-primary" />
@@ -370,7 +370,7 @@ const Dashboard = () => {
                       </div>
                     </HolographicCard>
                     
-                    <HolographicCard className="p-6 h-52 flex items-center justify-center" delay={0.8}>
+                    <HolographicCard className="p-6 min-h-[200px] flex items-center justify-center" delay={0.8}>
                       <div className="text-center">
                         <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-3 font-medium">Portal Status</p>
                         <div className={`text-4xl font-bold mb-2 ${stats.ndaSigned 
