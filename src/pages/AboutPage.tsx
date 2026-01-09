@@ -16,10 +16,11 @@ const AboutPage = () => {
     <div className="min-h-screen bg-midnight overflow-hidden relative">
       <Navigation />
 
-      {/* FLUID BACKGROUND (Nuclear Option) */}
+      {/* FLUID BACKGROUND - Premium 2025 (No external dependencies) */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#020410]" />
-        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-150 contrast-150 animate-pulse-slow pointer-events-none"></div>
+        {/* CSS-based noise pattern */}
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
         <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-primary/20 rounded-full blur-[150px] animate-blob mix-blend-screen" />
         <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] animate-blob animation-delay-4000 mix-blend-screen" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
@@ -27,15 +28,13 @@ const AboutPage = () => {
 
       {/* Cinematic Hero */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
-        <motion.div style={{ scale }} className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
+        <motion.div style={{ scale }} className="absolute inset-0 z-0 opacity-50">
           <img
-            src={heroImage} // Keeping the hero image but with enhanced overlay
+            src={heroImage}
             alt="Oil field operations"
             className="w-full h-full object-cover grayscale contrast-125"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-midnight via-transparent to-midnight" />
-          {/* Radar Grid Overlay */}
-          <div className="absolute inset-0 bg-[url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHh5enR5enR5enR5enR5enR5enR5enR5enR5enR5enR5/xT9IgN8YKkNqJk7u9O/giphy.gif')] opacity-5 mix-blend-screen pointer-events-none" />
         </motion.div>
 
         <div className="relative z-10 container mx-auto px-4 text-center">

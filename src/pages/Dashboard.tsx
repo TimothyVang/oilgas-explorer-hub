@@ -65,15 +65,14 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-midnight text-white font-sans selection:bg-cyan-500/30 overflow-hidden relative">
 
-      {/* 1. FLUID BACKGROUND (Nuclear Option) */}
+      {/* Premium Background - No external dependencies */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[#020410]" /> {/* Deep base */}
-        {/* Removed external noise.svg dependency - using CSS grain effect instead */}
-        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] bg-noise-pattern opacity-20 brightness-150 contrast-150 animate-pulse-slow pointer-events-none"></div>
-        <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-primary/20 rounded-full blur-[150px] animate-blob mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] animate-blob animation-delay-4000 mix-blend-screen" />
-
-        {/* Grid Overlay for 'Tactical' feel */}
+        <div className="absolute inset-0 bg-[#020410]" />
+        {/* Inline SVG noise pattern */}
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
+        {/* Grid Overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
