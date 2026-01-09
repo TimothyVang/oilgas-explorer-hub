@@ -551,14 +551,11 @@ const AdminDashboard = () => {
                                     <Eye className="w-4 h-4" />
                                   </Button>
                                   <UserActionsDropdown
-                                    profile={profile}
-                                    currentRole={role}
-                                    isCurrentUser={profile.user_id === user?.id}
-                                    updatingRole={updatingRole}
-                                    deletingUser={deletingUser}
-                                    onRoleChange={handleRoleChange}
-                                    onDeleteUser={() => handleDeleteUser(profile.user_id, profile.full_name)}
+                                    user={profile}
+                                    onResetNda={fetchData}
                                     onViewActivity={handleViewActivity}
+                                    onDeleteUser={() => handleDeleteUser(profile.user_id, profile.full_name)}
+                                    isDeleting={deletingUser === profile.user_id}
                                   />
                                 </div>
                               </TableCell>
@@ -613,7 +610,6 @@ const AdminDashboard = () => {
             <TabsContent value="activity">
               <ActivityLogTable 
                 userIdFilter={activityUserFilter}
-                onClearFilter={() => setActivityUserFilter(null)}
                 profiles={profiles}
               />
             </TabsContent>
