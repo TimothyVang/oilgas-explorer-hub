@@ -70,10 +70,10 @@ const services = [
 const Services = () => {
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-65%"]);
 
   return (
-    <section id="services" ref={targetRef} className="relative h-[300vh] bg-midnight overflow-hidden">
+    <section id="services" ref={targetRef} className="relative h-[400vh] bg-midnight overflow-hidden">
       {/* Data Stream Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <DataStreamBackground />
