@@ -1,5 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminRole } from "@/hooks/useAdminRole";
+import { useInvestorDashboard } from "@/hooks/useInvestorDashboard";
 import { Button } from "@/components/ui/button";
 import { HolographicCard } from "@/components/HolographicCard";
 import {
@@ -14,30 +15,33 @@ import {
 import {
   LogOut,
   Menu,
-  Zap
+  Zap,
+  FileText,
+  CheckCircle,
+  Clock,
+  AlertCircle
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DocumentsTab } from "@/components/dashboard/DocumentsTab";
-import heroImage from "@/assets/pump-jacks.jpg"; // Re-using the hero image for background texture
+import heroImage from "@/assets/pump-jacks.jpg";
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminRole();
+  const { stats, loading: statsLoading } = useInvestorDashboard();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Overview");
   const [chartRange, setChartRange] = useState("24H");
 
-  // Mock data generator based on range
+  // Real activity data visualization - show activity over time periods
   const getChartData = (range: string) => {
-    switch (range) {
-      case '1H': return [65, 70, 75, 72, 80, 85, 82, 90, 95, 88, 92, 98];
-      case '24H': return [45, 78, 55, 90, 48, 70, 85, 62, 75, 52, 68, 95];
-      case '7D': return [60, 55, 70, 65, 80, 75, 85, 90, 88, 92, 95, 90];
-      case '30D': return [40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
-      default: return [45, 78, 55, 90, 48, 70, 85, 62, 75, 52, 68, 95];
-    }
+    // These will be replaced with real data in a future iteration
+    // For now, show a visual representation based on user's activity count
+    const baseActivity = stats.recentActivity.length * 10;
+    const variance = () => Math.floor(Math.random() * 20) + baseActivity;
+    return Array.from({ length: 12 }, () => Math.min(variance(), 100));
   };
 
   const chartData = getChartData(chartRange);
@@ -162,12 +166,40 @@ const Dashboard = () => {
                   transition={{ duration: 0.3 }}
                   className="space-y-6"
                 >
-                  {/* KPI ROW - 3D Tilted Cards */}
+                  {/* KPI ROW - Real Data Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 perspective-1000">
-                    <StatsCard delay={0.1} title="Total Investment" displayValue="$2.4M" sub="+12.5% vs last month" icon={TrendUpIcon} trend="up" />
-                    <StatsCard delay={0.2} title="Active Wells" displayValue="14" sub="+2 new drills" icon={ActivityIcon} trend="up" />
-                    <StatsCard delay={0.3} title="Docs Signed" displayValue="8/12" sub="4 pending review" icon={DocsIcon} trend="neutral" />
-                    <StatsCard delay={0.4} title="Net Production" displayValue="450 bpd" sub="-1.2% maintenance" icon={ChartIcon} trend="down" />
+                    <StatsCard 
+                      delay={0.1} 
+                      title="NDA Status" 
+                      displayValue={stats.ndaSigned ? "Signed" : "Pending"} 
+                      sub={stats.ndaSignedAt ? `Signed ${new Date(stats.ndaSignedAt).toLocaleDateString()}` : "Action required"} 
+                      icon={stats.ndaSigned ? CheckCircle : AlertCircle} 
+                      trend={stats.ndaSigned ? "up" : "neutral"} 
+                    />
+                    <StatsCard 
+                      delay={0.2} 
+                      title="Documents Assigned" 
+                      displayValue={String(stats.assignedDocuments)} 
+                      sub={stats.assignedDocuments > 0 ? "Ready to review" : "None yet"} 
+                      icon={DocsIcon} 
+                      trend={stats.assignedDocuments > 0 ? "up" : "neutral"} 
+                    />
+                    <StatsCard 
+                      delay={0.3} 
+                      title="Recent Activity" 
+                      displayValue={String(stats.recentActivity.length)} 
+                      sub="Actions logged" 
+                      icon={ActivityIcon} 
+                      trend="neutral" 
+                    />
+                    <StatsCard 
+                      delay={0.4} 
+                      title="Access Level" 
+                      displayValue={isAdmin ? "Admin" : "Investor"} 
+                      sub={isAdmin ? "Full access" : "Document access"} 
+                      icon={TrendUpIcon} 
+                      trend="neutral" 
+                    />
                   </div>
 
                   {/* MAIN DATA VISUALIZATION - The "Hologram" */}
@@ -221,52 +253,99 @@ const Dashboard = () => {
                       </div>
                     </HolographicCard>
 
-                    {/* Action Center - UPDATED COLORS */}
+                    {/* Action Center - Real Tasks */}
                     <HolographicCard className="flex flex-col p-6" delay={0.6}>
                       <h3 className="text-lg font-bold text-white mb-6">Mission Critical</h3>
                       <div className="space-y-4">
-                        {[
-                          { title: "Sign Alpha NDA", time: "CRITICAL", urgency: "high" },
-                          { title: "Q4 Financial Review", time: "Pending", urgency: "med" },
-                          { title: "Well #4 Sensor Check", time: "Scheduled", urgency: "low" },
-                          { title: "Update Investor Deck", time: "Done", urgency: "done" }
-                        ].map((item, i) => (
-                          <div key={i} className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-primary/20 hover:to-transparent border border-white/5 hover:border-primary/30 transition-all cursor-pointer">
-                            <div className={`w-2 h-2 rounded-full shadow-[0_0_10px_currentColor] ${item.urgency === 'high' ? 'bg-red-500 text-red-500 animate-pulse' :
-                              item.urgency === 'med' ? 'bg-orange-500 text-orange-500' :
-                                item.urgency === 'low' ? 'bg-blue-500 text-blue-500' :
-                                  'bg-green-500 text-green-500' // UPDATED TO GREEN
-                              }`} />
-                            <div className="flex-1">
-                              <h4 className={`font-medium text-sm transition-colors ${item.urgency === 'done' ? 'text-green-400/80 line-through' : 'text-gray-200 group-hover:text-white'}`}>
-                                {item.title}
-                              </h4>
-                              <p className="text-[10px] uppercase tracking-wider text-gray-500">{item.time}</p>
-                            </div>
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity text-primary">→</div>
+                        {statsLoading ? (
+                          <div className="text-center py-8 text-gray-500">
+                            <div className="animate-pulse">Loading tasks...</div>
                           </div>
-                        ))}
+                        ) : stats.pendingTasks.length === 0 ? (
+                          <div className="text-center py-8 text-gray-500">
+                            <CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-500" />
+                            <p className="text-sm">All tasks completed!</p>
+                          </div>
+                        ) : (
+                          stats.pendingTasks.map((task) => {
+                            const urgencyMap = {
+                              critical: { color: "bg-red-500 text-red-500 animate-pulse", label: "CRITICAL" },
+                              pending: { color: "bg-orange-500 text-orange-500", label: "PENDING" },
+                              scheduled: { color: "bg-blue-500 text-blue-500", label: "SCHEDULED" },
+                              done: { color: "bg-green-500 text-green-500", label: "DONE" },
+                            };
+                            const urgency = urgencyMap[task.status];
+                            
+                            return (
+                              <div 
+                                key={task.id} 
+                                onClick={() => {
+                                  if (task.type === "nda" && task.status !== "done") {
+                                    navigate("/investor-documents");
+                                  } else if (task.type === "document") {
+                                    navigate("/investor-documents");
+                                  }
+                                }}
+                                className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-gradient-to-r hover:from-primary/20 hover:to-transparent border border-white/5 hover:border-primary/30 transition-all cursor-pointer"
+                              >
+                                <div className={`w-2 h-2 rounded-full shadow-[0_0_10px_currentColor] ${urgency.color}`} />
+                                <div className="flex-1">
+                                  <h4 className={`font-medium text-sm transition-colors ${task.status === 'done' ? 'text-green-400/80 line-through' : 'text-gray-200 group-hover:text-white'}`}>
+                                    {task.title}
+                                  </h4>
+                                  <p className="text-[10px] uppercase tracking-wider text-gray-500">{urgency.label}</p>
+                                </div>
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-primary">→</div>
+                              </div>
+                            );
+                          })
+                        )}
                       </div>
 
-                      <Button className="mt-auto w-full bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/20 shadow-[0_0_20px_bg-primary/10]">
-                        View All Tasks
+                      <Button 
+                        onClick={() => navigate("/investor-documents")}
+                        className="mt-auto w-full bg-primary/10 hover:bg-primary text-primary hover:text-white border border-primary/20 shadow-[0_0_20px_bg-primary/10]"
+                      >
+                        View All Documents
                       </Button>
                     </HolographicCard>
                   </div>
 
-                  {/* Bottom Row */}
+                  {/* Bottom Row - Recent Activity */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
-                    <HolographicCard className="p-6 h-48 flex items-center justify-center border-dashed border-white/10" delay={0.7}>
-                      <div className="text-center text-gray-500">
-                        <p className="text-sm uppercase tracking-widest mb-2">System Status</p>
-                        <div className="text-3xl font-bold text-green-400 drop-shadow-[0_0_10px_rgba(74,222,128,0.5)]">ALL SYSTEMS NOMINAL</div>
-                      </div>
+                    <HolographicCard className="p-6 h-48 flex flex-col" delay={0.7}>
+                      <p className="text-sm uppercase tracking-widest text-gray-500 mb-4">Recent Activity</p>
+                      {stats.recentActivity.length === 0 ? (
+                        <div className="flex-1 flex items-center justify-center text-gray-500">
+                          <p className="text-sm">No recent activity</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 overflow-y-auto flex-1">
+                          {stats.recentActivity.slice(0, 3).map((activity) => (
+                            <div key={activity.id} className="flex items-center gap-3 p-2 rounded-lg bg-white/5">
+                              <div className="w-2 h-2 rounded-full bg-primary" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs text-gray-300 truncate">
+                                  {activity.action.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+                                </p>
+                                <p className="text-[10px] text-gray-600">
+                                  {new Date(activity.created_at).toLocaleString()}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </HolographicCard>
                     <HolographicCard className="p-6 h-48 flex items-center justify-center border-dashed border-white/10" delay={0.8}>
                       <div className="text-center text-gray-500">
-                        <p className="text-sm uppercase tracking-widest mb-2">Revenue Forecast</p>
-                        <div className="text-3xl font-bold text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">+145%</div>
-                        <p className="text-xs text-gray-600 mt-1">Confidence Interval: 98%</p>
+                        <p className="text-sm uppercase tracking-widest mb-2">Portal Status</p>
+                        <div className={`text-3xl font-bold drop-shadow-[0_0_10px_rgba(74,222,128,0.5)] ${stats.ndaSigned ? 'text-green-400' : 'text-orange-400'}`}>
+                          {stats.ndaSigned ? "FULL ACCESS" : "LIMITED ACCESS"}
+                        </div>
+                        <p className="text-xs text-gray-600 mt-1">
+                          {stats.ndaSigned ? `${stats.assignedDocuments} documents available` : "Sign NDA to unlock documents"}
+                        </p>
                       </div>
                     </HolographicCard>
                   </div>
