@@ -28,6 +28,7 @@ import { UserActionsDropdown } from "@/components/admin/UserActionsDropdown";
 import { UserDetailModal } from "@/components/admin/UserDetailModal";
 import { BulkActionsBar } from "@/components/admin/BulkActionsBar";
 import { Checkbox } from "@/components/ui/checkbox";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface UserProfile {
   id: string;
@@ -345,6 +346,8 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-midnight relative overflow-hidden">
+      <Breadcrumb />
+      
       {/* Premium Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[#020410]" />
@@ -354,7 +357,7 @@ const AdminDashboard = () => {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-8 pt-32">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link

@@ -8,6 +8,7 @@ import { ArrowLeft, Camera, Loader2, User, Building, Phone, Mail } from "lucide-
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface Profile {
   id: string;
@@ -190,6 +191,8 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-midnight relative overflow-hidden">
+      <Breadcrumb />
+      
       {/* Premium Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[#020410]" />
@@ -199,7 +202,7 @@ const Profile = () => {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8 max-w-2xl">
+      <div className="relative z-10 container mx-auto px-4 py-8 pt-32 max-w-2xl">
         {/* Back Button */}
         <button
           onClick={() => navigate("/dashboard")}
