@@ -10,7 +10,9 @@ export type ActivityAction =
   | "admin_nda_reset"
   | "admin_document_created"
   | "admin_document_updated"
-  | "admin_document_deleted";
+  | "admin_document_deleted"
+  | "admin_bulk_document_assign"
+  | "admin_bulk_nda_reset";
 
 interface ActivityMetadata {
   [key: string]: string | number | boolean | null | undefined;

@@ -39,6 +39,8 @@ import { ActivityLogTable } from "@/components/admin/ActivityLogTable";
 import { DocumentsManager } from "@/components/admin/DocumentsManager";
 import { UserActionsDropdown } from "@/components/admin/UserActionsDropdown";
 import { UserDetailModal } from "@/components/admin/UserDetailModal";
+import { BulkActionsBar } from "@/components/admin/BulkActionsBar";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface UserProfile {
   id: string;
@@ -82,6 +84,9 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [ndaFilter, setNdaFilter] = useState("all");
+  
+  // Bulk selection state
+  const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -153,6 +158,24 @@ const AdminDashboard = () => {
     setCurrentPage(1);
   }, [searchQuery, roleFilter, ndaFilter]);
 
+  // Clear selection when filters change
+  useEffect(() => {
+    setSelectedUserIds(new Set());
+  }, [searchQuery, roleFilter, ndaFilter]);
+
+  // Bulk selection helpers (moved after paginatedProfiles is defined)
+  const selectedUsers = profiles.filter((p) => selectedUserIds.has(p.user_id));
+
+  const toggleSelectUser = (userId: string) => {
+    const newSet = new Set(selectedUserIds);
+    if (newSet.has(userId)) {
+      newSet.delete(userId);
+    } else {
+      newSet.add(userId);
+    }
+    setSelectedUserIds(newSet);
+  };
+
   const getUserRole = (userId: string): "admin" | "moderator" | "user" | null => {
     const role = userRoles.find((r) => r.user_id === userId);
     return role?.role || null;
@@ -189,6 +212,24 @@ const AdminDashboard = () => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredProfiles.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProfiles, currentPage]);
+
+  // Bulk selection helpers (need paginatedProfiles)
+  const isAllSelected = paginatedProfiles.length > 0 && 
+    paginatedProfiles.every((p) => selectedUserIds.has(p.user_id));
+  
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      // Deselect all on current page
+      const newSet = new Set(selectedUserIds);
+      paginatedProfiles.forEach((p) => newSet.delete(p.user_id));
+      setSelectedUserIds(newSet);
+    } else {
+      // Select all on current page
+      const newSet = new Set(selectedUserIds);
+      paginatedProfiles.forEach((p) => newSet.add(p.user_id));
+      setSelectedUserIds(newSet);
+    }
+  };
 
   // Stats
   const ndaSignedCount = profiles.filter(p => p.nda_signed).length;
@@ -452,11 +493,26 @@ const AdminDashboard = () => {
                 onNdaFilterChange={setNdaFilter}
               />
 
+              {/* Bulk Actions Bar */}
+              <BulkActionsBar
+                selectedUsers={selectedUsers}
+                onClearSelection={() => setSelectedUserIds(new Set())}
+                onActionComplete={fetchData}
+                currentUserId={user?.id || ""}
+              />
+
               {/* Users Table */}
               <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-[40px]">
+                        <Checkbox
+                          checked={isAllSelected}
+                          onCheckedChange={toggleSelectAll}
+                          aria-label="Select all users on this page"
+                        />
+                      </TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Company</TableHead>
@@ -469,13 +525,13 @@ const AdminDashboard = () => {
                   <TableBody>
                     {loadingData ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center py-8">
+                        <TableCell colSpan={8} className="text-center py-8">
                           Loading users...
                         </TableCell>
                       </TableRow>
                     ) : paginatedProfiles.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center py-8">
+                        <TableCell colSpan={8} className="text-center py-8">
                           {filteredProfiles.length === 0 && profiles.length > 0
                             ? "No users match your search criteria."
                             : "No users found."}
@@ -487,7 +543,14 @@ const AdminDashboard = () => {
                         const isCurrentUser = profile.user_id === user?.id;
 
                         return (
-                          <TableRow key={profile.id}>
+                          <TableRow key={profile.id} className={selectedUserIds.has(profile.user_id) ? "bg-primary/5" : ""}>
+                            <TableCell>
+                              <Checkbox
+                                checked={selectedUserIds.has(profile.user_id)}
+                                onCheckedChange={() => toggleSelectUser(profile.user_id)}
+                                aria-label={`Select ${profile.full_name || profile.email}`}
+                              />
+                            </TableCell>
                             <TableCell className="font-medium">
                               {profile.full_name || "—"}
                               {isCurrentUser && (

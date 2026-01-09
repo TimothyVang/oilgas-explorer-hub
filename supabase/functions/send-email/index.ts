@@ -11,10 +11,11 @@ const corsHeaders = {
 interface EmailRequest {
   to: string;
   subject: string;
-  template: "welcome" | "nda-complete" | "custom";
+  template: "welcome" | "nda-complete" | "nda-reset" | "custom";
   data?: {
     name?: string;
     customHtml?: string;
+    resetBy?: string;
   };
 }
 
@@ -114,6 +115,59 @@ const getNdaCompleteTemplate = (name: string) => `
 </html>
 `;
 
+const getNdaResetTemplate = (name: string) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h1 style="color: #1a365d; margin: 0; font-size: 28px;">BAH Oil and Gas</h1>
+      <p style="color: #64748b; margin-top: 8px;">NDA Status Update</p>
+    </div>
+    
+    <div style="background-color: #fef3c7; border-radius: 8px; padding: 24px; margin-bottom: 24px; border: 1px solid #fcd34d;">
+      <div style="display: flex; align-items: center; margin-bottom: 16px;">
+        <div style="width: 40px; height: 40px; background-color: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+          <span style="color: white; font-size: 20px;">!</span>
+        </div>
+        <h2 style="color: #92400e; margin: 0; font-size: 20px;">NDA Reset Required</h2>
+      </div>
+      <p style="color: #a16207; margin: 0; line-height: 1.6;">
+        Dear ${name}, your Non-Disclosure Agreement status has been reset by an administrator. To regain access to investor documents, you will need to sign a new NDA.
+      </p>
+    </div>
+    
+    <div style="margin-bottom: 24px;">
+      <h3 style="color: #1e293b; margin: 0 0 12px 0;">What's Next?</h3>
+      <p style="color: #475569; margin: 0; line-height: 1.6;">
+        Please visit the Investor Documents page in your portal to sign a new NDA. Once signed, your access to confidential documents will be restored.
+      </p>
+    </div>
+    
+    <div style="text-align: center;">
+      <a href="${Deno.env.get("SITE_URL") || "https://your-app.lovable.app"}/investor-documents" 
+         style="display: inline-block; background-color: #f59e0b; color: #ffffff; padding: 12px 32px; text-decoration: none; border-radius: 6px; font-weight: 500;">
+        Sign New NDA
+      </a>
+    </div>
+    
+    <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center;">
+      <p style="color: #94a3b8; font-size: 14px; margin: 0;">
+        © ${new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
+      </p>
+      <p style="color: #94a3b8; font-size: 12px; margin-top: 8px;">
+        If you have questions, please contact your account representative.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+
 const handler = async (req: Request): Promise<Response> => {
   console.log("send-email function called");
 
@@ -136,6 +190,9 @@ const handler = async (req: Request): Promise<Response> => {
         break;
       case "nda-complete":
         html = getNdaCompleteTemplate(name);
+        break;
+      case "nda-reset":
+        html = getNdaResetTemplate(name);
         break;
       case "custom":
         html = data?.customHtml || "<p>No content provided</p>";
