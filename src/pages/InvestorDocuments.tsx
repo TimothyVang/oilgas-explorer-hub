@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, FileText, Lock, CheckCircle, ExternalLink, Download, AlertCircle } from "lucide-react";
 import { logActivity } from "@/lib/logActivity";
+import { motion } from "framer-motion";
+import { HolographicCard } from "@/components/HolographicCard";
 
 interface InvestorDocument {
   id: string;
@@ -46,7 +48,6 @@ const InvestorDocuments = () => {
     const fetchData = async () => {
       if (!user) return;
 
-      // Fetch NDA status from profile
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("nda_signed, nda_signed_at")
@@ -59,7 +60,6 @@ const InvestorDocuments = () => {
         setNdaStatus(profileData);
       }
 
-      // If NDA is signed, fetch documents
       if (profileData?.nda_signed) {
         const { data: docsData, error: docsError } = await supabase
           .from("investor_documents")
@@ -91,167 +91,196 @@ const InvestorDocuments = () => {
 
   if (authLoading || !user) {
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="text-primary-foreground">Loading...</div>
+      <div className="min-h-screen bg-[#020410] flex items-center justify-center">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-primary">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
+    <div className="min-h-screen bg-[#020410] text-white overflow-hidden relative">
+      {/* Premium Background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-[#020410]" />
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-blob mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/15 rounded-full blur-[150px] animate-blob mix-blend-screen" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between mb-8"
+        >
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back to Dashboard
           </Link>
-        </div>
+        </motion.div>
 
-        {/* Main Card */}
-        <div className="bg-card rounded-lg shadow-2xl p-8 max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-14 h-14 bg-accent/20 rounded-full flex items-center justify-center">
-              <FileText className="w-7 h-7 text-accent" />
+        {/* Main Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="max-w-5xl mx-auto"
+        >
+          {/* Header Card */}
+          <HolographicCard className="p-8 mb-8" variant="elevated">
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/20 flex items-center justify-center shadow-[0_0_30px_rgba(0,102,255,0.3)]">
+                <FileText className="w-8 h-8 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white mb-1">
+                  Investor Documents
+                </h1>
+                <p className="text-gray-400">
+                  Access confidential investment materials
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-card-foreground">
-                Investor Documents
-              </h1>
-              <p className="text-muted-foreground">
-                Access confidential investment materials
-              </p>
-            </div>
-          </div>
+          </HolographicCard>
 
           {loadingData ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Loading...</p>
-            </div>
+            <HolographicCard className="p-12 text-center">
+              <div className="animate-pulse text-gray-400">Loading documents...</div>
+            </HolographicCard>
           ) : !ndaStatus?.nda_signed ? (
-            /* NDA Not Signed - Show Requirement */
-            <div className="text-center py-12">
-              <div className="w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Lock className="w-10 h-10 text-destructive" />
+            /* NDA Not Signed */
+            <HolographicCard className="p-12 text-center" variant="elevated">
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-rose-500/20 to-rose-500/5 flex items-center justify-center mx-auto mb-8">
+                <Lock className="w-12 h-12 text-rose-400" />
               </div>
-              <h2 className="text-2xl font-semibold text-card-foreground mb-4">
+              <h2 className="text-3xl font-bold text-white mb-4">
                 NDA Required
               </h2>
-              <p className="text-muted-foreground max-w-md mx-auto mb-6">
+              <p className="text-gray-400 max-w-md mx-auto mb-8 leading-relaxed">
                 Before accessing investor documents, you must sign our Non-Disclosure Agreement. 
                 This protects both parties and ensures confidentiality of sensitive information.
               </p>
               
               {/* Email reminder alert */}
-              <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 max-w-md mx-auto mb-6">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-5 max-w-md mx-auto mb-8">
+                <div className="flex items-start gap-4">
+                  <div className="p-2 rounded-lg bg-amber-500/20">
+                    <AlertCircle className="w-5 h-5 text-amber-400" />
+                  </div>
                   <div className="text-left">
-                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                      Important: Use your registered email
+                    <p className="text-sm font-semibold text-amber-300 mb-1">
+                      Use your registered email
                     </p>
-                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-                      When signing the NDA, please use: <strong className="font-semibold">{user?.email}</strong>
+                    <p className="text-sm text-amber-200/80">
+                      Sign with: <strong className="text-amber-200">{user?.email}</strong>
                     </p>
-                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                    <p className="text-xs text-amber-400/70 mt-2">
                       Using a different email will prevent automatic access.
                     </p>
                   </div>
                 </div>
               </div>
               
-              <Badge variant="outline" className="mb-6">
+              <Badge className="mb-8 bg-rose-500/10 text-rose-400 border-rose-500/20 px-4 py-1.5">
                 Pending NDA Signature
               </Badge>
-              <div className="mt-6">
-              <Button className="gap-2" onClick={handleSignNda}>
-                  <ExternalLink className="w-4 h-4" />
+              <div>
+                <Button 
+                  className="gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white px-8 py-6 text-lg font-semibold shadow-[0_0_30px_rgba(0,102,255,0.4)] hover:shadow-[0_0_40px_rgba(0,102,255,0.5)] transition-all"
+                  onClick={handleSignNda}
+                >
+                  <ExternalLink className="w-5 h-5" />
                   Sign NDA via DocuSign
                 </Button>
-                <p className="text-sm text-muted-foreground mt-4">
+                <p className="text-sm text-gray-500 mt-6">
                   After signing, your access will be automatically granted within minutes.
                 </p>
               </div>
-            </div>
+            </HolographicCard>
           ) : (
             /* NDA Signed - Show Documents */
-            <div>
-              <div className="flex items-center gap-2 mb-6 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <div>
-                  <p className="text-card-foreground font-medium">NDA Signed</p>
-                  <p className="text-sm text-muted-foreground">
-                    Signed on {ndaStatus.nda_signed_at ? new Date(ndaStatus.nda_signed_at).toLocaleDateString() : "—"}
-                  </p>
+            <div className="space-y-6">
+              {/* NDA Status Badge */}
+              <HolographicCard className="p-5">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-emerald-500/20">
+                    <CheckCircle className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold">Clearance Level: Unlocked</p>
+                    <p className="text-sm text-emerald-400">
+                      NDA Verified • {ndaStatus.nda_signed_at ? new Date(ndaStatus.nda_signed_at).toLocaleDateString() : "—"}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </HolographicCard>
 
               {documents.length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">
+                <HolographicCard className="p-12 text-center">
+                  <FileText className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                  <p className="text-gray-400">
                     No documents available at this time.
                   </p>
-                </div>
+                </HolographicCard>
               ) : (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-card-foreground border-b border-border pb-2">
-                    Available Documents
-                  </h3>
-                  {documents.map((doc) => (
-                    <div
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  {documents.map((doc, index) => (
+                    <motion.div
                       key={doc.id}
-                      className="flex items-center justify-between p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-accent/20 rounded flex items-center justify-center">
-                          <FileText className="w-5 h-5 text-accent" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-card-foreground">
-                            {doc.title}
-                          </p>
-                          {doc.description && (
-                            <p className="text-sm text-muted-foreground">
-                              {doc.description}
-                            </p>
-                          )}
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Added {new Date(doc.created_at).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDocumentAccess(doc)}
+                      <HolographicCard 
+                        className="p-6 h-full flex flex-col cursor-pointer group"
+                        delay={index * 0.05}
                       >
-                        <Download className="w-4 h-4 mr-2" />
-                        View
-                      </Button>
-                    </div>
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="p-3 rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-colors">
+                            <FileText className="w-5 h-5 text-primary" />
+                          </div>
+                          <Badge className="bg-white/5 text-gray-400 border-white/10 text-[10px]">
+                            PDF
+                          </Badge>
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">
+                          {doc.title}
+                        </h3>
+                        {doc.description && (
+                          <p className="text-sm text-gray-400 mb-4 flex-1 line-clamp-2">
+                            {doc.description}
+                          </p>
+                        )}
+                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                          <p className="text-xs text-gray-500">
+                            {new Date(doc.created_at).toLocaleDateString()}
+                          </p>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDocumentAccess(doc)}
+                            className="text-primary hover:text-white hover:bg-primary/20 gap-2"
+                          >
+                            <Download className="w-4 h-4" />
+                            View
+                          </Button>
+                        </div>
+                      </HolographicCard>
+                    </motion.div>
                   ))}
                 </div>
               )}
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Footer */}
-        <p className="text-center text-primary-foreground/60 mt-8 text-sm">
+        <p className="text-center text-gray-600 mt-12 text-sm">
           © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
         </p>
       </div>
