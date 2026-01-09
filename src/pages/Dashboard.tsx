@@ -218,7 +218,7 @@ const Dashboard = () => {
                   {/* MAIN DATA VISUALIZATION */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[500px]">
                     {/* Activity Timeline instead of fake chart */}
-                    <HolographicCard className="lg:col-span-2 flex flex-col p-6" delay={0.5} variant="elevated">
+                    <HolographicCard className="lg:col-span-2 flex flex-col p-6 min-h-[400px] max-h-[450px]" delay={0.5} variant="elevated">
                       <div className="flex justify-between items-start mb-8 flex-wrap gap-4">
                         <div>
                           <h3 className="text-lg font-bold text-white flex items-center gap-2.5">
