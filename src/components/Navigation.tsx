@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,7 +21,7 @@ const Navigation = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -28,7 +29,16 @@ const Navigation = () => {
 
   const scrollToSection = (id: string) => {
     if (!isHomePage) {
-      window.location.href = `/#${id}`;
+      // Navigate to home page then scroll after navigation
+      navigate('/');
+      // Wait for navigation to complete then scroll
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
+      setIsMobileMenuOpen(false);
       return;
     }
     const element = document.getElementById(id);
@@ -39,113 +49,88 @@ const Navigation = () => {
   };
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md shadow-lg" : "bg-primary/80 backdrop-blur-sm"
-      }`}
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent ${isScrolled
+          ? "bg-midnight/80 backdrop-blur-lg shadow-lg border-white/5 py-2"
+          : "bg-transparent py-4"
+        }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <div className="flex-shrink-0">
-            <Link to="/" className={`text-2xl font-bold ${isScrolled ? "text-gradient" : "text-accent"}`}>
-              BAH Oil and Gas
+        <div className="flex items-center justify-between h-16">
+          <div className="flex-shrink-0 z-50">
+            <Link to="/" className="text-2xl font-bold tracking-tighter">
+              <span className="text-white">BAH</span>
+              <span className="text-primary">.Energy</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <button
-              onClick={() => scrollToSection("home")}
-              className={`${
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              } hover:text-accent transition-colors font-medium`}
-            >
-              Home
-            </button>
-            <Link
-              to="/about"
-              className={`${
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              } hover:text-accent transition-colors font-medium`}
-            >
+            <NavLink isScrolled={isScrolled} onClick={() => scrollToSection("home")}>Home</NavLink>
+            <Link to="/about" className={`text-sm font-medium transition-colors hover:text-primary ${isScrolled ? 'text-gray-300' : 'text-white/90'}`}>
               About
             </Link>
-            <button
-              onClick={() => scrollToSection("services")}
-              className={`${
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              } hover:text-accent transition-colors font-medium`}
-            >
-              Services
-            </button>
-            <button
-              onClick={() => scrollToSection("contact")}
-              className={`${
-                isScrolled ? "text-foreground" : "text-primary-foreground"
-              } hover:text-accent transition-colors font-medium`}
-            >
-              Contact
-            </button>
-            
-            {/* Investor Portal / User Button */}
+            <NavLink isScrolled={isScrolled} onClick={() => scrollToSection("services")}>Services</NavLink>
+            <NavLink isScrolled={isScrolled} onClick={() => scrollToSection("contact")}>Contact</NavLink>
+
+            {/* Divider */}
+            <div className={`h-6 w-px ${isScrolled ? 'bg-white/10' : 'bg-white/20'}`} />
+
+            {/* User Actions */}
             {user ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <Link to="/dashboard">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
-                    className={`${
-                      isScrolled 
-                        ? "border-accent text-accent hover:bg-accent hover:text-accent-foreground" 
-                        : "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                    }`}
+                    className="border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-primary hover:text-primary transition-all duration-300"
                   >
                     <User className="w-4 h-4 mr-2" />
                     Dashboard
                   </Button>
                 </Link>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleSignOut}
-                  className={`${
-                    isScrolled 
-                      ? "text-muted-foreground hover:text-foreground" 
-                      : "text-primary-foreground/80 hover:text-primary-foreground"
-                  }`}
+                  aria-label="Sign out"
+                  className="text-gray-400 hover:text-white"
                 >
                   <LogOut className="w-4 h-4" />
                 </Button>
               </div>
             ) : (
               <Link to="/login">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="ghost"
                   size="sm"
-                  className={`${
-                    isScrolled 
-                      ? "border-accent text-accent hover:bg-accent hover:text-accent-foreground" 
-                      : "border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                  }`}
+                  className={`border border-transparent hover:border-white/20 hover:bg-white/5 ${isScrolled ? 'text-white' : 'text-white'}`}
                 >
-                  <User className="w-4 h-4 mr-2" />
                   Investor Portal
                 </Button>
               </Link>
             )}
-            
-            <Button variant="hero" size="lg" onClick={() => scrollToSection("contact")}>
-              Get Started
-            </Button>
+
+            <Link to="/login">
+              <Button className="bg-primary hover:bg-primary/90 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] rounded-full px-6 transition-all duration-300">
+                Get Started
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden z-50">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={!isScrolled ? "text-primary-foreground hover:text-accent" : ""}
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+              className="text-white hover:bg-white/10"
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
             </Button>
@@ -153,68 +138,70 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-background border-t border-border animate-fade-in">
-          <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-            <button
-              onClick={() => scrollToSection("home")}
-              className="text-left text-foreground hover:text-accent transition-colors font-medium py-2"
-            >
-              Home
-            </button>
-            <Link
-              to="/about"
-              className="text-left text-foreground hover:text-accent transition-colors font-medium py-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              About
-            </Link>
-            <button
-              onClick={() => scrollToSection("services")}
-              className="text-left text-foreground hover:text-accent transition-colors font-medium py-2"
-            >
-              Services
-            </button>
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="text-left text-foreground hover:text-accent transition-colors font-medium py-2"
-            >
-              Contact
-            </button>
-            {user ? (
-              <>
-                <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full border-accent text-accent">
-                    <User className="w-4 h-4 mr-2" />
-                    Dashboard
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            id="mobile-menu"
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={{ opacity: 1, scaleY: 1 }}
+            exit={{ opacity: 0, scaleY: 0 }}
+            style={{ transformOrigin: 'top' }}
+            className="md:hidden fixed inset-0 bg-midnight/95 backdrop-blur-xl z-40 overflow-hidden"
+          >
+            <div className="flex flex-col items-center justify-center h-full gap-8 p-4">
+              <MobileNavLink onClick={() => scrollToSection("home")}>Home</MobileNavLink>
+              <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-white/80 hover:text-primary transition-colors">
+                About
+              </Link>
+              <MobileNavLink onClick={() => scrollToSection("services")}>Services</MobileNavLink>
+              <MobileNavLink onClick={() => scrollToSection("contact")}>Contact</MobileNavLink>
+
+              <div className="w-16 h-px bg-white/10 my-4" />
+
+              {user ? (
+                <div className="flex flex-col gap-4 w-full max-w-xs">
+                  <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Button variant="ghost" onClick={handleSignOut} className="text-gray-400">
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full max-w-xs">
+                  <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white">
+                    Investor Portal
                   </Button>
                 </Link>
-                <Button 
-                  variant="ghost" 
-                  className="w-full text-muted-foreground"
-                  onClick={handleSignOut}
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-              <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full border-accent text-accent">
-                  <User className="w-4 h-4 mr-2" />
-                  Investor Portal
-                </Button>
-              </Link>
-            )}
-            <Button variant="hero" className="w-full" onClick={() => scrollToSection("contact")}>
-              Get Started
-            </Button>
-          </div>
-        </div>
-      )}
-    </nav>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 };
+
+// Helper Components
+const NavLink = ({ children, onClick, isScrolled }: { children: React.ReactNode, onClick: () => void, isScrolled: boolean }) => (
+  <button
+    onClick={onClick}
+    className={`text-sm font-medium transition-colors hover:text-primary ${isScrolled ? 'text-gray-300' : 'text-white/90'}`}
+  >
+    {children}
+  </button>
+);
+
+const MobileNavLink = ({ children, onClick }: { children: React.ReactNode, onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className="text-2xl font-bold text-white/80 hover:text-primary transition-colors"
+  >
+    {children}
+  </button>
+);
 
 export default Navigation;
