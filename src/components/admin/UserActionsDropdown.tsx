@@ -73,9 +73,28 @@ export const UserActionsDropdown = ({
         target_user_email: user.email,
       });
 
+      // Send notification email to user
+      if (user.email) {
+        try {
+          await supabase.functions.invoke("send-email", {
+            body: {
+              to: user.email,
+              subject: "NDA Status Reset - Action Required",
+              template: "nda-reset",
+              data: {
+                name: user.full_name || "Investor",
+              },
+            },
+          });
+        } catch (emailError) {
+          console.error("Failed to send NDA reset notification email:", emailError);
+          // Don't fail the whole operation if email fails
+        }
+      }
+
       toast({
         title: "NDA Reset",
-        description: `NDA status has been reset for ${user.full_name || user.email}.`,
+        description: `NDA status has been reset for ${user.full_name || user.email}. A notification email has been sent.`,
       });
 
       onResetNda();
