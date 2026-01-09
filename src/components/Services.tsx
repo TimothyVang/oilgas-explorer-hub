@@ -70,7 +70,7 @@ const services = [
 const Services = () => {
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
-  const x = useTransform(scrollYProgress, [0, 1], ["1%", "-95%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
   return (
     <section id="services" ref={targetRef} className="relative h-[300vh] bg-midnight overflow-hidden">
@@ -88,7 +88,7 @@ const Services = () => {
           </h1>
         </div>
 
-        <motion.div style={{ x }} className="flex gap-20 pl-[10vw]">
+        <motion.div style={{ x }} className="flex gap-8 pl-[5vw] pr-[10vw]">
           {/* Intro Card */}
           <div className="w-[40vw] md:w-[25vw] flex-shrink-0 flex flex-col justify-center">
             <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
