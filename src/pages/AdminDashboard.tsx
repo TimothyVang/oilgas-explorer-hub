@@ -14,25 +14,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Clock, Eye } from "lucide-react";
+import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Eye } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserFilters } from "@/components/admin/UserFilters";
 import { ActivityLogTable } from "@/components/admin/ActivityLogTable";
@@ -73,22 +60,13 @@ const AdminDashboard = () => {
   const [deletingUser, setDeletingUser] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("users");
   
-  // Activity filter by user
   const [activityUserFilter, setActivityUserFilter] = useState<string | null>(null);
-  
-  // User detail modal
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
-  
-  // Search and filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [ndaFilter, setNdaFilter] = useState("all");
-  
-  // Bulk selection state
   const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
-  
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleViewUserDetail = (profile: UserProfile) => {
@@ -116,7 +94,6 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     setLoadingData(true);
     
-    // Fetch all profiles
     const { data: profilesData, error: profilesError } = await supabase
       .from("profiles")
       .select("*")
@@ -133,7 +110,6 @@ const AdminDashboard = () => {
       setProfiles(profilesData || []);
     }
 
-    // Fetch all user roles
     const { data: rolesData, error: rolesError } = await supabase
       .from("user_roles")
       .select("user_id, role");
@@ -153,17 +129,14 @@ const AdminDashboard = () => {
     }
   }, [isAdmin, user]);
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, roleFilter, ndaFilter]);
 
-  // Clear selection when filters change
   useEffect(() => {
     setSelectedUserIds(new Set());
   }, [searchQuery, roleFilter, ndaFilter]);
 
-  // Bulk selection helpers (moved after paginatedProfiles is defined)
   const selectedUsers = profiles.filter((p) => selectedUserIds.has(p.user_id));
 
   const toggleSelectUser = (userId: string) => {
@@ -181,23 +154,19 @@ const AdminDashboard = () => {
     return role?.role || null;
   };
 
-  // Filter and search profiles
   const filteredProfiles = useMemo(() => {
     return profiles.filter((profile) => {
-      // Search filter
       const searchLower = searchQuery.toLowerCase();
       const matchesSearch = searchQuery === "" || 
         (profile.full_name?.toLowerCase().includes(searchLower)) ||
         (profile.email?.toLowerCase().includes(searchLower)) ||
         (profile.company_name?.toLowerCase().includes(searchLower));
       
-      // Role filter
       const role = getUserRole(profile.user_id);
       const matchesRole = roleFilter === "all" ||
         (roleFilter === "none" && !role) ||
         role === roleFilter;
       
-      // NDA filter
       const matchesNda = ndaFilter === "all" ||
         (ndaFilter === "signed" && profile.nda_signed) ||
         (ndaFilter === "pending" && !profile.nda_signed);
@@ -206,32 +175,27 @@ const AdminDashboard = () => {
     });
   }, [profiles, userRoles, searchQuery, roleFilter, ndaFilter]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredProfiles.length / ITEMS_PER_PAGE);
   const paginatedProfiles = useMemo(() => {
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredProfiles.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProfiles, currentPage]);
 
-  // Bulk selection helpers (need paginatedProfiles)
   const isAllSelected = paginatedProfiles.length > 0 && 
     paginatedProfiles.every((p) => selectedUserIds.has(p.user_id));
   
   const toggleSelectAll = () => {
     if (isAllSelected) {
-      // Deselect all on current page
       const newSet = new Set(selectedUserIds);
       paginatedProfiles.forEach((p) => newSet.delete(p.user_id));
       setSelectedUserIds(newSet);
     } else {
-      // Select all on current page
       const newSet = new Set(selectedUserIds);
       paginatedProfiles.forEach((p) => newSet.add(p.user_id));
       setSelectedUserIds(newSet);
     }
   };
 
-  // Stats
   const ndaSignedCount = profiles.filter(p => p.nda_signed).length;
 
   const handleRoleChange = async (userId: string, newRole: string) => {
@@ -245,11 +209,9 @@ const AdminDashboard = () => {
     }
 
     setUpdatingRole(userId);
-
     const currentRole = getUserRole(userId);
 
     if (newRole === "none") {
-      // Remove role
       if (currentRole) {
         const { error } = await supabase
           .from("user_roles")
@@ -272,7 +234,6 @@ const AdminDashboard = () => {
       }
     } else {
       if (currentRole) {
-        // Update existing role
         const { error } = await supabase
           .from("user_roles")
           .update({ role: newRole as "admin" | "moderator" | "user" })
@@ -292,7 +253,6 @@ const AdminDashboard = () => {
           fetchData();
         }
       } else {
-        // Insert new role
         const { error } = await supabase
           .from("user_roles")
           .insert({ user_id: userId, role: newRole as "admin" | "moderator" | "user" });
@@ -373,8 +333,8 @@ const AdminDashboard = () => {
 
   if (authLoading || adminLoading) {
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center">
-        <div className="text-primary-foreground">Loading...</div>
+      <div className="min-h-screen bg-midnight flex items-center justify-center">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
@@ -384,15 +344,14 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-primary">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
+    <div className="min-h-screen bg-midnight relative overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[#020410]" />
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
@@ -400,7 +359,7 @@ const AdminDashboard = () => {
         <div className="flex items-center justify-between mb-8">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
@@ -409,24 +368,27 @@ const AdminDashboard = () => {
             variant="outline"
             onClick={fetchData}
             disabled={loadingData}
-            className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+            className="border-white/20 text-white hover:bg-white/10"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loadingData ? "animate-spin" : ""}`} />
             Refresh
           </Button>
         </div>
 
-        {/* Admin Card */}
-        <div className="bg-card rounded-lg shadow-2xl p-8 max-w-6xl mx-auto">
+        {/* Admin Card - Glassmorphism */}
+        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl p-8 max-w-6xl mx-auto relative overflow-hidden">
+          {/* Top highlight */}
+          <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-14 h-14 bg-destructive/20 rounded-full flex items-center justify-center">
-              <Shield className="w-7 h-7 text-destructive" />
+            <div className="w-14 h-14 bg-rose-500/20 rounded-2xl flex items-center justify-center">
+              <Shield className="w-7 h-7 text-rose-400" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-card-foreground">
+              <h1 className="text-3xl font-bold text-white">
                 Admin Dashboard
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-gray-400">
                 Manage users, documents, and view activity
               </p>
             </div>
@@ -434,48 +396,48 @@ const AdminDashboard = () => {
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div className="bg-muted/50 rounded-lg p-4 text-center">
-              <Users className="w-6 h-6 text-accent mx-auto mb-2" />
-              <p className="text-2xl font-bold text-card-foreground">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+              <Users className="w-6 h-6 text-primary mx-auto mb-2" />
+              <p className="text-2xl font-bold text-white">
                 {profiles.length}
               </p>
-              <p className="text-sm text-muted-foreground">Total Users</p>
+              <p className="text-sm text-gray-400">Total Users</p>
             </div>
-            <div className="bg-muted/50 rounded-lg p-4 text-center">
-              <Shield className="w-6 h-6 text-destructive mx-auto mb-2" />
-              <p className="text-2xl font-bold text-card-foreground">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+              <Shield className="w-6 h-6 text-rose-400 mx-auto mb-2" />
+              <p className="text-2xl font-bold text-white">
                 {userRoles.filter((r) => r.role === "admin").length}
               </p>
-              <p className="text-sm text-muted-foreground">Admins</p>
+              <p className="text-sm text-gray-400">Admins</p>
             </div>
-            <div className="bg-muted/50 rounded-lg p-4 text-center">
-              <Users className="w-6 h-6 text-primary mx-auto mb-2" />
-              <p className="text-2xl font-bold text-card-foreground">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+              <Users className="w-6 h-6 text-accent mx-auto mb-2" />
+              <p className="text-2xl font-bold text-white">
                 {userRoles.filter((r) => r.role === "moderator").length}
               </p>
-              <p className="text-sm text-muted-foreground">Moderators</p>
+              <p className="text-sm text-gray-400">Moderators</p>
             </div>
-            <div className="bg-muted/50 rounded-lg p-4 text-center">
-              <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-card-foreground">
+            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+              <CheckCircle className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+              <p className="text-2xl font-bold text-white">
                 {ndaSignedCount}
               </p>
-              <p className="text-sm text-muted-foreground">NDAs Signed</p>
+              <p className="text-sm text-gray-400">NDAs Signed</p>
             </div>
           </div>
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6">
-              <TabsTrigger value="users" className="gap-2">
+            <TabsList className="mb-6 bg-white/5 border border-white/10">
+              <TabsTrigger value="users" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
                 <Users className="w-4 h-4" />
                 Users
               </TabsTrigger>
-              <TabsTrigger value="documents" className="gap-2">
+              <TabsTrigger value="documents" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
                 <FileText className="w-4 h-4" />
                 Documents
               </TabsTrigger>
-              <TabsTrigger value="activity" className="gap-2">
+              <TabsTrigger value="activity" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
                 <Activity className="w-4 h-4" />
                 Activity
               </TabsTrigger>
@@ -483,7 +445,6 @@ const AdminDashboard = () => {
 
             {/* Users Tab */}
             <TabsContent value="users">
-              {/* Search and Filter */}
               <UserFilters
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
@@ -493,7 +454,6 @@ const AdminDashboard = () => {
                 onNdaFilterChange={setNdaFilter}
               />
 
-              {/* Bulk Actions Bar */}
               <BulkActionsBar
                 selectedUsers={selectedUsers}
                 onClearSelection={() => setSelectedUserIds(new Set())}
@@ -501,180 +461,146 @@ const AdminDashboard = () => {
                 currentUserId={user?.id || ""}
               />
 
-              {/* Users Table */}
-              <div className="border rounded-lg overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[40px]">
-                        <Checkbox
-                          checked={isAllSelected}
-                          onCheckedChange={toggleSelectAll}
-                          aria-label="Select all users on this page"
-                        />
-                      </TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Company</TableHead>
-                      <TableHead>Joined</TableHead>
-                      <TableHead>NDA</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead className="w-[140px]">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {loadingData ? (
-                      <TableRow>
-                        <TableCell colSpan={8} className="text-center py-8">
-                          Loading users...
-                        </TableCell>
-                      </TableRow>
-                    ) : paginatedProfiles.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={8} className="text-center py-8">
-                          {filteredProfiles.length === 0 && profiles.length > 0
-                            ? "No users match your search criteria."
-                            : "No users found."}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      paginatedProfiles.map((profile) => {
-                        const role = getUserRole(profile.user_id);
-                        const isCurrentUser = profile.user_id === user?.id;
-
-                        return (
-                          <TableRow key={profile.id} className={selectedUserIds.has(profile.user_id) ? "bg-primary/5" : ""}>
-                            <TableCell>
-                              <Checkbox
-                                checked={selectedUserIds.has(profile.user_id)}
-                                onCheckedChange={() => toggleSelectUser(profile.user_id)}
-                                aria-label={`Select ${profile.full_name || profile.email}`}
-                              />
-                            </TableCell>
-                            <TableCell className="font-medium">
-                              {profile.full_name || "—"}
-                              {isCurrentUser && (
-                                <Badge variant="outline" className="ml-2 text-xs">
-                                  You
-                                </Badge>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-muted-foreground">
-                              {profile.email || "—"}
-                            </TableCell>
-                            <TableCell>{profile.company_name || "—"}</TableCell>
-                            <TableCell>
-                              {new Date(profile.created_at).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    {profile.nda_signed ? (
-                                      <Badge variant="default" className="bg-green-600 hover:bg-green-700">
-                                        <CheckCircle className="w-3 h-3 mr-1" />
-                                        Signed
-                                      </Badge>
-                                    ) : (
-                                      <Badge variant="secondary" className="bg-amber-100 text-amber-800 hover:bg-amber-200">
-                                        <Clock className="w-3 h-3 mr-1" />
-                                        Pending
-                                      </Badge>
-                                    )}
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    {profile.nda_signed && profile.nda_signed_at
-                                      ? `Signed on ${new Date(profile.nda_signed_at).toLocaleDateString()}`
-                                      : "Not yet signed"}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={getRoleBadgeVariant(role)}>
-                                {role || "No Role"}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Select
-                                  value={role || "none"}
-                                  onValueChange={(value) =>
-                                    handleRoleChange(profile.user_id, value)
-                                  }
-                                  disabled={isCurrentUser || updatingRole === profile.user_id}
-                                >
-                                  <SelectTrigger className="w-28">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="none">No Role</SelectItem>
-                                    <SelectItem value="user">User</SelectItem>
-                                    <SelectItem value="moderator">Moderator</SelectItem>
-                                    <SelectItem value="admin">Admin</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8"
-                                  onClick={() => handleViewUserDetail(profile)}
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                                
-                                {!isCurrentUser && (
-                                  <UserActionsDropdown
-                                    user={profile}
-                                    onResetNda={fetchData}
-                                    onViewActivity={handleViewActivity}
-                                    onDeleteUser={() => handleDeleteUser(profile.user_id, profile.full_name)}
-                                    isDeleting={deletingUser === profile.user_id}
-                                  />
-                                )}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between mt-4">
-                  <p className="text-sm text-muted-foreground">
-                    Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
-                    {Math.min(currentPage * ITEMS_PER_PAGE, filteredProfiles.length)} of{" "}
-                    {filteredProfiles.length} users
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                      Previous
-                    </Button>
-                    <span className="text-sm text-muted-foreground">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                      <ChevronRight className="w-4 h-4" />
-                    </Button>
-                  </div>
+              {loadingData ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-400">Loading users...</p>
                 </div>
+              ) : (
+                <>
+                  <div className="rounded-xl border border-white/10 overflow-hidden bg-white/5">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-white/10 hover:bg-white/5">
+                          <TableHead className="w-12 text-gray-300">
+                            <Checkbox
+                              checked={isAllSelected}
+                              onCheckedChange={toggleSelectAll}
+                              aria-label="Select all"
+                            />
+                          </TableHead>
+                          <TableHead className="text-gray-300">User</TableHead>
+                          <TableHead className="text-gray-300">Company</TableHead>
+                          <TableHead className="text-gray-300">Role</TableHead>
+                          <TableHead className="text-gray-300">NDA</TableHead>
+                          <TableHead className="text-gray-300">Joined</TableHead>
+                          <TableHead className="text-right text-gray-300">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {paginatedProfiles.map((profile) => {
+                          const role = getUserRole(profile.user_id);
+                          return (
+                            <TableRow key={profile.id} className="border-white/10 hover:bg-white/5">
+                              <TableCell>
+                                <Checkbox
+                                  checked={selectedUserIds.has(profile.user_id)}
+                                  onCheckedChange={() => toggleSelectUser(profile.user_id)}
+                                  aria-label={`Select ${profile.full_name || profile.email}`}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-3">
+                                  <button
+                                    onClick={() => handleViewUserDetail(profile)}
+                                    className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                                  >
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-white font-medium">
+                                      {profile.full_name?.[0]?.toUpperCase() || profile.email?.[0]?.toUpperCase() || "U"}
+                                    </div>
+                                    <div>
+                                      <p className="font-medium text-white">
+                                        {profile.full_name || "No name"}
+                                      </p>
+                                      <p className="text-sm text-gray-400">
+                                        {profile.email}
+                                      </p>
+                                    </div>
+                                  </button>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-gray-300">
+                                {profile.company_name || "-"}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={getRoleBadgeVariant(role)}>
+                                  {role || "No role"}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                {profile.nda_signed ? (
+                                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                                    Signed
+                                  </Badge>
+                                ) : (
+                                  <Badge variant="outline" className="border-amber-500/30 text-amber-400">
+                                    Pending
+                                  </Badge>
+                                )}
+                              </TableCell>
+                              <TableCell className="text-gray-400">
+                                {new Date(profile.created_at).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => handleViewUserDetail(profile)}
+                                    className="text-gray-400 hover:text-white hover:bg-white/10"
+                                  >
+                                    <Eye className="w-4 h-4" />
+                                  </Button>
+                                  <UserActionsDropdown
+                                    profile={profile}
+                                    currentRole={role}
+                                    isCurrentUser={profile.user_id === user?.id}
+                                    updatingRole={updatingRole}
+                                    deletingUser={deletingUser}
+                                    onRoleChange={handleRoleChange}
+                                    onDeleteUser={() => handleDeleteUser(profile.user_id, profile.full_name)}
+                                    onViewActivity={handleViewActivity}
+                                  />
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex items-center justify-between mt-4">
+                      <p className="text-sm text-gray-400">
+                        Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProfiles.length)} of {filteredProfiles.length} users
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                          disabled={currentPage === 1}
+                          className="border-white/20 text-white hover:bg-white/10"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </Button>
+                        <span className="text-sm text-gray-400">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                          disabled={currentPage === totalPages}
+                          className="border-white/20 text-white hover:bg-white/10"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </TabsContent>
 
@@ -685,38 +611,23 @@ const AdminDashboard = () => {
 
             {/* Activity Tab */}
             <TabsContent value="activity">
-              {activityUserFilter && (
-                <div className="mb-4 flex items-center gap-2">
-                  <Badge variant="secondary">
-                    Filtering by user: {profiles.find(p => p.user_id === activityUserFilter)?.full_name || activityUserFilter}
-                  </Badge>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setActivityUserFilter(null)}
-                  >
-                    Clear filter
-                  </Button>
-                </div>
-              )}
-              <ActivityLogTable profiles={profiles} userIdFilter={activityUserFilter} />
+              <ActivityLogTable 
+                userIdFilter={activityUserFilter}
+                onClearFilter={() => setActivityUserFilter(null)}
+                profiles={profiles}
+              />
             </TabsContent>
           </Tabs>
         </div>
-
-        {/* User Detail Modal */}
-        <UserDetailModal
-          open={detailModalOpen}
-          onOpenChange={setDetailModalOpen}
-          user={selectedUser}
-          userRole={selectedUser ? getUserRole(selectedUser.user_id) : null}
-        />
-
-        {/* Footer */}
-        <p className="text-center text-primary-foreground/60 mt-8 text-sm">
-          © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
-        </p>
       </div>
+
+      {/* User Detail Modal */}
+      <UserDetailModal
+        open={detailModalOpen}
+        onOpenChange={setDetailModalOpen}
+        user={selectedUser}
+        userRole={selectedUser ? getUserRole(selectedUser.user_id) : null}
+      />
     </div>
   );
 };

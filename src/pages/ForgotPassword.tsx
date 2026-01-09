@@ -42,32 +42,40 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary flex items-center justify-center px-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
+    <div className="min-h-screen bg-midnight flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Premium Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[#020410]" />
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
       
       <div className="w-full max-w-md relative z-10">
         {/* Back Link */}
         <Link 
           to="/login" 
-          className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Login
         </Link>
 
-        {/* Card */}
-        <div className="bg-card rounded-lg shadow-2xl p-8">
+        {/* Card - Glassmorphism */}
+        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl p-8 relative overflow-hidden">
+          {/* Top highlight */}
+          <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          
           {/* Header */}
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-card-foreground mb-2">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-xl text-white shadow-[0_4px_20px_rgba(0,102,255,0.4)]">
+              B
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">
               Reset Password
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-gray-400">
               {isSubmitted 
                 ? "Check your email for a reset link" 
                 : "Enter your email to receive a password reset link"}
@@ -77,18 +85,18 @@ const ForgotPassword = () => {
           {!isSubmitted ? (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-card-foreground">
+                <Label htmlFor="email" className="text-gray-300">
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="you@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
                     required
                   />
                 </div>
@@ -96,9 +104,7 @@ const ForgotPassword = () => {
 
               <Button 
                 type="submit" 
-                variant="hero" 
-                className="w-full" 
-                size="lg"
+                className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-[0_4px_20px_rgba(0,102,255,0.4)] transition-all duration-300"
                 disabled={isLoading}
               >
                 {isLoading ? "Sending..." : "Send Reset Link"}
@@ -106,16 +112,16 @@ const ForgotPassword = () => {
             </form>
           ) : (
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
-                <Mail className="w-8 h-8 text-accent" />
+              <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                <Mail className="w-8 h-8 text-primary" />
               </div>
-              <p className="text-muted-foreground text-sm">
-                We've sent a password reset link to <strong className="text-card-foreground">{email}</strong>. 
+              <p className="text-gray-400 text-sm">
+                We've sent a password reset link to <strong className="text-white">{email}</strong>. 
                 Click the link in the email to reset your password.
               </p>
               <Button 
                 variant="outline" 
-                className="w-full"
+                className="w-full border-white/20 text-white hover:bg-white/10"
                 onClick={() => {
                   setIsSubmitted(false);
                   setEmail("");
@@ -127,10 +133,10 @@ const ForgotPassword = () => {
           )}
 
           {/* Back to sign in */}
-          <div className="mt-8 pt-6 border-t border-border text-center">
-            <p className="text-muted-foreground text-sm">
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+            <p className="text-gray-400 text-sm">
               Remember your password?{" "}
-              <Link to="/login" className="text-accent hover:underline font-medium">
+              <Link to="/login" className="text-primary hover:text-primary/80 font-medium transition-colors">
                 Sign in
               </Link>
             </p>
@@ -138,7 +144,7 @@ const ForgotPassword = () => {
         </div>
 
         {/* Company Name */}
-        <p className="text-center text-primary-foreground/60 mt-8 text-sm">
+        <p className="text-center text-gray-600 mt-8 text-sm">
           © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
         </p>
       </div>
