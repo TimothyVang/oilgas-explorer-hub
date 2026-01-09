@@ -8,6 +8,7 @@ import { ArrowLeft, FileText, Lock, CheckCircle, ExternalLink, Download, AlertCi
 import { logActivity } from "@/lib/logActivity";
 import { motion } from "framer-motion";
 import { HolographicCard } from "@/components/HolographicCard";
+import Breadcrumb from "@/components/Breadcrumb";
 
 interface InvestorDocument {
   id: string;
@@ -99,6 +100,8 @@ const InvestorDocuments = () => {
 
   return (
     <div className="min-h-screen bg-[#020410] text-white overflow-hidden relative">
+      <Breadcrumb />
+      
       {/* Premium Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#020410]" />
@@ -108,7 +111,7 @@ const InvestorDocuments = () => {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-8 pt-32">
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
