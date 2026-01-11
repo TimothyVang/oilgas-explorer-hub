@@ -1,5 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight, Home, ChevronDown } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface BreadcrumbItem {
   label: string;
@@ -20,6 +27,7 @@ const routeLabels: Record<string, string> = {
 
 export const Breadcrumb = () => {
   const location = useLocation();
+  const isMobile = useIsMobile();
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   // Don't show breadcrumb on home page
@@ -36,6 +44,43 @@ export const Breadcrumb = () => {
     breadcrumbs.push({ label, path: currentPath });
   });
 
+  const currentPage = breadcrumbs[breadcrumbs.length - 1];
+  const parentPages = breadcrumbs.slice(0, -1);
+
+  // Mobile: Show dropdown with parent pages
+  if (isMobile) {
+    return (
+      <div className="flex items-center gap-1">
+        {parentPages.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-md hover:bg-white/[0.08] text-xs">
+              <Home className="w-3 h-3" />
+              <ChevronDown className="w-3 h-3" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="bg-background border-border min-w-[140px]">
+              {parentPages.map((crumb) => (
+                <DropdownMenuItem key={crumb.path} asChild>
+                  <Link
+                    to={crumb.path}
+                    className="flex items-center gap-2 text-sm cursor-pointer"
+                  >
+                    {crumb.path === "/" && <Home className="w-3.5 h-3.5" />}
+                    {crumb.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+        <ChevronRight className="w-3 h-3 text-gray-500" />
+        <span className="text-primary font-medium px-2 py-0.5 bg-primary/10 rounded-full text-xs">
+          {currentPage.label}
+        </span>
+      </div>
+    );
+  }
+
+  // Desktop: Show full breadcrumb trail
   return (
     <ol className="flex items-center gap-1 text-sm">
       {breadcrumbs.map((crumb, index) => {
