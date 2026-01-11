@@ -91,7 +91,7 @@ const Navigation = () => {
 
             {/* User Actions */}
             {user ? (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <Link to="/dashboard">
                   <Button
                     variant="outline"
@@ -104,31 +104,33 @@ const Navigation = () => {
                 </Link>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   onClick={handleSignOut}
-                  aria-label="Sign out"
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 gap-2"
                 >
                   <LogOut className="w-4 h-4" />
+                  Logout
                 </Button>
               </div>
             ) : (
-              <Link to="/login">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`border border-transparent hover:border-white/20 hover:bg-white/5 ${isScrolled ? 'text-white' : 'text-white'}`}
+              <>
+                <Link to="/login">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`border border-transparent hover:border-white/20 hover:bg-white/5 ${isScrolled ? 'text-white' : 'text-white'}`}
+                  >
+                    Investor Portal
+                  </Button>
+                </Link>
+                <Button 
+                  onClick={() => scrollToSection("contact")}
+                  className="bg-primary hover:bg-primary/90 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] rounded-full px-6 transition-all duration-300"
                 >
-                  Investor Portal
+                  Get Started
                 </Button>
-              </Link>
+              </>
             )}
-
-            <Link to="/login">
-              <Button className="bg-primary hover:bg-primary/90 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] rounded-full px-6 transition-all duration-300">
-                Get Started
-              </Button>
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -176,16 +178,25 @@ const Navigation = () => {
                       Dashboard
                     </Button>
                   </Link>
-                  <Button variant="ghost" onClick={handleSignOut} className="text-gray-400">
-                    Sign Out
+                  <Button variant="ghost" onClick={handleSignOut} className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 gap-2">
+                    <LogOut className="w-4 h-4" />
+                    Logout
                   </Button>
                 </div>
               ) : (
-                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full max-w-xs">
-                  <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white">
-                    Investor Portal
+                <div className="flex flex-col gap-4 w-full max-w-xs">
+                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
+                    <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white">
+                      Investor Portal
+                    </Button>
+                  </Link>
+                  <Button 
+                    onClick={() => scrollToSection("contact")}
+                    className="w-full bg-primary hover:bg-primary/90 text-white"
+                  >
+                    Get Started
                   </Button>
-                </Link>
+                </div>
               )}
             </div>
           </motion.div>

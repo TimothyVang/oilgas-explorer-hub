@@ -67,13 +67,13 @@ export const useInvestorDashboard = () => {
           totalDocs = count || 0;
         }
 
-        // Fetch recent activity for this user
+        // Fetch recent activity for this user (increased limit for "View All")
         const { data: activities } = await supabase
           .from("activity_logs")
           .select("id, action, created_at, metadata")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
-          .limit(5);
+          .limit(50);
 
         // Build dynamic tasks based on real status
         const tasks: TaskItem[] = [];

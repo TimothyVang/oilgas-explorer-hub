@@ -35,6 +35,7 @@ const Dashboard = () => {
   const { stats, loading: statsLoading } = useInvestorDashboard();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Overview");
+  const [showAllActivity, setShowAllActivity] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -242,6 +243,16 @@ const Dashboard = () => {
                           </h3>
                           <p className="text-sm text-gray-500 mt-1">Your recent portal activity</p>
                         </div>
+                        {stats.recentActivity.length > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowAllActivity(!showAllActivity)}
+                            className="text-primary hover:text-white hover:bg-primary/20 text-xs"
+                          >
+                            {showAllActivity ? "Show Less" : "View All Activity"}
+                          </Button>
+                        )}
                       </div>
 
                       {/* Activity list instead of mock chart */}
@@ -259,7 +270,7 @@ const Dashboard = () => {
                             <p className="text-gray-500 text-sm mt-1">Start by exploring your documents</p>
                           </div>
                         ) : (
-                          stats.recentActivity.map((activity, index) => (
+                          (showAllActivity ? stats.recentActivity : stats.recentActivity.slice(0, 5)).map((activity, index) => (
                             <motion.div
                               key={activity.id}
                               initial={{ opacity: 0, x: -20 }}
