@@ -23,7 +23,7 @@ const Hero = () => {
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="relative"
         >
-          <h1 className="text-[12vw] leading-[0.85] font-black uppercase text-center tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 relative z-20 mix-blend-difference">
+          <h1 className="text-[12vw] leading-[0.85] font-black uppercase text-center tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 relative z-20">
             Energy <br />
             <span className="relative">
               Evolved
