@@ -7,7 +7,7 @@ import heroImage from "@/assets/pump-jacks.jpg";
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { InteractiveTimeline } from "@/components/about/InteractiveTimeline";
 import { useRef } from "react";
-import Breadcrumb from "@/components/Breadcrumb";
+
 
 const AboutPage = () => {
   const { scrollYProgress } = useScroll();
@@ -16,7 +16,6 @@ const AboutPage = () => {
   return (
     <div className="min-h-screen bg-midnight overflow-hidden relative">
       <Navigation />
-      <Breadcrumb />
 
       {/* FLUID BACKGROUND - Premium 2025 (No external dependencies) */}
       <div className="fixed inset-0 z-0">

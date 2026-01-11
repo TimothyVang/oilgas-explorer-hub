@@ -28,7 +28,7 @@ import { UserActionsDropdown } from "@/components/admin/UserActionsDropdown";
 import { UserDetailModal } from "@/components/admin/UserDetailModal";
 import { BulkActionsBar } from "@/components/admin/BulkActionsBar";
 import { Checkbox } from "@/components/ui/checkbox";
-import Breadcrumb from "@/components/Breadcrumb";
+
 
 interface UserProfile {
   id: string;
@@ -346,7 +346,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-midnight relative overflow-hidden">
-      <Breadcrumb />
       
       {/* Premium Background */}
       <div className="absolute inset-0 z-0">

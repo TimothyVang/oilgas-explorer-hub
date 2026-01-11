@@ -8,8 +8,6 @@ import { ArrowLeft, Camera, Loader2, User, Building, Phone, Mail } from "lucide-
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import Breadcrumb from "@/components/Breadcrumb";
-
 interface Profile {
   id: string;
   user_id: string;
@@ -191,7 +189,6 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-midnight relative overflow-hidden">
-      <Breadcrumb />
       
       {/* Premium Background */}
       <div className="absolute inset-0 z-0">
