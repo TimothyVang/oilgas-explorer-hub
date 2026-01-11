@@ -8,7 +8,7 @@ import { ArrowLeft, FileText, Lock, CheckCircle, ExternalLink, Download, AlertCi
 import { logActivity } from "@/lib/logActivity";
 import { motion } from "framer-motion";
 import { HolographicCard } from "@/components/HolographicCard";
-import Breadcrumb from "@/components/Breadcrumb";
+
 
 interface InvestorDocument {
   id: string;
@@ -100,7 +100,6 @@ const InvestorDocuments = () => {
 
   return (
     <div className="min-h-screen bg-[#020410] text-white overflow-hidden relative">
-      <Breadcrumb />
       
       {/* Premium Background */}
       <div className="fixed inset-0 z-0">
