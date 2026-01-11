@@ -1,101 +1,38 @@
-import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { Link, Navigate } from "react-router-dom";
+import { useInvestorDocuments } from "@/hooks/useInvestorDocuments";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, FileText, Lock, CheckCircle, ExternalLink, Download, AlertCircle } from "lucide-react";
-import { logActivity } from "@/lib/logActivity";
 import { motion } from "framer-motion";
 import { HolographicCard } from "@/components/HolographicCard";
-
-
-interface InvestorDocument {
-  id: string;
-  title: string;
-  description: string | null;
-  file_url: string;
-  created_at: string;
-}
-
-interface ProfileNdaStatus {
-  nda_signed: boolean;
-  nda_signed_at: string | null;
-}
-
-const DOCUSIGN_NDA_URL = "https://demo.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=fe62249a-9ae4-4146-9473-730060811d53&env=demo&acct=31150f9e-848b-4280-bbd7-cc8dcbaecef2&v=2";
+import { useAuth } from "@/contexts/AuthContext";
 
 const InvestorDocuments = () => {
-  const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
-  const [ndaStatus, setNdaStatus] = useState<ProfileNdaStatus | null>(null);
-  const [documents, setDocuments] = useState<InvestorDocument[]>([]);
-  const [loadingData, setLoadingData] = useState(true);
+  const { loading: authLoading } = useAuth();
+  const { 
+    user, 
+    ndaStatus, 
+    documents, 
+    loading: dataLoading, 
+    handleSignNda, 
+    handleDocumentAccess 
+  } = useInvestorDocuments();
 
-  const handleSignNda = async () => {
-    await logActivity("nda_sign_initiated", {
-      redirect_url: DOCUSIGN_NDA_URL,
-    });
-    window.open(DOCUSIGN_NDA_URL, "_blank");
-  };
-
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/login");
-    }
-  }, [user, authLoading, navigate]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return;
-
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("nda_signed, nda_signed_at")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (profileError) {
-        console.error("Error fetching profile:", profileError);
-      } else {
-        setNdaStatus(profileData);
-      }
-
-      if (profileData?.nda_signed) {
-        const { data: docsData, error: docsError } = await supabase
-          .from("investor_documents")
-          .select("*")
-          .order("created_at", { ascending: false });
-
-        if (docsError) {
-          console.error("Error fetching documents:", docsError);
-        } else {
-          setDocuments(docsData || []);
-        }
-      }
-
-      setLoadingData(false);
-    };
-
-    if (user) {
-      fetchData();
-    }
-  }, [user]);
-
-  const handleDocumentAccess = async (document: InvestorDocument) => {
-    await logActivity("document_access", {
-      document_id: document.id,
-      document_title: document.title,
-    });
-    window.open(document.file_url, "_blank");
-  };
-
-  if (authLoading || !user) {
+  // Show loading while auth is being checked
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-[#020410] flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+          <p className="text-gray-400 text-sm">Authenticating...</p>
+        </div>
       </div>
     );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -150,9 +87,12 @@ const InvestorDocuments = () => {
             </div>
           </HolographicCard>
 
-          {loadingData ? (
+          {dataLoading ? (
             <HolographicCard className="p-12 text-center">
-              <div className="animate-pulse text-gray-400">Loading documents...</div>
+              <div className="flex flex-col items-center gap-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <p className="text-gray-400">Loading documents...</p>
+              </div>
             </HolographicCard>
           ) : !ndaStatus?.nda_signed ? (
             /* NDA Not Signed */
@@ -226,7 +166,10 @@ const InvestorDocuments = () => {
                 <HolographicCard className="p-12 text-center">
                   <FileText className="w-12 h-12 text-gray-500 mx-auto mb-4" />
                   <p className="text-gray-400">
-                    No documents available at this time.
+                    No documents have been assigned to your account yet.
+                  </p>
+                  <p className="text-gray-500 text-sm mt-2">
+                    Documents will appear here once an administrator assigns them to you.
                   </p>
                 </HolographicCard>
               ) : (
