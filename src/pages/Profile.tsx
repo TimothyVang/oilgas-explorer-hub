@@ -8,6 +8,8 @@ import { ArrowLeft, Camera, Loader2, User, Building, Phone, Mail } from "lucide-
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { profileSchema, validateForm } from "@/lib/validation";
+import { FormError, useFormErrors } from "@/components/ui/form-error";
 interface Profile {
   id: string;
   user_id: string;
@@ -21,6 +23,7 @@ const Profile = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { errors, setErrors, clearError, clearAllErrors } = useFormErrors();
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -73,6 +76,14 @@ const Profile = () => {
   };
 
   const handleSaveProfile = async () => {
+    clearAllErrors();
+    const formData = { fullName, companyName, phone };
+    const validation = validateForm(profileSchema, formData);
+    if (!validation.success) {
+      setErrors(validation.errors);
+      return;
+    }
+
     if (!user) return;
 
     setIsSaving(true);
@@ -283,10 +294,11 @@ const Profile = () => {
                   type="text"
                   placeholder="John Doe"
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                  onChange={(e) => { setFullName(e.target.value); clearError("fullName"); }}
+                  className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.fullName ? "border-red-500/50" : ""}`}
                 />
               </div>
+              <FormError message={errors.fullName} />
             </div>
 
             <div className="space-y-2">
@@ -319,10 +331,11 @@ const Profile = () => {
                   type="text"
                   placeholder="Your Company"
                   value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                  onChange={(e) => { setCompanyName(e.target.value); clearError("companyName"); }}
+                  className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.companyName ? "border-red-500/50" : ""}`}
                 />
               </div>
+              <FormError message={errors.companyName} />
             </div>
 
             <div className="space-y-2">
@@ -336,10 +349,11 @@ const Profile = () => {
                   type="tel"
                   placeholder="+1 (555) 123-4567"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                  onChange={(e) => { setPhone(e.target.value); clearError("phone"); }}
+                  className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.phone ? "border-red-500/50" : ""}`}
                 />
               </div>
+              <FormError message={errors.phone} />
             </div>
 
             <Button

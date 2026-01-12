@@ -7,11 +7,9 @@ import { ArrowLeft, Lock, Mail, User, CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { z } from "zod";
+import { loginSchema, signupSchema, validateForm } from "@/lib/validation";
+import { FormError, useFormErrors } from "@/components/ui/form-error";
 
-const emailSchema = z.string().email("Please enter a valid email address");
-const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
-const nameSchema = z.string().min(1, "Name is required");
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,12 +21,18 @@ const Login = () => {
   const [showVerificationMessage, setShowVerificationMessage] = useState(false);
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
+  const { errors, setErrors, clearError, clearAllErrors } = useFormErrors();
 
   useEffect(() => {
     if (!loading && user) {
       navigate("/dashboard");
     }
   }, [user, loading, navigate]);
+
+  // Clear errors when switching between sign in and sign up
+  useEffect(() => {
+    clearAllErrors();
+  }, [isSignUp]);
 
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
@@ -60,15 +64,24 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearAllErrors();
     setIsLoading(true);
 
-    try {
-      emailSchema.parse(email);
-      passwordSchema.parse(password);
-      if (isSignUp) {
-        nameSchema.parse(fullName);
-      }
+    // Validate form data using centralized schemas
+    const schema = isSignUp ? signupSchema : loginSchema;
+    const formData = isSignUp
+      ? { fullName, email, password }
+      : { email, password };
 
+    const validation = validateForm(schema, formData);
+
+    if (!validation.success) {
+      setErrors(validation.errors);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
       if (isSignUp) {
         const { error } = await signUp(email, password, fullName);
         if (error) {
@@ -96,9 +109,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast.error(error.errors[0].message);
-      }
+      toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -164,6 +175,7 @@ const Login = () => {
                     setPassword("");
                     setFullName("");
                     setIsSignUp(false);
+                    clearAllErrors();
                   }}
                 >
                   Back to Sign In
@@ -231,11 +243,15 @@ const Login = () => {
                           type="text"
                           placeholder="John Doe"
                           value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                          onChange={(e) => {
+                            setFullName(e.target.value);
+                            clearError("fullName");
+                          }}
+                          className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.fullName ? "border-red-500/50" : ""}`}
                           required={isSignUp}
                         />
                       </div>
+                      <FormError message={errors.fullName} />
                     </div>
                   )}
 
@@ -250,11 +266,15 @@ const Login = () => {
                         type="email"
                         placeholder="you@company.com"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          clearError("email");
+                        }}
+                        className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.email ? "border-red-500/50" : ""}`}
                         required
                       />
                     </div>
+                    <FormError message={errors.email} />
                   </div>
 
                   <div className="space-y-2">
@@ -268,12 +288,16 @@ const Login = () => {
                         type="password"
                         placeholder="••••••••"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                          clearError("password");
+                        }}
+                        className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.password ? "border-red-500/50" : ""}`}
                         required
                       />
                     </div>
-                    {isSignUp && (
+                    <FormError message={errors.password} />
+                    {isSignUp && !errors.password && (
                       <p className="text-xs text-white/40">
                         Password must be at least 6 characters
                       </p>
