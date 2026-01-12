@@ -53,24 +53,38 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-midnight text-white font-sans selection:bg-cyan-500/30 overflow-hidden relative">
 
-      {/* Premium Background */}
+      {/* Premium Background - Matching Homepage */}
       <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[#020410]" />
-        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-midnight" />
+        {/* Radial gradient matching Hero */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-midnight to-midnight" />
+        {/* Dramatic glow orbs */}
+        <div className="absolute top-[-200px] right-[-200px] w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-pulse-glow" />
+        <div className="absolute bottom-[-200px] left-[-200px] w-[600px] h-[600px] bg-accent/15 rounded-full blur-[150px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
+        {/* Holographic grid - matching Services */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)] pointer-events-none" />
+      </div>
+
+      {/* Floating Background Typography - Like Homepage */}
+      <div className="fixed inset-0 z-0 pointer-events-none select-none overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02]">
+          <h1 className="text-[30vw] font-black leading-none text-white tracking-tighter whitespace-nowrap">
+            PORTAL
+          </h1>
+        </div>
       </div>
 
       <div className="relative z-10 flex h-dvh md:h-screen p-4 md:p-6 gap-6 flex-col md:flex-row">
 
-        {/* FLOATING SIDEBAR (Desktop) */}
+        {/* FLOATING SIDEBAR (Desktop) - Enhanced */}
         <motion.aside
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="w-20 hidden md:flex flex-col items-center py-8 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl relative overflow-hidden"
+          className="w-20 hidden md:flex flex-col items-center py-8 bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] relative overflow-hidden group/sidebar"
         >
+          {/* Holographic grid effect */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2rem]" />
           <div className="absolute top-0 left-[20%] right-[20%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           
           {/* Brand Mark - Links to Home */}
@@ -143,25 +157,28 @@ const Dashboard = () => {
         {/* MAIN HUD AREA */}
         <div className="flex-1 flex flex-col gap-4 md:gap-6 overflow-hidden">
 
-          {/* Header HUD */}
+          {/* Header HUD - Enhanced */}
           <motion.header
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="relative flex items-center justify-between bg-gradient-to-r from-white/[0.08] to-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-2xl px-4 md:px-8 py-3.5 md:py-4 shadow-2xl shrink-0 overflow-hidden"
+            className="relative flex items-center justify-between bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] px-4 md:px-8 py-3.5 md:py-4 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] shrink-0 overflow-hidden group"
           >
-            <div className="absolute top-0 left-[5%] right-[5%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+            {/* Holographic grid on hover */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2rem]" />
+            <div className="absolute top-0 left-[5%] right-[5%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
-            <div>
+            <div className="relative z-10">
               <h1 className="text-xl md:text-2xl font-bold tracking-tight">
                 <span className="hidden md:inline text-gray-300">COMMAND CENTER</span>
                 <span className="md:hidden text-gray-300">CMD</span>
                 <span className="text-white/30 mx-2">//</span>
-                <span className="bg-gradient-to-r from-primary via-cyan-400 to-primary bg-clip-text text-transparent animate-gradient-x">{activeTab.toUpperCase()}</span>
+                <span className="bg-gradient-to-r from-primary via-cyan-400 to-accent bg-clip-text text-transparent">{activeTab.toUpperCase()}</span>
               </h1>
               <p className="text-[11px] text-cyan-400/60 tracking-[0.2em] uppercase mt-1.5 font-medium">System Operational • {new Date().toLocaleDateString()}</p>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6 relative z-10">
               <div className="hidden lg:flex items-center gap-2.5 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full backdrop-blur-sm">
                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
                 <span className="text-[11px] text-emerald-400 font-medium tracking-wide">LIVE DATA FEED</span>
@@ -172,9 +189,9 @@ const Dashboard = () => {
                   <p className="text-sm font-semibold text-white leading-none">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</p>
                   <p className="text-[11px] text-gray-500 mt-1.5 font-medium">{isAdmin ? "Admin Access" : "Investor Access"}</p>
                 </div>
-                <div className="relative w-11 h-11 rounded-full ring-2 ring-primary/40 ring-offset-2 ring-offset-[#020410] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(0,102,255,0.3)]">
+                <div className="relative w-11 h-11 rounded-full ring-2 ring-primary/40 ring-offset-2 ring-offset-midnight bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center font-bold text-white shadow-[0_0_30px_rgba(0,102,255,0.4)]">
                   {user?.email?.[0]?.toUpperCase() || "U"}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-[#020410]" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-midnight shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
                 </div>
               </div>
             </div>
