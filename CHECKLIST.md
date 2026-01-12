@@ -3,10 +3,10 @@
 ## Progress Summary
 - **Total Tasks**: 47
 - **Completed**: 10
-- **In Progress**: 0
-- **Todo**: 37
+- **In Progress**: 1
+- **Todo**: 36
 - **Completion**: 21.3%
-- **Last Updated**: 2026-01-12T04:42:50.167503
+- **Last Updated**: 2026-01-12T04:46:13.607572
 
 ---
 
@@ -169,8 +169,8 @@ Total: 50 tests passing across all test files
 - Total: 28 utility tests passing
 **Completed**: 2026-01-12
 
-### [ ] Task 12: Create integration tests for auth flow
-**Status**:  Todo
+### [-] Task 12: Create integration tests for auth flow
+**Status**:  In Progress
 **Priority**: HIGH
 **Description**: Test complete flow: signup -> email verify -> login -> dashboard
 **Files**: `tests/integration/auth-flow.test.tsx`
