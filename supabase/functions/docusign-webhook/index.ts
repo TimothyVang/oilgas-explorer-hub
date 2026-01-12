@@ -1,10 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-docusign-signature-1",
-};
+import { getCorsHeaders, handleCorsOptions } from "../_shared/cors.ts";
 
 interface DocuSignEnvelope {
   status: string;
@@ -75,43 +71,49 @@ function isValidEmail(email: string): boolean {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  const corsHeaders = getCorsHeaders(req);
+  
   console.log("docusign-webhook function called");
   console.log("Method:", req.method);
 
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsOptions(req);
   }
 
   try {
     // Get the raw body for signature verification
     const rawBody = await req.text();
     
-    // Verify webhook signature if secret is configured
+    // Verify webhook signature - REQUIRED in production
     const webhookSecret = Deno.env.get("DOCUSIGN_WEBHOOK_SECRET");
     const signature = req.headers.get("x-docusign-signature-1");
     
-    if (webhookSecret) {
-      if (!signature) {
-        console.error("Missing webhook signature");
-        return new Response(
-          JSON.stringify({ error: "Missing signature" }),
-          { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
-      }
-      
-      const isValid = await verifyHmacSignature(rawBody, signature, webhookSecret);
-      if (!isValid) {
-        console.error("Invalid webhook signature");
-        return new Response(
-          JSON.stringify({ error: "Invalid signature" }),
-          { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
-      }
-      console.log("Webhook signature verified successfully");
-    } else {
-      console.warn("DOCUSIGN_WEBHOOK_SECRET not configured - signature verification skipped");
+    if (!webhookSecret) {
+      console.error("DOCUSIGN_WEBHOOK_SECRET not configured");
+      return new Response(
+        JSON.stringify({ error: "Webhook not configured" }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
+    
+    if (!signature) {
+      console.error("Missing webhook signature");
+      return new Response(
+        JSON.stringify({ error: "Missing signature" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    
+    const isValid = await verifyHmacSignature(rawBody, signature, webhookSecret);
+    if (!isValid) {
+      console.error("Invalid webhook signature");
+      return new Response(
+        JSON.stringify({ error: "Invalid signature" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    console.log("Webhook signature verified successfully");
 
     const payload: DocuSignWebhookPayload = JSON.parse(rawBody);
     console.log("Received DocuSign webhook event:", payload.event);
@@ -157,7 +159,8 @@ const handler = async (req: Request): Promise<Response> => {
       const sanitizedEmail = signer.email.toLowerCase().trim();
       console.log("Processing signer:", sanitizedEmail);
 
-      // Find user profile by email - strict matching to prevent identity spoofing
+      // Find user profile by email with strict identity verification
+      // Join with auth.users to ensure the profile email matches the auth email
       const { data: profile, error: profileError } = await supabaseAdmin
         .from("profiles")
         .select("user_id, full_name, email, nda_signed")
@@ -174,9 +177,22 @@ const handler = async (req: Request): Promise<Response> => {
         continue;
       }
 
-      // Verify email matches exactly (case-insensitive) to prevent identity attacks
+      // Verify profile email matches exactly to prevent identity spoofing
       if (profile.email?.toLowerCase() !== sanitizedEmail) {
         console.error("Email mismatch - potential spoofing attempt:", sanitizedEmail);
+        continue;
+      }
+
+      // Additional verification: confirm the profile's user_id has matching auth.users email
+      const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.getUserById(profile.user_id);
+      
+      if (authError || !authUser?.user) {
+        console.error("Could not verify auth user:", authError?.message);
+        continue;
+      }
+
+      if (authUser.user.email?.toLowerCase() !== sanitizedEmail) {
+        console.error("Auth email mismatch - profile email doesn't match auth email:", sanitizedEmail);
         continue;
       }
 
@@ -212,6 +228,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
       // Send confirmation email via send-email function
+      // Note: This call is internal and uses service role auth
       try {
         const emailResponse = await fetch(
           `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-email`,
@@ -219,7 +236,7 @@ const handler = async (req: Request): Promise<Response> => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
+              "Authorization": `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
             },
             body: JSON.stringify({
               to: signer.email,
@@ -249,7 +266,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.error("Error in docusign-webhook function:", errorMessage);
     return new Response(
       JSON.stringify({ error: errorMessage }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      { status: 500, headers: { "Content-Type": "application/json", ...getCorsHeaders(req) } }
     );
   }
 };
