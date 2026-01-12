@@ -2,10 +2,10 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 29
+- **Completed**: 30
 - **In Progress**: 0
-- **Todo**: 18
-- **Completion**: 61.7%
+- **Todo**: 17
+- **Completion**: 63.8%
 - **Last Updated**: 2026-01-12T14:57:19.443926
 
 ---
@@ -653,11 +653,22 @@ Benefits:
 **Dependencies**: Task 33
 **Verification**: Re-run audit, verify all critical issues resolved
 
-### [ ] Task 35: Improve loading skeleton states
-**Status**:  Todo
+### [x] Task 35: Improve loading skeleton states
+**Status**:  Done
 **Priority**: MEDIUM
 **Description**: Replace simple spinners with content-shaped skeletons
 **Verification**: Loading states feel smooth and professional
+**Notes**: Implementation complete:
+- Added ActivitySkeleton to Dashboard for activity timeline and tasks
+- Replaced inline spinners with AdminDashboardSkeleton on Admin page
+- Added TableSkeleton for Admin users table loading state  
+- Added ProfileSkeleton to Profile page
+- Added PageLoadingSkeleton with message to InvestorDocuments
+- Added DocumentCardsSkeleton for documents loading
+- Created new skeleton components: StatsSkeleton, DocumentCardsSkeleton
+- Tested via Playwright: all 11 smoke tests pass
+- Commit: 96bf664
+**Completed**: 2026-01-12
 
 ### [ ] Task 36: Add smooth transitions (Framer Motion)
 **Status**:  Todo
