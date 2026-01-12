@@ -298,6 +298,7 @@ const Profile = () => {
                   onChange={(e) => { setFullName(e.target.value); clearError("fullName"); }}
                   className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.fullName ? "border-red-500/50" : ""}`}
                 />
+                  autoComplete="name"
               </div>
               <FormError message={errors.fullName} />
             </div>
@@ -334,6 +335,7 @@ const Profile = () => {
                   value={companyName}
                   onChange={(e) => { setCompanyName(e.target.value); clearError("companyName"); }}
                   className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.companyName ? "border-red-500/50" : ""}`}
+                  autoComplete="organization"
                 />
               </div>
               <FormError message={errors.companyName} />
@@ -352,6 +354,7 @@ const Profile = () => {
                   value={phone}
                   onChange={(e) => { setPhone(e.target.value); clearError("phone"); }}
                   className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.phone ? "border-red-500/50" : ""}`}
+                  autoComplete="tel"
                 />
               </div>
               <FormError message={errors.phone} />

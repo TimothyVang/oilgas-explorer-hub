@@ -250,6 +250,8 @@ const Login = () => {
                           }}
                           className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.fullName ? "border-red-500/50" : ""}`}
                           required={isSignUp}
+                          autoComplete="name"
+                          enterKeyHint="next"
                         />
                       </div>
                       <FormError message={errors.fullName} />
@@ -273,6 +275,8 @@ const Login = () => {
                         }}
                         className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.email ? "border-red-500/50" : ""}`}
                         required
+                        autoComplete="email"
+                        enterKeyHint="next"
                       />
                     </div>
                     <FormError message={errors.email} />
@@ -295,6 +299,8 @@ const Login = () => {
                         }}
                         className={`pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg ${errors.password ? "border-red-500/50" : ""}`}
                         required
+                        autoComplete={isSignUp ? "new-password" : "current-password"}
+                        enterKeyHint="done"
                       />
                     </div>
                     <FormError message={errors.password} />

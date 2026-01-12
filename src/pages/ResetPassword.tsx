@@ -165,6 +165,8 @@ const ResetPassword = () => {
                     className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
                     required
                   />
+                    autoComplete="new-password"
+                    enterKeyHint="next"
                 </div>
                 <p className="text-xs text-white/40">
                   Password must be at least 6 characters
@@ -186,6 +188,8 @@ const ResetPassword = () => {
                     className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
                     required
                   />
+                    autoComplete="new-password"
+                    enterKeyHint="done"
                 </div>
               </div>
 
