@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Activity, TrendingUp, BarChart3, Database } from "lucide-react";
+import { ArrowUpRight, Activity, TrendingUp, BarChart3, Database, LucideIcon } from "lucide-react";
 
 // Asset Imports
 import drillImg from "@/assets/3d/drill.png";
@@ -8,6 +8,26 @@ import flameImg from "@/assets/3d/flame.png";
 import structureImg from "@/assets/3d/structure.png";
 import scaleImg from "@/assets/3d/scale.png";
 import leafImg from "@/assets/3d/leaf.png";
+
+// Type Definitions
+interface Service {
+  id: number;
+  title: string;
+  category: string;
+  description: string;
+  img: string;
+  roi: string;
+  cagr: string;
+  capacity: string;
+  tech_specs: string[];
+}
+
+interface MetricCellProps {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  delay: number;
+}
 
 const services = [
   {
@@ -119,7 +139,7 @@ const Services = () => {
   );
 };
 
-const ServiceCard = ({ service }: { service: any }) => {
+const ServiceCard = ({ service }: { service: Service }) => {
   return (
     <div className="relative w-[80vw] md:w-[45vw] lg:w-[35vw] h-[60vh] flex-shrink-0 group cursor-pointer perspective-1000">
       <div className="absolute inset-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-[3rem] overflow-hidden transition-all duration-500 group-hover:bg-white/10 group-hover:border-primary/50 group-hover:shadow-[0_0_50px_rgba(0,255,255,0.15)]">
@@ -180,7 +200,7 @@ const ServiceCard = ({ service }: { service: any }) => {
   );
 };
 
-const MetricCell = ({ label, value, icon: Icon, delay }: any) => (
+const MetricCell = ({ label, value, icon: Icon, delay }: MetricCellProps) => (
   <div className="group/metric">
     <div className="flex items-center gap-1 mb-1 text-gray-500 group-hover/metric:text-primary transition-colors">
       <Icon size={12} />

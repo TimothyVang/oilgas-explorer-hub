@@ -123,7 +123,12 @@ export const UserDetailModal = ({
 
       if (error) throw error;
       // Transform the data to match our interface
-      const transformedData = (data || []).map((item: any) => ({
+      const transformedData = (data || []).map((item: {
+        id: string;
+        document_id: string;
+        assigned_at: string;
+        document: { title: string; description: string | null };
+      }) => ({
         id: item.id,
         document_id: item.document_id,
         assigned_at: item.assigned_at,

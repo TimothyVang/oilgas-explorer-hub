@@ -98,11 +98,11 @@ export const UserActionsDropdown = ({
       });
 
       onResetNda();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error resetting NDA:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to reset NDA status.",
+        description: error instanceof Error ? error.message : "Failed to reset NDA status.",
         variant: "destructive",
       });
     } finally {

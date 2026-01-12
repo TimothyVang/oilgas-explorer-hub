@@ -160,11 +160,11 @@ export const DocumentUserAssignment = ({
 
       onOpenChange(false);
       onSuccess();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error saving assignments:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to save assignments.",
+        description: error instanceof Error ? error.message : "Failed to save assignments.",
         variant: "destructive",
       });
     } finally {

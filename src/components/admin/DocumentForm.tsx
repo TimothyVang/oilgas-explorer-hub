@@ -305,11 +305,11 @@ export const DocumentForm = ({
 
       handleClose();
       onSuccess();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error saving document:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to save document.",
+        description: error instanceof Error ? error.message : "Failed to save document.",
         variant: "destructive",
       });
     } finally {

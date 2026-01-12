@@ -85,7 +85,7 @@ export const DocumentsManager = () => {
       }));
 
       setDocuments(docsWithCounts);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error fetching documents:", error);
       toast({
         title: "Error",
@@ -163,7 +163,7 @@ export const DocumentsManager = () => {
       });
 
       fetchDocuments();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error deleting document:", error);
       toast({
         title: "Error",

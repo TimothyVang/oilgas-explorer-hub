@@ -2,6 +2,12 @@ import { useRef } from "react";
 import { useInView, useMotionValue, useSpring, motion } from "framer-motion";
 import { useEffect } from "react";
 
+interface Stat {
+  value: number;
+  suffix: string;
+  label: string;
+}
+
 const Stats = () => {
   const stats = [
     { value: 45, suffix: "+", label: "Years in Operation" },
@@ -25,7 +31,7 @@ const Stats = () => {
   );
 };
 
-const StatItem = ({ stat, index }: { stat: any; index: number }) => {
+const StatItem = ({ stat, index }: { stat: Stat; index: number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 

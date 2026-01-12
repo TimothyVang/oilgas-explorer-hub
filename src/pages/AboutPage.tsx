@@ -8,6 +8,13 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from "fram
 import { InteractiveTimeline } from "@/components/about/InteractiveTimeline";
 import { useRef } from "react";
 
+interface ValueCard3DProps {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  desc: string;
+  delay: number;
+}
+
 
 const AboutPage = () => {
   const { scrollYProgress } = useScroll();

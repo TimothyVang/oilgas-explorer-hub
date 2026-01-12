@@ -1,6 +1,13 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
+interface Milestone {
+  year: string;
+  title: string;
+  description: string;
+  side: "left" | "right";
+}
+
 const milestones = [
     {
         year: "1995",
@@ -76,7 +83,7 @@ export const InteractiveTimeline = () => {
     );
 };
 
-const TimelineItem = ({ item, index }: { item: any, index: number }) => {
+const TimelineItem = ({ item, index }: { item: Milestone, index: number }) => {
     const isEven = index % 2 === 0;
 
     return (
