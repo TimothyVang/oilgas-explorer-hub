@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { profileSchema, validateForm } from "@/lib/validation";
 import { FormError, useFormErrors } from "@/components/ui/form-error";
+import { getUserMessage } from "@/lib/errorMessages";
 interface Profile {
   id: string;
   user_id: string;

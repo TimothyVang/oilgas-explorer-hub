@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Lock, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { getUserMessage } from "@/lib/errorMessages";
 import { z } from "zod";
 
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
@@ -57,7 +58,7 @@ const ResetPassword = () => {
       });
 
       if (error) {
-        toast.error(error.message);
+        toast.error(getUserMessage(error));
       } else {
         setIsSuccess(true);
         toast.success("Password updated successfully!");

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { getUserMessage } from "@/lib/errorMessages";
 import { z } from "zod";
 
 const emailSchema = z.string().email("Please enter a valid email address");
@@ -27,7 +28,7 @@ const ForgotPassword = () => {
       });
 
       if (error) {
-        toast.error(error.message);
+        toast.error(getUserMessage(error));
       } else {
         setIsSubmitted(true);
         toast.success("Password reset email sent! Check your inbox.");

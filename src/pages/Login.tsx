@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { loginSchema, signupSchema, validateForm } from "@/lib/validation";
 import { FormError, useFormErrors } from "@/components/ui/form-error";
+import { getUserMessage } from "@/lib/errorMessages";
 
 
 const Login = () => {
@@ -88,7 +89,7 @@ const Login = () => {
           if (error.message.includes("already registered")) {
             toast.error("An account with this email already exists. Please sign in instead.");
           } else {
-            toast.error(error.message);
+            toast.error(getUserMessage(error));
           }
         } else {
           setShowVerificationMessage(true);
@@ -101,7 +102,7 @@ const Login = () => {
           } else if (error.message.includes("Email not confirmed")) {
             toast.error("Please verify your email before signing in. Check your inbox for the verification link.");
           } else {
-            toast.error(error.message);
+            toast.error(getUserMessage(error));
           }
         } else {
           toast.success("Welcome back!");
