@@ -71,6 +71,10 @@ const Services = () => {
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-70%"]);
+  
+  // Parallax for background text - moves slower
+  const bgTextY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const bgTextOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.03, 0.05, 0.02]);
 
   return (
     <section id="services" ref={targetRef} className="relative h-[300vh] bg-midnight overflow-hidden">
@@ -81,12 +85,15 @@ const Services = () => {
 
       <div className="sticky top-0 h-screen flex items-center overflow-hidden z-10">
 
-        {/* Background Typography */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center opacity-[0.03] pointer-events-none select-none">
+        {/* Background Typography with Parallax */}
+        <motion.div 
+          style={{ y: bgTextY, opacity: bgTextOpacity }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none"
+        >
           <h1 className="text-[20vw] font-bold uppercase leading-none text-white">
             Systems
           </h1>
-        </div>
+        </motion.div>
 
         <motion.div style={{ x }} className="flex gap-8 pl-[5vw] pr-[10vw]">
           {/* Intro Card */}

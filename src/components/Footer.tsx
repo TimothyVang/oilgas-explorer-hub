@@ -1,13 +1,28 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { siteConfig } from "@/constants/siteConfig";
 
 const Footer = () => {
+  const footerRef = useRef<HTMLElement>(null);
+  
+  // Parallax for watermark
+  const { scrollYProgress } = useScroll({
+    target: footerRef,
+    offset: ["start end", "end end"]
+  });
+  const watermarkY = useTransform(scrollYProgress, [0, 1], ["30%", "-5%"]);
+  const watermarkOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.1, 0.1]);
+
   return (
-    <footer className="relative bg-black py-20 overflow-hidden">
-      {/* Massive Watermark */}
-      <div className="absolute bottom-0 left-0 w-full text-center pointer-events-none select-none opacity-[0.1]">
+    <footer ref={footerRef} className="relative bg-black py-20 overflow-hidden">
+      {/* Massive Watermark with Parallax */}
+      <motion.div 
+        style={{ y: watermarkY, opacity: watermarkOpacity }}
+        className="absolute bottom-0 left-0 w-full text-center pointer-events-none select-none"
+      >
         <h1 className="text-[25vw] font-black leading-none text-white tracking-tighter translate-y-[20%]">BAH</h1>
-      </div>
+      </motion.div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
