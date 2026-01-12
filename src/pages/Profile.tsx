@@ -190,33 +190,46 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-midnight relative overflow-hidden">
       
-      {/* Premium Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[#020410]" />
-        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
+      {/* Background - matches homepage Hero */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,20,40,1)_0%,rgba(2,4,16,1)_100%)]" />
+      
+      {/* Single centered glow orb */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+      
+      {/* Bold background typography */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span className="text-[15vw] font-black tracking-tighter bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent opacity-[0.03]">
+          PROFILE
+        </span>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8 pt-32 max-w-2xl">
         {/* Back Button */}
         <button
           onClick={() => navigate("/dashboard")}
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </button>
 
-        {/* Profile Card - Glassmorphism */}
-        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl p-8 relative overflow-hidden">
-          {/* Top highlight */}
-          <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        {/* Profile Card - Clean glassmorphism */}
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
           
-          <h1 className="text-2xl font-bold text-white mb-6">
-            Account Settings
-          </h1>
+          {/* Header */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+              <User className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white mb-1">
+                Account Settings
+              </h1>
+              <p className="text-white/60 text-sm">
+                Manage your profile information
+              </p>
+            </div>
+          </div>
 
           {/* Avatar Section */}
           <div className="flex items-center gap-6 mb-8 pb-8 border-b border-white/10">
@@ -230,7 +243,7 @@ const Profile = () => {
               <button
                 onClick={handleAvatarClick}
                 disabled={isUploadingAvatar}
-                className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full hover:bg-primary/80 transition-colors disabled:opacity-50 shadow-[0_4px_15px_rgba(0,102,255,0.4)]"
+                className="absolute bottom-0 right-0 bg-white text-midnight p-2 rounded-full hover:bg-white/90 transition-colors disabled:opacity-50"
               >
                 {isUploadingAvatar ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -250,8 +263,8 @@ const Profile = () => {
               <h2 className="text-lg font-semibold text-white">
                 {fullName || "Your Name"}
               </h2>
-              <p className="text-gray-400 text-sm">{user?.email}</p>
-              <p className="text-gray-500 text-xs mt-1">
+              <p className="text-white/60 text-sm">{user?.email}</p>
+              <p className="text-white/40 text-xs mt-1">
                 Click the camera icon to update your photo
               </p>
             </div>
@@ -260,78 +273,78 @@ const Profile = () => {
           {/* Profile Form */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-gray-300">
+              <Label htmlFor="fullName" className="text-white/70 text-sm">
                 Full Name
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                 <Input
                   id="fullName"
                   type="text"
                   placeholder="John Doe"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
+                  className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-300">
+              <Label htmlFor="email" className="text-white/70 text-sm">
                 Email Address
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                 <Input
                   id="email"
                   type="email"
                   value={user?.email || ""}
                   disabled
-                  className="pl-10 bg-white/5 border-white/10 text-gray-400 cursor-not-allowed"
+                  className="pl-10 h-11 bg-white/5 border-white/10 text-white/50 cursor-not-allowed rounded-lg"
                 />
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-white/40">
                 Email cannot be changed
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="companyName" className="text-gray-300">
+              <Label htmlFor="companyName" className="text-white/70 text-sm">
                 Company Name
               </Label>
               <div className="relative">
-                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                 <Input
                   id="companyName"
                   type="text"
                   placeholder="Your Company"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
+                  className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-gray-300">
+              <Label htmlFor="phone" className="text-white/70 text-sm">
                 Phone Number
               </Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                 <Input
                   id="phone"
                   type="tel"
                   placeholder="+1 (555) 123-4567"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
+                  className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
                 />
               </div>
             </div>
 
             <Button
               onClick={handleSaveProfile}
-              className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-[0_4px_20px_rgba(0,102,255,0.4)] transition-all duration-300"
+              className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg"
               disabled={isSaving}
             >
               {isSaving ? (
@@ -347,7 +360,7 @@ const Profile = () => {
         </div>
 
         {/* Company Name */}
-        <p className="text-center text-gray-600 mt-8 text-sm">
+        <p className="text-center text-white/30 mt-8 text-sm">
           © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
         </p>
       </div>
