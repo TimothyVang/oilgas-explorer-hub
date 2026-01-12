@@ -1,22 +1,28 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { getCorsHeaders, handleCorsOptions } from "../_shared/cors.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// Valid email templates - only allow predefined templates
+const VALID_TEMPLATES = ["welcome", "nda-complete", "nda-reset"] as const;
+type ValidTemplate = typeof VALID_TEMPLATES[number];
 
 interface EmailRequest {
   to: string;
   subject: string;
-  template: "welcome" | "nda-complete" | "nda-reset" | "custom";
+  template: ValidTemplate;
   data?: {
     name?: string;
-    customHtml?: string;
-    resetBy?: string;
   };
+}
+
+// Validate email format
+function isValidEmail(email: string): boolean {
+  if (!email || typeof email !== 'string') return false;
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return email.length <= 254 && emailRegex.test(email);
 }
 
 const getWelcomeTemplate = (name: string) => `
@@ -169,20 +175,84 @@ const getNdaResetTemplate = (name: string) => `
 `;
 
 const handler = async (req: Request): Promise<Response> => {
+  const corsHeaders = getCorsHeaders(req);
+  
   console.log("send-email function called");
 
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return handleCorsOptions(req);
   }
 
   try {
+    // Verify authentication - require a valid JWT token
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      console.error("Missing or invalid authorization header");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    
+    // Create client with user's token
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    // Verify the token is valid
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
+    
+    if (claimsError || !claimsData?.claims) {
+      console.error("Invalid token:", claimsError?.message);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const userId = claimsData.claims.sub;
+    console.log("Authenticated user:", userId);
+
     const { to, subject, template, data }: EmailRequest = await req.json();
+    
+    // Validate template is one of the allowed templates
+    if (!VALID_TEMPLATES.includes(template as ValidTemplate)) {
+      console.error("Invalid template:", template);
+      return new Response(
+        JSON.stringify({ error: "Invalid template" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Validate email format
+    if (!isValidEmail(to)) {
+      console.error("Invalid email format:", to);
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Validate subject length
+    if (!subject || subject.length > 200) {
+      console.error("Invalid subject");
+      return new Response(
+        JSON.stringify({ error: "Invalid subject" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
     
     console.log(`Sending ${template} email to: ${to}`);
 
     let html: string;
-    const name = data?.name || "Valued Client";
+    // Sanitize name to prevent XSS - only allow alphanumeric, spaces, and basic punctuation
+    const rawName = data?.name || "Valued Client";
+    const name = rawName.replace(/[<>\"'&]/g, '').substring(0, 100);
 
     switch (template) {
       case "welcome":
@@ -193,9 +263,6 @@ const handler = async (req: Request): Promise<Response> => {
         break;
       case "nda-reset":
         html = getNdaResetTemplate(name);
-        break;
-      case "custom":
-        html = data?.customHtml || "<p>No content provided</p>";
         break;
       default:
         throw new Error(`Unknown template: ${template}`);
@@ -221,7 +288,7 @@ const handler = async (req: Request): Promise<Response> => {
       JSON.stringify({ error: errorMessage }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+        headers: { "Content-Type": "application/json", ...getCorsHeaders(req) },
       }
     );
   }
