@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 25
+- **Completed**: 26
 - **In Progress**: 0
-- **Todo**: 22
-- **Completion**: 53.2%
-- **Last Updated**: 2026-01-12T14:24:11.094750
+- **Todo**: 21
+- **Completion**: 55.3%
+- **Last Updated**: 2026-01-12T14:27:11.812059
 
 ---
 
@@ -559,12 +559,28 @@ Changes:
 
 **Completed**: 2026-01-12
 
-### [ ] Task 30: Fix document cards mobile layout
-**Status**:  Todo
+### [x] Task 30: Fix document cards mobile layout
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Ensure document cards stack properly, text readable
 **Files**: `src/components/dashboard/DocumentsTab.tsx`
 **Verification**: Document cards look good on mobile
+**Notes**: Task 30 Complete - Fix document cards mobile layout
+
+Made DocumentCard component responsive for mobile:
+- Reduced padding on mobile (p-4 on mobile, p-5 on sm+)
+- Smaller icon container and icon on mobile (p-2, w-5 h-5)
+- Smaller title font on mobile (text-base vs text-lg)
+- Reduced bottom margin on mobile (mb-4 vs mb-6)
+- Added min-h-[44px] for touch target compliance
+- Grid already uses grid-cols-1 on mobile
+
+All tests passing:
+- 210 unit tests
+- 35 responsive E2E tests
+- Build succeeds
+
+**Completed**: 2026-01-12
 
 ### [ ] Task 31: Test forms with mobile keyboards
 **Status**:  Todo

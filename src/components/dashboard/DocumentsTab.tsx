@@ -119,23 +119,23 @@ const DocumentCard = ({ doc, onClick, delay }: { doc: InvestorDocument, onClick:
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.4 }}
     onClick={onClick}
-    className="group relative bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/40 rounded-xl p-5 cursor-pointer transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.15)] overflow-hidden"
+    className="group relative bg-white/5 hover:bg-white/10 border border-white/5 hover:border-primary/40 rounded-xl p-4 sm:p-5 cursor-pointer transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.15)] overflow-hidden min-h-[44px]"
   >
     <div className="relative z-10 flex flex-col h-full">
-      <div className="flex items-start justify-between mb-4">
-        <div className="p-3 rounded-lg bg-gradient-to-br from-white/5 to-transparent border border-white/5 group-hover:border-primary/20 transition-colors">
-          <FileText className="w-6 h-6 text-gray-400 group-hover:text-primary transition-colors" />
+      <div className="flex items-start justify-between mb-3 sm:mb-4">
+        <div className="p-2 sm:p-3 rounded-lg bg-gradient-to-br from-white/5 to-transparent border border-white/5 group-hover:border-primary/20 transition-colors">
+          <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-primary transition-colors" />
         </div>
         <div className="bg-white/5 text-xs px-2 py-1 rounded text-gray-500 font-mono">
           PDF
         </div>
       </div>
 
-      <h4 className="font-bold text-lg text-gray-200 group-hover:text-white mb-2 line-clamp-2">
+      <h4 className="font-bold text-base sm:text-lg text-gray-200 group-hover:text-white mb-2 line-clamp-2">
         {doc.title}
       </h4>
 
-      <p className="text-sm text-gray-500 mb-6 line-clamp-2 flex-1">
+      <p className="text-sm text-gray-500 mb-4 sm:mb-6 line-clamp-2 flex-1">
         {doc.description || "Confidential investment memorandum."}
       </p>
 
