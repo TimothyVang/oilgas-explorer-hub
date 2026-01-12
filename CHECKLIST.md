@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 16
+- **Completed**: 17
 - **In Progress**: 1
-- **Todo**: 30
-- **Completion**: 34.0%
-- **Last Updated**: 2026-01-12T11:10:56.927836
+- **Todo**: 29
+- **Completion**: 36.2%
+- **Last Updated**: 2026-01-12T11:20:17.110120
 
 ---
 
@@ -348,14 +348,26 @@ Coverage report available in coverage/index.html
 All 58 unit tests passing.
 **Completed**: 2026-01-12
 
-### [-] Task 20: Add loading states everywhere
-**Status**:  In Progress
+### [x] Task 20: Add loading states everywhere
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Ensure every async operation shows loading spinner or skeleton
 **Verification**: No flash of empty content during loading
+**Notes**: Loading states implemented everywhere:
+- Created LoadingSpinner, PageLoading, InlineLoading components
+- Created PageLoadingSkeleton with variants for all page types
+  - DashboardSkeleton, AdminDashboardSkeleton, ProfileSkeleton, LoginSkeleton
+  - CardsSkeleton, TableSkeleton, ActivitySkeleton
+- Replaced plain Loading... text with animated spinners in:
+  - Login.tsx, Profile.tsx, Dashboard.tsx
+  - AdminDashboard.tsx, ResetPassword.tsx
+- All existing pages verified to have proper loading states
+- No flash of empty content during loading
+- Commit: 8eb436f
+**Completed**: 2026-01-12
 
-### [ ] Task 21: Implement comprehensive form validation
-**Status**:  Todo
+### [-] Task 21: Implement comprehensive form validation
+**Status**:  In Progress
 **Priority**: HIGH
 **Description**: Use Zod schemas for all forms, add user-friendly error messages
 **Verification**: All forms show clear error messages for invalid input
