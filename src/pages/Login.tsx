@@ -31,14 +31,21 @@ const Login = () => {
   }, [user, loading, navigate]);
 
   const handleGoogleSignIn = async () => {
+    console.log("Google sign in clicked");
+    console.log("Redirect URL:", window.location.origin);
     setIsGoogleLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({
+    
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: window.location.origin
       }
     });
+    
+    console.log("OAuth response:", { data, error });
+    
     if (error) {
+      console.error("Google OAuth error:", error);
       toast.error("Failed to sign in with Google. Please try again.");
       setIsGoogleLoading(false);
     }
