@@ -202,7 +202,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResponse = await resend.emails.send({
-      from: "BAH Oil and Gas <onboarding@resend.dev>",
+      from: Deno.env.get("EMAIL_FROM") || "BAH Oil and Gas <onboarding@resend.dev>",
       to: [to],
       subject,
       html,

@@ -16,7 +16,9 @@ interface ProfileNdaStatus {
   nda_signed_at: string | null;
 }
 
-const DOCUSIGN_NDA_URL = "https://demo.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=fe62249a-9ae4-4146-9473-730060811d53&env=demo&acct=31150f9e-848b-4280-bbd7-cc8dcbaecef2&v=2";
+// DocuSign PowerForm URL - configure for production via environment variable
+const DOCUSIGN_NDA_URL = import.meta.env.VITE_DOCUSIGN_NDA_URL ||
+  "https://demo.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=fe62249a-9ae4-4146-9473-730060811d53&env=demo&acct=31150f9e-848b-4280-bbd7-cc8dcbaecef2&v=2";
 
 export const useInvestorDocuments = () => {
   const { user } = useAuth();
