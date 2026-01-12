@@ -35,6 +35,45 @@ interface DocuSignWebhookPayload {
   };
 }
 
+// HMAC-SHA256 signature verification
+async function verifyHmacSignature(payload: string, signature: string, secret: string): Promise<boolean> {
+  try {
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    
+    const signatureBytes = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
+    const computedSignature = btoa(String.fromCharCode(...new Uint8Array(signatureBytes)));
+    
+    // Constant-time comparison to prevent timing attacks
+    if (computedSignature.length !== signature.length) {
+      return false;
+    }
+    
+    let result = 0;
+    for (let i = 0; i < computedSignature.length; i++) {
+      result |= computedSignature.charCodeAt(i) ^ signature.charCodeAt(i);
+    }
+    return result === 0;
+  } catch (error) {
+    console.error("Error verifying HMAC signature:", error);
+    return false;
+  }
+}
+
+// Validate email format and sanitize
+function isValidEmail(email: string): boolean {
+  if (!email || typeof email !== 'string') return false;
+  // RFC 5322 compliant email regex
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return email.length <= 254 && emailRegex.test(email);
+}
+
 const handler = async (req: Request): Promise<Response> => {
   console.log("docusign-webhook function called");
   console.log("Method:", req.method);
@@ -45,17 +84,36 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Get the raw body for signature verification
+    const rawBody = await req.text();
+    
     // Verify webhook signature if secret is configured
     const webhookSecret = Deno.env.get("DOCUSIGN_WEBHOOK_SECRET");
     const signature = req.headers.get("x-docusign-signature-1");
     
-    if (webhookSecret && signature) {
-      // In production, verify the HMAC signature
-      // For now, we log it for debugging
-      console.log("Webhook signature received:", signature ? "present" : "missing");
+    if (webhookSecret) {
+      if (!signature) {
+        console.error("Missing webhook signature");
+        return new Response(
+          JSON.stringify({ error: "Missing signature" }),
+          { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+      
+      const isValid = await verifyHmacSignature(rawBody, signature, webhookSecret);
+      if (!isValid) {
+        console.error("Invalid webhook signature");
+        return new Response(
+          JSON.stringify({ error: "Invalid signature" }),
+          { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+      console.log("Webhook signature verified successfully");
+    } else {
+      console.warn("DOCUSIGN_WEBHOOK_SECRET not configured - signature verification skipped");
     }
 
-    const payload: DocuSignWebhookPayload = await req.json();
+    const payload: DocuSignWebhookPayload = JSON.parse(rawBody);
     console.log("Received DocuSign webhook event:", payload.event);
     console.log("Envelope ID:", payload.data?.envelopeId);
 
@@ -90,13 +148,20 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Process each completed signer
     for (const signer of completedSigners) {
-      console.log("Processing signer:", signer.email);
+      // Validate email format before processing
+      if (!isValidEmail(signer.email)) {
+        console.error("Invalid email format from signer:", signer.email);
+        continue;
+      }
+      
+      const sanitizedEmail = signer.email.toLowerCase().trim();
+      console.log("Processing signer:", sanitizedEmail);
 
-      // Find user profile by email
+      // Find user profile by email - strict matching to prevent identity spoofing
       const { data: profile, error: profileError } = await supabaseAdmin
         .from("profiles")
-        .select("user_id, full_name, nda_signed")
-        .eq("email", signer.email.toLowerCase())
+        .select("user_id, full_name, email, nda_signed")
+        .eq("email", sanitizedEmail)
         .maybeSingle();
 
       if (profileError) {
@@ -105,12 +170,18 @@ const handler = async (req: Request): Promise<Response> => {
       }
 
       if (!profile) {
-        console.log("No profile found for email:", signer.email);
+        console.log("No matching profile found for email:", sanitizedEmail);
+        continue;
+      }
+
+      // Verify email matches exactly (case-insensitive) to prevent identity attacks
+      if (profile.email?.toLowerCase() !== sanitizedEmail) {
+        console.error("Email mismatch - potential spoofing attempt:", sanitizedEmail);
         continue;
       }
 
       if (profile.nda_signed) {
-        console.log("NDA already signed for user:", signer.email);
+        console.log("NDA already signed for user:", sanitizedEmail);
         continue;
       }
 
