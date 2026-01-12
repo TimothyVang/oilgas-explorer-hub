@@ -1,3 +1,4 @@
+import { PageLoadingSkeleton, DocumentCardsSkeleton } from "@/components/loading/PageLoadingSkeleton";
 import { Link, Navigate } from "react-router-dom";
 import { useInvestorDocuments } from "@/hooks/useInvestorDocuments";
 import { Button } from "@/components/ui/button";
@@ -19,14 +20,7 @@ const InvestorDocuments = () => {
 
   // Show loading while auth is being checked
   if (authLoading) {
-    return (
-      <div className="min-h-screen bg-midnight flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
-          <p className="text-white/50 text-sm">Authenticating...</p>
-        </div>
-      </div>
-    );
+    return <PageLoadingSkeleton message="Authenticating..." />;
   }
 
   // Redirect to login if not authenticated
@@ -91,12 +85,7 @@ const InvestorDocuments = () => {
           </div>
 
           {dataLoading ? (
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-12 text-center">
-              <div className="flex flex-col items-center gap-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                <p className="text-white/50">Loading documents...</p>
-              </div>
-            </div>
+            <DocumentCardsSkeleton count={6} />
           ) : !ndaStatus?.nda_signed ? (
             /* NDA Not Signed */
             <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-12 text-center">

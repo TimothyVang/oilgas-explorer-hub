@@ -241,3 +241,40 @@ export const ActivitySkeleton = ({ count = 5 }: { count?: number }) => (
     ))}
   </div>
 );
+
+/**
+ * Stats row loading skeleton for dashboard stat cards
+ */
+export const StatsSkeleton = ({ count = 4 }: { count?: number }) => (
+  <div className={`grid grid-cols-2 lg:grid-cols-${count} gap-8 border-t border-b border-white/10 py-8`}>
+    {Array.from({ length: count }).map((_, i) => (
+      <div key={i} className="text-center">
+        <Skeleton className="h-10 w-20 mx-auto bg-white/10 mb-2" />
+        <Skeleton className="h-4 w-16 mx-auto bg-white/10" />
+      </div>
+    ))}
+  </div>
+);
+
+/**
+ * Document cards loading skeleton for investor documents
+ */
+export const DocumentCardsSkeleton = ({ count = 6 }: { count?: number }) => (
+  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    {Array.from({ length: count }).map((_, i) => (
+      <div key={i} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 h-full flex flex-col">
+        <div className="flex items-start justify-between mb-3">
+          <Skeleton className="w-10 h-10 rounded-lg bg-white/10" />
+          <Skeleton className="h-5 w-12 bg-white/10 rounded-full" />
+        </div>
+        <Skeleton className="h-5 w-3/4 bg-white/10 mb-2" />
+        <Skeleton className="h-4 w-full bg-white/10 mb-1" />
+        <Skeleton className="h-4 w-2/3 bg-white/10 flex-1" />
+        <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/10">
+          <Skeleton className="h-3 w-20 bg-white/10" />
+          <Skeleton className="h-8 w-16 bg-white/10 rounded-md" />
+        </div>
+      </div>
+    ))}
+  </div>
+);

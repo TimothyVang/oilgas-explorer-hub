@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { profileSchema, validateForm } from "@/lib/validation";
 import { FormError, useFormErrors } from "@/components/ui/form-error";
 import { getUserMessage } from "@/lib/errorMessages";
+import { ProfileSkeleton } from "@/components/loading/PageLoadingSkeleton";
 interface Profile {
   id: string;
   user_id: string;
@@ -192,11 +193,7 @@ const Profile = () => {
   };
 
   if (authLoading || isLoading) {
-    return (
-      <div className="min-h-screen bg-midnight flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4"><div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" /><span className="text-white/60 text-sm">Loading profile...</span></div>
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   return (

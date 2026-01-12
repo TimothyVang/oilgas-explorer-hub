@@ -28,6 +28,7 @@ import { UserActionsDropdown } from "@/components/admin/UserActionsDropdown";
 import { UserDetailModal } from "@/components/admin/UserDetailModal";
 import { BulkActionsBar } from "@/components/admin/BulkActionsBar";
 import { Checkbox } from "@/components/ui/checkbox";
+import { AdminDashboardSkeleton, TableSkeleton } from "@/components/loading/PageLoadingSkeleton";
 
 
 interface UserProfile {
@@ -333,11 +334,7 @@ const AdminDashboard = () => {
   };
 
   if (authLoading || adminLoading) {
-    return (
-      <div className="min-h-screen bg-midnight flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4"><div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" /><span className="text-white/60 text-sm">Loading admin panel...</span></div>
-      </div>
-    );
+    return <AdminDashboardSkeleton />;
   }
 
   if (!isAdmin) {
@@ -461,9 +458,7 @@ const AdminDashboard = () => {
               />
 
               {loadingData ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-400">Loading users...</p>
-                </div>
+                <TableSkeleton rows={5} />
               ) : (
                 <>
                   <div className="rounded-xl border border-white/10 overflow-hidden bg-white/5 overflow-x-auto">
