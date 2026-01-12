@@ -1,0 +1,881 @@
+{
+  "project_name": "Oil & Gas Explorer Hub - Production Enhancement",
+  "created_at": "2026-01-12T04:06:18.311040",
+  "last_updated": "2026-01-12T04:06:18.311080",
+  "phases": [
+    {
+      "id": 1,
+      "name": "Phase 1: Critical Infrastructure",
+      "priority": "CRITICAL",
+      "description": "Must complete before other phases. Install dependencies and verify environment."
+    },
+    {
+      "id": 2,
+      "name": "Phase 2: Comprehensive Testing",
+      "priority": "HIGH",
+      "description": "Set up testing infrastructure with Vitest and Playwright."
+    },
+    {
+      "id": 3,
+      "name": "Phase 3: Error Handling & Resilience",
+      "priority": "HIGH",
+      "description": "Implement error boundaries, loading states, and offline handling."
+    },
+    {
+      "id": 4,
+      "name": "Phase 4: Mobile Responsiveness",
+      "priority": "HIGH",
+      "description": "Test and fix mobile layouts at 375px, 768px, and 1920px."
+    },
+    {
+      "id": 5,
+      "name": "Phase 5: UI/UX Polish",
+      "priority": "MEDIUM",
+      "description": "Accessibility audit, design consistency, and performance optimization."
+    },
+    {
+      "id": 6,
+      "name": "Phase 6: New Features",
+      "priority": "MEDIUM",
+      "description": "Implement search, versioning, 2FA, audit trails, and reporting."
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Install npm dependencies",
+      "description": "Run `npm install` in project root. Verify node_modules is created.",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "package.json",
+        "package-lock.json"
+      ],
+      "verification": "`npm run dev` starts successfully on port 8080",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 2,
+      "title": "Verify development server starts",
+      "description": "Confirm `npm run dev` starts without errors on http://localhost:8080",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [
+        1
+      ],
+      "files": [],
+      "verification": "Open browser, check console for zero errors",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 3,
+      "title": "Run ESLint and fix critical errors",
+      "description": "Execute `npm run lint`, fix any blocking compilation errors",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [
+        1
+      ],
+      "files": [
+        "eslint.config.js"
+      ],
+      "verification": "ESLint passes or only minor warnings remain",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "title": "Configure production email service",
+      "description": "Replace 'onboarding@resend.dev' with actual company email domain",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "supabase/functions/send-email/index.ts"
+      ],
+      "verification": "Email templates updated, RESEND_API_KEY documented",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 5,
+      "title": "Configure production DocuSign environment",
+      "description": "Replace demo DocuSign URL with production environment",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/pages/InvestorDocuments.tsx",
+        "supabase/functions/docusign-webhook/index.ts"
+      ],
+      "verification": "Production PowerForm URL configured, webhook tested",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 6,
+      "title": "Update company configuration",
+      "description": "Replace placeholder company info (phone, address, social media) in Contact and Footer components",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/Contact.tsx",
+        "src/components/Footer.tsx"
+      ],
+      "verification": "No placeholder text visible, all links working",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 7,
+      "title": "Create .env.production.example file",
+      "description": "Document all required production environment variables with descriptions",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        ".env.production.example"
+      ],
+      "verification": ".env.production.example created with full documentation",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 8,
+      "title": "Verify production build succeeds",
+      "description": "Run `npm run build`, ensure no build errors",
+      "priority": "CRITICAL",
+      "phase": 1,
+      "status": "Todo",
+      "dependencies": [
+        1,
+        2,
+        3
+      ],
+      "files": [],
+      "verification": "Build completes, dist/ directory created, no errors",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 9,
+      "title": "Set up Vitest test environment",
+      "description": "Install Vitest + React Testing Library, create vitest.config.ts, setup test utilities",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "vitest.config.ts",
+        "tests/setup.ts",
+        "package.json"
+      ],
+      "verification": "`npm run test` command works",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 10,
+      "title": "Create unit tests for AuthContext",
+      "description": "Test signUp, signIn, signOut, session management functions",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        9
+      ],
+      "files": [
+        "tests/unit/AuthContext.test.tsx"
+      ],
+      "verification": "All AuthContext tests passing",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 11,
+      "title": "Create unit tests for utility functions",
+      "description": "Test cn(), logActivity, and other helper functions in src/lib/",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        9
+      ],
+      "files": [
+        "tests/unit/utils.test.ts",
+        "tests/unit/logActivity.test.ts"
+      ],
+      "verification": "All utility tests passing",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 12,
+      "title": "Create integration tests for auth flow",
+      "description": "Test complete flow: signup -> email verify -> login -> dashboard",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        9
+      ],
+      "files": [
+        "tests/integration/auth-flow.test.tsx"
+      ],
+      "verification": "Auth integration tests passing",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 13,
+      "title": "Set up Playwright for E2E testing",
+      "description": "Install Playwright, create playwright.config.ts, configure browsers",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "playwright.config.ts",
+        "package.json"
+      ],
+      "verification": "`npm run test:e2e` command works",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 14,
+      "title": "Create E2E test - User registration and login",
+      "description": "Playwright test for complete user signup and login flow",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        13
+      ],
+      "files": [
+        "tests/e2e/auth.spec.ts"
+      ],
+      "verification": "E2E test passes, screenshots captured",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 15,
+      "title": "Create E2E test - Admin dashboard workflows",
+      "description": "Test admin user management and document management",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        13
+      ],
+      "files": [
+        "tests/e2e/admin.spec.ts"
+      ],
+      "verification": "Admin E2E tests passing",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 16,
+      "title": "Create E2E test - Investor portal",
+      "description": "Test NDA signing workflow and document access",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        13
+      ],
+      "files": [
+        "tests/e2e/investor.spec.ts"
+      ],
+      "verification": "Investor portal E2E tests passing",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 17,
+      "title": "Create E2E test - Form validation",
+      "description": "Test all forms with invalid data, verify error messages",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        13
+      ],
+      "files": [
+        "tests/e2e/forms.spec.ts"
+      ],
+      "verification": "Form validation tests passing",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 18,
+      "title": "Achieve 80%+ test coverage",
+      "description": "Run coverage report, add tests for uncovered critical paths",
+      "priority": "HIGH",
+      "phase": 2,
+      "status": "Todo",
+      "dependencies": [
+        10,
+        11,
+        14,
+        15,
+        16,
+        17
+      ],
+      "files": [],
+      "verification": "Coverage report shows 80%+ on critical code",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 19,
+      "title": "Implement root error boundary",
+      "description": "Wrap App with ErrorBoundary to catch all uncaught errors",
+      "priority": "HIGH",
+      "phase": 3,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/App.tsx",
+        "src/components/ErrorBoundary.tsx"
+      ],
+      "verification": "Throw test error, verify fallback UI shown",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 20,
+      "title": "Add loading states everywhere",
+      "description": "Ensure every async operation shows loading spinner or skeleton",
+      "priority": "HIGH",
+      "phase": 3,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "No flash of empty content during loading",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 21,
+      "title": "Implement comprehensive form validation",
+      "description": "Use Zod schemas for all forms, add user-friendly error messages",
+      "priority": "HIGH",
+      "phase": 3,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "All forms show clear error messages for invalid input",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 22,
+      "title": "Add retry logic for API failures",
+      "description": "Implement exponential backoff for Supabase query failures",
+      "priority": "HIGH",
+      "phase": 3,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/integrations/supabase/client.ts"
+      ],
+      "verification": "Cause API failure, verify retry happens automatically",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 23,
+      "title": "Add user-friendly error messages",
+      "description": "Replace technical error messages with helpful user-facing text",
+      "priority": "HIGH",
+      "phase": 3,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "Test various errors, verify messages are clear",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 24,
+      "title": "Implement offline detection",
+      "description": "Show banner when network is offline, queue operations",
+      "priority": "HIGH",
+      "phase": 3,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/OfflineBanner.tsx",
+        "src/App.tsx"
+      ],
+      "verification": "Disconnect network, verify offline banner appears",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 25,
+      "title": "Set up error logging (Sentry)",
+      "description": "Configure Sentry or similar for production error tracking",
+      "priority": "HIGH",
+      "phase": 3,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/main.tsx",
+        ".env.production.example"
+      ],
+      "verification": "Sentry dashboard receiving test errors",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 26,
+      "title": "Test all pages at mobile viewport (375px)",
+      "description": "Use Playwright to test all pages at iPhone SE width",
+      "priority": "HIGH",
+      "phase": 4,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "tests/e2e/responsive.spec.ts"
+      ],
+      "verification": "No horizontal scroll, all content readable",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 27,
+      "title": "Test all pages at tablet viewport (768px)",
+      "description": "Test all pages at iPad width",
+      "priority": "HIGH",
+      "phase": 4,
+      "status": "Todo",
+      "dependencies": [
+        26
+      ],
+      "files": [],
+      "verification": "Layout appropriate for tablet",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 28,
+      "title": "Fix navigation menu on mobile",
+      "description": "Ensure hamburger menu works, proper touch targets",
+      "priority": "HIGH",
+      "phase": 4,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/Navigation.tsx"
+      ],
+      "verification": "Navigation usable on mobile, touch targets >= 44x44px",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 29,
+      "title": "Fix admin tables on mobile",
+      "description": "Make admin tables horizontally scrollable or stacked",
+      "priority": "HIGH",
+      "phase": 4,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/pages/AdminDashboard.tsx"
+      ],
+      "verification": "Admin tables usable on mobile",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 30,
+      "title": "Fix document cards mobile layout",
+      "description": "Ensure document cards stack properly, text readable",
+      "priority": "HIGH",
+      "phase": 4,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/dashboard/DocumentsTab.tsx"
+      ],
+      "verification": "Document cards look good on mobile",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 31,
+      "title": "Test forms with mobile keyboards",
+      "description": "Verify all forms work with mobile keyboards, proper input types",
+      "priority": "HIGH",
+      "phase": 4,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "Forms usable on mobile, autocomplete works",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 32,
+      "title": "Run design review on all pages",
+      "description": "Use `/review-design` command on each page to identify issues",
+      "priority": "MEDIUM",
+      "phase": 5,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "Design review report generated with actionable items",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 33,
+      "title": "Run accessibility audit",
+      "description": "Use `/accessibility-audit --level AA` on all interactive components",
+      "priority": "MEDIUM",
+      "phase": 5,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "WCAG 2.2 Level AA compliance report",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 34,
+      "title": "Fix accessibility violations",
+      "description": "Address all issues identified in accessibility audit",
+      "priority": "MEDIUM",
+      "phase": 5,
+      "status": "Todo",
+      "dependencies": [
+        33
+      ],
+      "files": [],
+      "verification": "Re-run audit, verify all critical issues resolved",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 35,
+      "title": "Improve loading skeleton states",
+      "description": "Replace simple spinners with content-shaped skeletons",
+      "priority": "MEDIUM",
+      "phase": 5,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "Loading states feel smooth and professional",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 36,
+      "title": "Add smooth transitions (Framer Motion)",
+      "description": "Add page transitions, modal animations using Framer Motion",
+      "priority": "MEDIUM",
+      "phase": 5,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [],
+      "verification": "Animations smooth, no jank",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 37,
+      "title": "Optimize and compress images",
+      "description": "Convert images to WebP, add lazy loading",
+      "priority": "MEDIUM",
+      "phase": 5,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "public/"
+      ],
+      "verification": "Images load fast, Lighthouse performance improved",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 38,
+      "title": "Verify color contrast ratios",
+      "description": "Check all text meets WCAG 4.5:1, UI elements 3:1",
+      "priority": "MEDIUM",
+      "phase": 5,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "tailwind.config.ts"
+      ],
+      "verification": "Contrast checker passes all text/UI combinations",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 39,
+      "title": "Implement global search",
+      "description": "Add search bar to navigation, search documents/users/pages",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/GlobalSearch.tsx",
+        "src/components/Navigation.tsx"
+      ],
+      "verification": "Search works, results relevant",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 40,
+      "title": "Add document versioning",
+      "description": "Track document revisions, allow version uploads",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/admin/DocumentVersioning.tsx"
+      ],
+      "verification": "Document version history visible, can upload new versions",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 41,
+      "title": "Implement 2FA (TOTP)",
+      "description": "Add TOTP 2FA support with QR codes and backup codes",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/TwoFactorSetup.tsx",
+        "src/contexts/AuthContext.tsx"
+      ],
+      "verification": "Can enable 2FA, scan QR, verify code works",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 42,
+      "title": "Add comprehensive audit trails",
+      "description": "Log all admin actions, document access, profile changes",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/admin/AuditTrail.tsx"
+      ],
+      "verification": "Audit log shows all activities with timestamps",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 43,
+      "title": "Implement advanced filtering (admin)",
+      "description": "Add date range, status, role filters to admin tables",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/admin/UserFilters.tsx"
+      ],
+      "verification": "Filters work, results update in real-time",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 44,
+      "title": "Add bulk operations (admin)",
+      "description": "Allow bulk delete, bulk role change, bulk email",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/components/admin/BulkActionsBar.tsx"
+      ],
+      "verification": "Can select multiple users, perform bulk action",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 45,
+      "title": "Create reporting dashboard",
+      "description": "Add charts for user growth, document downloads, activity trends",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/pages/ReportingDashboard.tsx"
+      ],
+      "verification": "Charts display data correctly, update in real-time",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 46,
+      "title": "Add email notification preferences",
+      "description": "Let users control which emails they receive",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/pages/Profile.tsx"
+      ],
+      "verification": "Preference settings work, emails respect preferences",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    },
+    {
+      "id": 47,
+      "title": "Implement session timeout with renewal",
+      "description": "Auto-logout after inactivity, show renewal prompt before timeout",
+      "priority": "MEDIUM",
+      "phase": 6,
+      "status": "Todo",
+      "dependencies": [],
+      "files": [
+        "src/contexts/AuthContext.tsx",
+        "src/components/SessionTimeout.tsx"
+      ],
+      "verification": "Session expires after inactivity, renewal prompt works",
+      "created_at": "2026-01-12T04:06:18.311040",
+      "started_at": null,
+      "completed_at": null,
+      "notes": ""
+    }
+  ],
+  "session_logs": [],
+  "success_criteria": [
+    "All existing features continue working",
+    "Zero console errors/warnings",
+    "Zero TypeScript errors",
+    "ESLint passing",
+    "80%+ test coverage",
+    "All Playwright tests passing",
+    "Production build succeeds",
+    "Lighthouse score 90+",
+    "WCAG 2.2 Level AA compliant",
+    "Mobile responsive (375px, 768px, 1920px)",
+    "Production email configured",
+    "DocuSign production working",
+    "Company info complete",
+    ".env.production documented"
+  ]
+}

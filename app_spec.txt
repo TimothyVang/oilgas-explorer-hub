@@ -1,0 +1,156 @@
+<project_specification>
+  <project_name>Oil & Gas Explorer Hub - Production Enhancement</project_name>
+
+  <project_type>EXISTING_CODEBASE_ENHANCEMENT</project_type>
+
+  <overview>
+    Transform the existing oilgas-explorer-hub React/TypeScript/Vite application from 80% complete
+    to 100% production-ready. This is NOT a greenfield project—this is enhancement and completion
+    of an existing application with working authentication, admin dashboard, and investor portal.
+
+    CRITICAL: This is an EXISTING codebase at C:\Users\newbi\Desktop\hadi projects\oilgas-explorer-hub
+    - Read CLAUDE.md for architecture overview
+    - Extend existing code, don't rewrite
+    - Preserve all working features
+    - Follow established patterns (React Hook Form + Zod, shadcn-ui components)
+
+    Current State (80% Complete):
+    - ✅ React 18.3.1 + TypeScript 5.8.3 + Vite 5.4.19
+    - ✅ Tailwind CSS 3.4.17 with shadcn-ui (40+ components)
+    - ✅ Supabase backend (PostgreSQL, Auth, Storage, Edge Functions)
+    - ✅ Authentication system (email/password, Google OAuth, role-based access)
+    - ✅ Admin dashboard (user management, document management, activity logs)
+    - ✅ Investor portal (NDA-gated document access via DocuSign)
+    - ✅ 74 components total (public, admin, dashboard, ui library)
+    - ✅ Database schema complete with RLS policies
+    - ✅ 10 pages (Index, Login, Dashboard, Admin, Profile, About, etc.)
+
+    What Needs Completion (Priority: Production Readiness):
+    1. Install dependencies (node_modules missing - must run npm install first)
+    2. Production environment configuration (email, DocuSign, company info)
+    3. Comprehensive testing (unit, integration, E2E - currently zero tests)
+    4. Error handling and resilience (error boundaries, validation, offline handling)
+    5. Mobile responsiveness validation and fixes
+    6. UI/UX polish (accessibility audit, design system consistency)
+    7. New features (search, document versioning, 2FA, audit trails)
+    8. Documentation (API docs, deployment guide, user manual)
+    9. Performance optimization
+    10. Security audit and production deployment setup
+  </overview>
+
+  <technology_stack>
+    <existing_stack>
+      <frontend>
+        <framework>React 18.3.1 with TypeScript 5.8.3</framework>
+        <build_tool>Vite 5.4.19 with SWC plugin</build_tool>
+        <styling>Tailwind CSS 3.4.17 with tailwindcss-animate</styling>
+        <ui_library>shadcn-ui built on Radix UI primitives</ui_library>
+        <state_management>React Context (AuthContext) + TanStack React Query 5.83.0</state_management>
+        <routing>React Router DOM 6.30.1</routing>
+        <forms>React Hook Form 7.61.1 with Zod 3.25.76 validation</forms>
+        <animation>Framer Motion 12.24.0</animation>
+        <charts>Recharts 2.15.4</charts>
+        <icons>Lucide React 0.462.0</icons>
+        <dev_port>8080 (configured in vite.config.ts)</dev_port>
+      </frontend>
+
+      <backend>
+        <provider>Supabase (managed PostgreSQL + Auth + Storage + Edge Functions)</provider>
+        <database>PostgreSQL with Row Level Security (RLS) policies</database>
+        <authentication>Supabase Auth with email verification and Google OAuth</authentication>
+        <storage>Supabase Storage (avatars bucket: public, investor-documents: private)</storage>
+        <edge_functions>
+          - send-email: Email templates (welcome, NDA complete, NDA reset)
+          - docusign-webhook: NDA signature processing with HMAC verification
+          - delete-user: User deletion handler (stub, needs completion)
+        </edge_functions>
+      </backend>
+
+      <integrations>
+        <email_service>Resend API (currently using test sender: onboarding@resend.dev)</email_service>
+        <document_signing>DocuSign API (currently using demo/test URL)</document_signing>
+      </integrations>
+    </existing_stack>
+
+    <tools_to_add>
+      <testing>Vitest + React Testing Library + Playwright for E2E</testing>
+      <linting>ESLint 9.32.0 (installed but not configured properly)</linting>
+      <monitoring>Sentry or similar for production error tracking</monitoring>
+      <ci_cd>GitHub Actions for automated testing and deployment</ci_cd>
+    </tools_to_add>
+  </technology_stack>
+
+  <implementation_phases>
+    <phase_1 priority="CRITICAL">
+      <title>Infrastructure Setup - Install Dependencies and Verify Environment</title>
+      <estimated_tasks>8</estimated_tasks>
+      <verification>
+        - npm run dev starts without errors
+        - npm run build completes successfully
+        - No console errors when browsing
+        - Company info displays correctly
+      </verification>
+      <blocking>Must complete before proceeding to other phases</blocking>
+    </phase_1>
+
+    <phase_2 priority="HIGH">
+      <title>Comprehensive Testing Infrastructure</title>
+      <estimated_tasks>10</estimated_tasks>
+      <verification>
+        - All tests passing
+        - 80%+ test coverage
+        - Playwright E2E tests working
+      </verification>
+    </phase_2>
+
+    <phase_3 priority="HIGH">
+      <title>Error Handling and Resilience</title>
+      <estimated_tasks>7</estimated_tasks>
+      <verification>
+        - ErrorBoundary catches all errors
+        - Offline handling works
+        - Retry logic implemented
+      </verification>
+    </phase_3>
+
+    <phase_4 priority="HIGH">
+      <title>Mobile Responsiveness</title>
+      <estimated_tasks>6</estimated_tasks>
+      <verification>
+        - Works at 375px, 768px, 1920px
+        - Touch targets ≥ 44x44px
+        - No horizontal scroll
+      </verification>
+    </phase_4>
+
+    <phase_5 priority="MEDIUM">
+      <title>UI/UX Polish and Accessibility</title>
+      <estimated_tasks>7</estimated_tasks>
+      <verification>
+        - WCAG 2.2 Level AA compliant
+        - Lighthouse score 90+
+        - senior-uiux-designer validation passing
+      </verification>
+    </phase_5>
+
+    <phase_6 priority="MEDIUM">
+      <title>New Features</title>
+      <estimated_tasks>9</estimated_tasks>
+      <verification>
+        - All features tested
+        - No regressions
+        - Documentation complete
+      </verification>
+    </phase_6>
+  </implementation_phases>
+
+  <success_criteria>
+    - All existing features continue working
+    - Zero console errors/warnings
+    - 80%+ test coverage
+    - WCAG 2.2 Level AA compliant
+    - Mobile responsive (375px, 768px, 1920px)
+    - Production configs complete
+    - All Playwright tests passing
+  </success_criteria>
+</project_specification>

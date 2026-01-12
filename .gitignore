@@ -22,3 +22,29 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code temp files
+tmpclaude-*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+
+# Environment files (keep .env.example)
+.env.production
+
+# Test outputs
+coverage/
+test-results/
+playwright-report/
+
+# Build artifacts
+.cache
+.parcel-cache
+
+# OS files
+Thumbs.db
+*.tmp
