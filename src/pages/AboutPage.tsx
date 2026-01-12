@@ -125,7 +125,7 @@ const TextDecode = ({ text }: { text: string }) => {
   ); // Simplifying for MVP, full decode logic is complex to inline without extra hook. Visual impact comes from font size/weight here.
 };
 
-const ValueCard3D = ({ icon: Icon, title, desc, delay }: any) => {
+const ValueCard3D = ({ icon: Icon, title, desc, delay }: ValueCard3DProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
