@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
 
@@ -58,6 +59,3 @@ export function useFormErrors() {
     hasErrors: Object.keys(errors).length > 0,
   };
 }
-
-// Need to import useState for the hook
-import { useState } from "react";
