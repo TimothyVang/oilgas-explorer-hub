@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import OfflineBanner from "@/components/OfflineBanner";
+import SessionTimeout from "@/components/SessionTimeout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -20,6 +21,11 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Session timeout configuration
+// Default: 30 minutes timeout, 2 minute warning before timeout
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+const SESSION_WARNING_MS = 2 * 60 * 1000; // 2 minutes before timeout
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
@@ -28,6 +34,10 @@ const App = () => (
           <Toaster />
           <Sonner />
           <OfflineBanner position="bottom" />
+          <SessionTimeout
+            timeoutDuration={SESSION_TIMEOUT_MS}
+            warningDuration={SESSION_WARNING_MS}
+          />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -35,7 +45,7 @@ const App = () => (
               <Route path="/about" element={<AboutPage />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              
+
               {/* Protected Routes - Require Authentication */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
@@ -52,14 +62,14 @@ const App = () => (
                   <InvestorDocuments />
                 </ProtectedRoute>
               } />
-              
+
               {/* Admin Routes - Require Admin Role */}
               <Route path="/admin" element={
                 <ProtectedRoute requireAdmin>
                   <AdminDashboard />
                 </ProtectedRoute>
               } />
-              
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

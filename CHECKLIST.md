@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 28
+- **Completed**: 29
 - **In Progress**: 0
-- **Todo**: 19
-- **Completion**: 59.6%
-- **Last Updated**: 2026-01-12T14:38:42.293840
+- **Todo**: 18
+- **Completion**: 61.7%
+- **Last Updated**: 2026-01-12T14:56:59.705418
 
 ---
 
@@ -741,12 +741,22 @@ Benefits:
 **Files**: `src/pages/Profile.tsx`
 **Verification**: Preference settings work, emails respect preferences
 
-### [ ] Task 47: Implement session timeout with renewal
-**Status**:  Todo
+### [x] Task 47: Implement session timeout with renewal
+**Status**:  Done
 **Priority**: MEDIUM
 **Description**: Auto-logout after inactivity, show renewal prompt before timeout
 **Files**: `src/contexts/AuthContext.tsx`, `src/components/SessionTimeout.tsx`
 **Verification**: Session expires after inactivity, renewal prompt works
+**Notes**: Session timeout feature complete:
+- useSessionTimeout hook: Tracks user activity, shows warning before timeout
+- SessionTimeout component: Modal dialog with Stay Logged In / Log Out options
+- Integrated in App.tsx with 30-minute timeout, 2-minute warning
+- Activity tracked via mousedown, mousemove, keydown, scroll, touchstart, click, focus
+- Auto-logout on timeout, session extended on user activity
+- All 225 unit tests passing
+- All 11 E2E smoke tests passing
+- Production build succeeds
+**Completed**: 2026-01-12
 
 ---
 
