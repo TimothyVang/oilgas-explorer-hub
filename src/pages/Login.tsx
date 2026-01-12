@@ -37,7 +37,11 @@ const Login = () => {
       provider: 'google',
       options: {
         redirectTo: window.location.origin,
-        skipBrowserRedirect: true
+        skipBrowserRedirect: true,
+        queryParams: {
+          prompt: 'select_account',
+          access_type: 'offline'
+        }
       }
     });
     
