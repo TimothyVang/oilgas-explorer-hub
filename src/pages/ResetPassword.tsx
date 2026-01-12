@@ -81,39 +81,40 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen bg-midnight flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Premium Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[#020410]" />
-        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
+      {/* Background - matches homepage Hero */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,20,40,1)_0%,rgba(2,4,16,1)_100%)]" />
+      
+      {/* Single centered glow orb */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+      
+      {/* Bold background typography */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span className="text-[15vw] font-black tracking-tighter bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent opacity-[0.03]">
+          SECURE
+        </span>
       </div>
       
       <div className="w-full max-w-md relative z-10">
         {/* Back Link */}
         <Link 
           to="/login" 
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors"
+          className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Login
         </Link>
 
-        {/* Card - Glassmorphism */}
-        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl p-8 relative overflow-hidden">
-          {/* Top highlight */}
-          <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          
+        {/* Card - Clean glassmorphism */}
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-bold text-xl text-white shadow-[0_4px_20px_rgba(0,102,255,0.4)]">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-white/10 flex items-center justify-center font-bold text-lg text-white">
               B
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-white mb-1">
               {isSuccess ? "Password Updated" : "Set New Password"}
             </h1>
-            <p className="text-gray-400">
+            <p className="text-white/60 text-sm">
               {isSuccess 
                 ? "Your password has been successfully updated" 
                 : "Enter your new password below"}
@@ -122,66 +123,66 @@ const ResetPassword = () => {
 
           {!isValidSession && !isSuccess ? (
             <div className="text-center space-y-4">
-              <p className="text-gray-400 text-sm">
+              <p className="text-white/60 text-sm">
                 This password reset link is invalid or has expired. Please request a new one.
               </p>
               <Link to="/forgot-password">
-                <Button className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-[0_4px_20px_rgba(0,102,255,0.4)] transition-all duration-300">
+                <Button className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg">
                   Request New Link
                 </Button>
               </Link>
             </div>
           ) : isSuccess ? (
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-emerald-400" />
+              <div className="w-14 h-14 bg-emerald-500/20 rounded-xl flex items-center justify-center mx-auto">
+                <CheckCircle className="w-7 h-7 text-emerald-400" />
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className="text-white/60 text-sm">
                 You can now sign in with your new password.
               </p>
               <Button 
-                className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-[0_4px_20px_rgba(0,102,255,0.4)] transition-all duration-300"
+                className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg"
                 onClick={() => navigate("/login")}
               >
                 Sign In
               </Button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-300">
+                <Label htmlFor="password" className="text-white/70 text-sm">
                   New Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                   <Input
                     id="password"
                     type="password"
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
+                    className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
                     required
                   />
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-white/40">
                   Password must be at least 6 characters
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-gray-300">
+                <Label htmlFor="confirmPassword" className="text-white/70 text-sm">
                   Confirm New Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                   <Input
                     id="confirmPassword"
                     type="password"
                     placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-600 focus:bg-white/10 focus:border-primary/50"
+                    className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
                     required
                   />
                 </div>
@@ -189,7 +190,7 @@ const ResetPassword = () => {
 
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-[0_4px_20px_rgba(0,102,255,0.4)] transition-all duration-300"
+                className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg"
                 disabled={isLoading}
               >
                 {isLoading ? "Updating..." : "Update Password"}
@@ -199,7 +200,7 @@ const ResetPassword = () => {
         </div>
 
         {/* Company Name */}
-        <p className="text-center text-gray-600 mt-8 text-sm">
+        <p className="text-center text-white/30 mt-8 text-sm">
           © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
         </p>
       </div>
