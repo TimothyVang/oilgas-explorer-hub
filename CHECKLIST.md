@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 20
+- **Completed**: 21
 - **In Progress**: 0
-- **Todo**: 27
-- **Completion**: 42.6%
-- **Last Updated**: 2026-01-12T13:43:30.266899
+- **Todo**: 26
+- **Completion**: 44.7%
+- **Last Updated**: 2026-01-12T13:46:26.606965
 
 ---
 
@@ -424,12 +424,28 @@ Integration verified:
 
 **Completed**: 2026-01-12
 
-### [ ] Task 24: Implement offline detection
-**Status**:  Todo
+### [x] Task 24: Implement offline detection
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Show banner when network is offline, queue operations
 **Files**: `src/components/OfflineBanner.tsx`, `src/App.tsx`
 **Verification**: Disconnect network, verify offline banner appears
+**Notes**: Offline detection complete:
+- Created useOnlineStatus hook with:
+  - Browser online/offline event detection
+  - Optional polling for connection verification
+  - Callbacks for status changes (onOnline, onOffline)
+  - checkConnection() for manual retry
+- Created OfflineBanner component:
+  - Fixed bottom banner with amber styling
+  - Shows when offline, auto-hides when online
+  - Retry button with loading state
+  - Toast notifications for status changes
+- Integrated into App.tsx
+- Created test suite (12 tests)
+- All 210 unit tests passing
+
+**Completed**: 2026-01-12
 
 ### [ ] Task 25: Set up error logging (Sentry)
 **Status**:  Todo
