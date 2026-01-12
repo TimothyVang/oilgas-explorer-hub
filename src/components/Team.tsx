@@ -1,9 +1,20 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Linkedin, Mail } from "lucide-react";
 
 const Team = () => {
-  const [activeId, setActiveId] = useState<number | null>(1); // Default first open
+  const [activeId, setActiveId] = useState<number | null>(1);
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  // Parallax transforms
+  const { scrollYProgress } = useScroll({ 
+    target: sectionRef, 
+    offset: ["start end", "end start"] 
+  });
+  const titleY = useTransform(scrollYProgress, [0, 0.4], [80, 0]);
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+  const cardsY = useTransform(scrollYProgress, [0.1, 0.5], [100, 0]);
+  const cardsOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
 
   const team = [
     {
@@ -37,17 +48,26 @@ const Team = () => {
   ];
 
   return (
-    <section className="py-32 bg-midnight overflow-hidden">
+    <section ref={sectionRef} className="py-32 bg-midnight overflow-hidden">
       <div className="container mx-auto px-4 mb-20 text-center">
-        <h2 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter mb-6">
+        <motion.h2 
+          style={{ y: titleY, opacity: titleOpacity }}
+          className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter mb-6"
+        >
           The <span className="text-primary">Architects</span>
-        </h2>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+        </motion.h2>
+        <motion.p 
+          style={{ y: titleY, opacity: titleOpacity }}
+          className="text-xl text-gray-400 max-w-2xl mx-auto"
+        >
           Meet the minds behind the machine.
-        </p>
+        </motion.p>
       </div>
 
-      <div className="container mx-auto px-4 h-[500px] flex gap-4">
+      <motion.div 
+        style={{ y: cardsY, opacity: cardsOpacity }}
+        className="container mx-auto px-4 h-[500px] flex gap-4"
+      >
         {team.map((member) => (
           <motion.div
             key={member.id}
@@ -88,7 +108,7 @@ const Team = () => {
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

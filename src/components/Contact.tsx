@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import { Send, MapPin, Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { siteConfig } from "@/constants/siteConfig";
@@ -11,7 +11,20 @@ const Contact = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
+  // Scroll-based parallax
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.3]);
+  const contentX = useTransform(scrollYProgress, [0, 0.5], [-60, 0]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
+  const formY = useTransform(scrollYProgress, [0.1, 0.5], [80, 0]);
+  const formOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
+
+  // Mouse-based 3D effect
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useTransform(y, [-100, 100], [30, -30]);
@@ -37,7 +50,6 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Basic validation
     if (!formData.name || !formData.email || !formData.message) {
       toast.error("Please fill in all fields");
       return;
@@ -46,13 +58,8 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      // TODO: Replace with actual API endpoint when backend is ready
-      // For now, we'll simulate a submission
       await new Promise(resolve => setTimeout(resolve, 1000));
-
       toast.success("Message sent successfully! We'll get back to you soon.");
-
-      // Reset form
       setFormData({
         name: "",
         email: "",
@@ -66,15 +73,21 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="relative min-h-screen py-32 bg-midnight flex items-center justify-center overflow-hidden">
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-midnight to-midnight opacity-50" />
+    <section ref={sectionRef} id="contact" className="relative min-h-screen py-32 bg-midnight flex items-center justify-center overflow-hidden">
+      {/* Background Ambience with Parallax Scale */}
+      <motion.div 
+        style={{ scale: bgScale }}
+        className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-midnight to-midnight opacity-50" 
+      />
 
       <div className="container mx-auto px-4 perspective-1000">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
 
-          {/* Text Content */}
-          <div className="space-y-8 z-10">
+          {/* Text Content with Slide-in Parallax */}
+          <motion.div 
+            style={{ x: contentX, opacity: contentOpacity }}
+            className="space-y-8 z-10"
+          >
             <motion.h2
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -108,64 +121,69 @@ const Contact = () => {
                 </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* 3D Holographic Form */}
+          {/* 3D Holographic Form with Parallax */}
           <motion.div
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            style={{ y: formY, opacity: formOpacity }}
             className="relative w-full max-w-md mx-auto"
           >
-            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full -z-10 animate-pulse-glow" />
+            <motion.div
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+              className="relative"
+            >
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full -z-10 animate-pulse-glow" />
 
-            <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[2rem] shadow-2xl relative z-10">
-              <div className="space-y-6">
-                <div>
-                  <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Name</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all"
-                    placeholder="Enter your name"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Email</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all"
-                    placeholder="name@company.com"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Message</label>
-                  <textarea
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all resize-none"
-                    placeholder="Tell us about your project..."
-                  />
+              <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[2rem] shadow-2xl relative z-10">
+                <div className="space-y-6">
+                  <div>
+                    <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Name</label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Email</label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all"
+                      placeholder="name@company.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Message</label>
+                    <textarea
+                      rows={4}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full bg-white/10 border border-white/20 rounded-lg p-4 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary focus:bg-white/20 transition-all resize-none"
+                      placeholder="Tell us about your project..."
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-4 bg-gradient-to-r from-primary to-accent rounded-lg text-black font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Signal"}
+                    {!isSubmitting && <Send className="w-4 h-4" />}
+                  </button>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 bg-gradient-to-r from-primary to-accent rounded-lg text-black font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                >
-                  {isSubmitting ? "Sending..." : "Send Signal"}
-                  {!isSubmitting && <Send className="w-4 h-4" />}
-                </button>
-              </div>
-
-              {/* Decorative Glass Elements */}
-              <div className="absolute -top-10 -right-10 w-20 h-20 bg-accent/20 rounded-full blur-xl" />
-              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/20 rounded-full blur-xl" />
-            </form>
+                {/* Decorative Glass Elements */}
+                <div className="absolute -top-10 -right-10 w-20 h-20 bg-accent/20 rounded-full blur-xl" />
+                <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/20 rounded-full blur-xl" />
+              </form>
+            </motion.div>
           </motion.div>
 
         </div>
