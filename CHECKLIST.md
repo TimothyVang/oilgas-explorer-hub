@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 22
+- **Completed**: 24
 - **In Progress**: 0
-- **Todo**: 25
-- **Completion**: 46.8%
-- **Last Updated**: 2026-01-12T14:06:34.825864
+- **Todo**: 23
+- **Completion**: 51.1%
+- **Last Updated**: 2026-01-12T14:19:43.742740
 
 ---
 
@@ -493,19 +493,49 @@ All tests verified passing on Chromium browser.
 
 **Completed**: 2026-01-12
 
-### [ ] Task 27: Test all pages at tablet viewport (768px)
-**Status**:  Todo
+### [x] Task 27: Test all pages at tablet viewport (768px)
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Test all pages at iPad width
 **Dependencies**: Task 26
 **Verification**: Layout appropriate for tablet
+**Notes**: Task 27 Complete - Tablet viewport testing (768px)
 
-### [ ] Task 28: Fix navigation menu on mobile
-**Status**:  Todo
+Tablet tests were implemented as part of Task 26 in tests/e2e/responsive.spec.ts.
+
+Test Coverage:
+- Homepage: loads without horizontal scroll at 768px
+- About page: loads without horizontal scroll at 768px
+- Login page: proper tablet layout verification
+- Navigation: functional at tablet width
+
+All 4 tablet tests passing on Chromium.
+Tests verify no horizontal scroll and proper layout at iPad width.
+
+**Completed**: 2026-01-12
+
+### [x] Task 28: Fix navigation menu on mobile
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Ensure hamburger menu works, proper touch targets
 **Files**: `src/components/Navigation.tsx`
 **Verification**: Navigation usable on mobile, touch targets >= 44x44px
+**Notes**: Task 28 Complete - Fix navigation menu on mobile
+
+Added 44px minimum touch targets to all mobile navigation elements:
+- MobileNavLink component: min-h-[44px] min-w-[44px] px-4 py-2
+- About link in mobile menu: min-h-[44px] min-w-[44px] px-4 py-2
+- Dashboard/Investor Portal buttons: min-h-[44px]
+- Logout button: min-h-[44px]
+- Get Started button: min-h-[44px]
+
+Hamburger menu button already had size="icon" which provides h-11 w-11 (44x44px).
+
+All 35 responsive tests passing.
+All 210 unit tests passing.
+Build succeeds.
+
+**Completed**: 2026-01-12
 
 ### [ ] Task 29: Fix admin tables on mobile
 **Status**:  Todo

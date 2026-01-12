@@ -163,7 +163,7 @@ const Navigation = () => {
           >
             <div className="flex flex-col items-center justify-center h-full gap-8 p-4">
               <MobileNavLink onClick={() => scrollToSection("home")}>Home</MobileNavLink>
-              <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-white/80 hover:text-primary transition-colors">
+              <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-white/80 hover:text-primary transition-colors min-h-[44px] min-w-[44px] px-4 py-2">
                 About
               </Link>
               <MobileNavLink onClick={() => scrollToSection("services")}>Services</MobileNavLink>
@@ -174,11 +174,11 @@ const Navigation = () => {
               {user ? (
                 <div className="flex flex-col gap-4 w-full max-w-xs">
                   <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white">
+                    <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white min-h-[44px]">
                       Dashboard
                     </Button>
                   </Link>
-                  <Button variant="ghost" onClick={handleSignOut} className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 gap-2">
+                  <Button variant="ghost" onClick={handleSignOut} className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 gap-2 min-h-[44px]">
                     <LogOut className="w-4 h-4" />
                     Logout
                   </Button>
@@ -186,13 +186,13 @@ const Navigation = () => {
               ) : (
                 <div className="flex flex-col gap-4 w-full max-w-xs">
                   <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full">
-                    <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white">
+                    <Button variant="outline" className="w-full border-white/20 bg-white/5 text-white min-h-[44px]">
                       Investor Portal
                     </Button>
                   </Link>
                   <Button 
                     onClick={() => scrollToSection("contact")}
-                    className="w-full bg-primary hover:bg-primary/90 text-white"
+                    className="w-full bg-primary hover:bg-primary/90 text-white min-h-[44px]"
                   >
                     Get Started
                   </Button>
@@ -219,7 +219,7 @@ const NavLink = ({ children, onClick, isScrolled }: { children: React.ReactNode,
 const MobileNavLink = ({ children, onClick }: { children: React.ReactNode, onClick: () => void }) => (
   <button
     onClick={onClick}
-    className="text-2xl font-bold text-white/80 hover:text-primary transition-colors"
+    className="text-2xl font-bold text-white/80 hover:text-primary transition-colors min-h-[44px] min-w-[44px] px-4 py-2"
   >
     {children}
   </button>
