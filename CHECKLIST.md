@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 10
-- **In Progress**: 1
+- **Completed**: 11
+- **In Progress**: 0
 - **Todo**: 36
-- **Completion**: 21.3%
-- **Last Updated**: 2026-01-12T04:46:13.607572
+- **Completion**: 23.4%
+- **Last Updated**: 2026-01-12T04:49:03.081850
 
 ---
 
@@ -169,13 +169,26 @@ Total: 50 tests passing across all test files
 - Total: 28 utility tests passing
 **Completed**: 2026-01-12
 
-### [-] Task 12: Create integration tests for auth flow
-**Status**:  In Progress
+### [x] Task 12: Create integration tests for auth flow
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Test complete flow: signup -> email verify -> login -> dashboard
 **Files**: `tests/integration/auth-flow.test.tsx`
 **Dependencies**: Task 9
 **Verification**: Auth integration tests passing
+**Notes**: Integration tests complete:
+- tests/integration/auth-flow.test.tsx: 18 tests
+- Signup flow: form rendering, validation, success/error handling
+- Login flow: validation, credential checking, error messages
+- Google OAuth: initiation and redirect
+- Protected routes: redirect unauthenticated, access authenticated
+- Session persistence: restore session, handle expiry
+- Logout flow: signout and redirect
+- Form toggling: login/signup switch, verification message
+
+Total: 76 tests passing (58 unit + 18 integration)
+Commit: 782635f
+**Completed**: 2026-01-12
 
 ### [x] Task 13: Set up Playwright for E2E testing
 **Status**:  Done
