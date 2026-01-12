@@ -33,7 +33,7 @@ describe("DocumentsTab", () => {
   });
 
   describe("Loading State", () => {
-    it("should render loading spinner when loading", () => {
+    it("should render loading skeleton when loading", () => {
       vi.mocked(useInvestorDocuments).mockReturnValue({
         user: { id: "user-1", email: "test@example.com" },
         ndaStatus: null,
@@ -44,8 +44,8 @@ describe("DocumentsTab", () => {
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      const spinner = document.querySelector(".animate-spin");
-      expect(spinner).toBeInTheDocument();
+      const loadingSkeleton = document.querySelector(".animate-pulse");
+      expect(loadingSkeleton).toBeInTheDocument();
     });
   });
 

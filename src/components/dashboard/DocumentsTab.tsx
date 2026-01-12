@@ -10,6 +10,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { DocumentCardsSkeleton } from "@/components/loading/PageLoadingSkeleton";
 
 export const DocumentsTab = () => {
   const {
@@ -23,8 +24,19 @@ export const DocumentsTab = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="space-y-6">
+        {/* Loading skeleton for header */}
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 animate-pulse">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-white/10 rounded-lg" />
+            <div className="space-y-2">
+              <div className="h-4 w-32 bg-white/10 rounded" />
+              <div className="h-3 w-24 bg-white/10 rounded" />
+            </div>
+          </div>
+        </div>
+        {/* Document cards skeleton */}
+        <DocumentCardsSkeleton count={6} />
       </div>
     );
   }
