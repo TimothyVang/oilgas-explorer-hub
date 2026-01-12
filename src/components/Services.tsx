@@ -167,6 +167,8 @@ const ServiceCard = ({ service }: { service: Service }) => {
 
           <motion.img
             src={service.img}
+            loading="lazy"
+            decoding="async"
             alt={service.title}
             className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(0,102,255,0.3)] group-hover:scale-110 group-hover:drop-shadow-[0_0_50px_rgba(0,255,255,0.6)] transition-all duration-700 relative z-20"
           />

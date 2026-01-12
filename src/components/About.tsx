@@ -35,6 +35,8 @@ const About = () => {
               <img
                 src={pumpJacksImage}
                 alt="Oil pump jacks at dawn"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/50 to-transparent" />

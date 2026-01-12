@@ -39,6 +39,8 @@ const AboutPage = () => {
         <motion.div style={{ scale }} className="absolute inset-0 z-0 opacity-50">
           <img
             src={heroImage}
+            loading="lazy"
+            decoding="async"
             alt="Oil field operations"
             className="w-full h-full object-cover grayscale contrast-125"
           />
