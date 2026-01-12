@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
+import { captureException, isSentryEnabled } from "@/lib/sentry";
 
 interface Props {
   children: ReactNode;
@@ -9,24 +10,33 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  eventId: string | null;
 }
 
 class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
+    eventId: null,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Log to console in all environments
     console.error("Uncaught error:", error, errorInfo);
+
+    // Report to Sentry in production
+    captureException(error, {
+      componentStack: errorInfo.componentStack,
+      boundary: "ErrorBoundary",
+    });
   }
 
   private handleReset = () => {
-    this.setState({ hasError: false, error: null });
+    this.setState({ hasError: false, error: null, eventId: null });
     window.location.href = "/";
   };
 
@@ -44,10 +54,11 @@ class ErrorBoundary extends Component<Props, State> {
             </h1>
 
             <p className="text-gray-400 mb-6">
-              We're sorry, but something unexpected happened. The error has been logged and we'll look into it.
+              We're sorry, but something unexpected happened.
+              {isSentryEnabled() && " The error has been automatically reported."}
             </p>
 
-            {process.env.NODE_ENV === "development" && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <div className="mb-6 p-4 bg-black/50 rounded-lg text-left overflow-auto max-h-32">
                 <code className="text-xs text-red-300 break-all">
                   {this.state.error.toString()}

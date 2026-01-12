@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { setSentryUser } from "@/lib/sentry";
 
 interface AuthContextType {
   user: User | null;
@@ -33,6 +34,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+
+        // Update Sentry user context on auth state change
+        if (session?.user) {
+          setSentryUser({
+            id: session.user.id,
+            email: session.user.email,
+            role: session.user.user_metadata?.role || 'user',
+          });
+        } else {
+          setSentryUser(null);
+        }
       }
     );
 
@@ -41,6 +53,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Set initial Sentry user context
+      if (session?.user) {
+        setSentryUser({
+          id: session.user.id,
+          email: session.user.email,
+          role: session.user.user_metadata?.role || 'user',
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -71,6 +92,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    // Clear Sentry user context on sign out
+    setSentryUser(null);
     await supabase.auth.signOut();
   };
 
