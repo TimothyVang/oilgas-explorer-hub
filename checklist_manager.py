@@ -29,9 +29,12 @@ Usage:
 """
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
+
+# UTF-8 encoding is configured via PYTHONIOENCODING environment variable in autonomous_agent_demo.py
 
 
 class ChecklistManager:
