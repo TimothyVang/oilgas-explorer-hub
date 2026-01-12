@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, User, LogOut, Search } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
@@ -85,6 +85,29 @@ const Navigation = () => {
             </Link>
             <NavLink isScrolled={isScrolled} onClick={() => scrollToSection("services")}>Services</NavLink>
             <NavLink isScrolled={isScrolled} onClick={() => scrollToSection("contact")}>Contact</NavLink>
+
+            {/* Search Button */}
+            <button
+              onClick={() => {
+                const event = new KeyboardEvent("keydown", {
+                  key: "k",
+                  ctrlKey: true,
+                  bubbles: true,
+                });
+                document.dispatchEvent(event);
+              }}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md border transition-all hover:bg-white/10 ${
+                isScrolled
+                  ? "text-gray-400 border-white/10 hover:text-white"
+                  : "text-white/70 border-white/20 hover:text-white"
+              }`}
+              aria-label="Search"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 font-mono text-[10px] opacity-60">
+                <span>2318</span>K
+              </kbd>
+            </button>
 
             {/* Divider */}
             <div className={`h-6 w-px ${isScrolled ? 'bg-white/10' : 'bg-white/20'}`} />

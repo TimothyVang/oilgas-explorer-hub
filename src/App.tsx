@@ -8,6 +8,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import OfflineBanner from "@/components/OfflineBanner";
 import SessionTimeout from "@/components/SessionTimeout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import GlobalSearch from "@/components/GlobalSearch";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -39,6 +40,7 @@ const App = () => (
             warningDuration={SESSION_WARNING_MS}
           />
           <BrowserRouter>
+            <GlobalSearch />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
