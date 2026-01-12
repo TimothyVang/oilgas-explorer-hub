@@ -206,7 +206,7 @@ const Dashboard = () => {
 
                       <div className="space-y-2">
                         {statsLoading ? (
-                          <p className="text-white/40 py-8 text-center">Loading...</p>
+                          <div className="flex items-center justify-center py-8"><div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
                         ) : stats.recentActivity.length === 0 ? (
                           <div className="text-center py-12 border border-white/10 rounded-xl">
                             <p className="text-white/40">No activity yet</p>
@@ -239,7 +239,7 @@ const Dashboard = () => {
                       
                       <div className="space-y-2">
                         {statsLoading ? (
-                          <p className="text-white/40 py-8 text-center">Loading...</p>
+                          <div className="flex items-center justify-center py-8"><div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
                         ) : stats.pendingTasks.length === 0 ? (
                           <div className="text-center py-8 border border-white/10 rounded-xl">
                             <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
