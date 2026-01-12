@@ -204,7 +204,7 @@ const MetricCell = ({ label, value, icon: Icon, delay }: MetricCellProps) => (
   <div className="group/metric">
     <div className="flex items-center gap-1 mb-1 text-gray-500 group-hover/metric:text-primary transition-colors">
       <Icon size={12} />
-      <span className="text-[10px] uppercase tracking-wider">{label}</span>
+      <span className="text-xs uppercase tracking-wider">{label}</span>
     </div>
     <p className="text-lg font-bold text-white group-hover/metric:text-white transition-colors">{value}</p>
   </div>

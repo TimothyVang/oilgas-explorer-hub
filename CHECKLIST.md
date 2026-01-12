@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 21
+- **Completed**: 22
 - **In Progress**: 0
-- **Todo**: 26
-- **Completion**: 44.7%
-- **Last Updated**: 2026-01-12T13:46:51.995939
+- **Todo**: 25
+- **Completion**: 46.8%
+- **Last Updated**: 2026-01-12T14:06:34.825864
 
 ---
 
@@ -460,12 +460,38 @@ Integration verified:
 
 > Test and fix mobile layouts at 375px, 768px, and 1920px.
 
-### [ ] Task 26: Test all pages at mobile viewport (375px)
-**Status**:  Todo
+### [x] Task 26: Test all pages at mobile viewport (375px)
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Use Playwright to test all pages at iPhone SE width
 **Files**: `tests/e2e/responsive.spec.ts`
 **Verification**: No horizontal scroll, all content readable
+**Notes**: Task 26 Complete - Mobile Viewport Testing (375px)
+
+Comprehensive mobile responsive tests created and all 35 tests passing.
+
+Test Coverage:
+- Homepage: loading, navigation, text readability, images, content stacking
+- Login: horizontal scroll, form fields, submit button, form fit
+- About Page: loading, horizontal scroll, text readability
+- Dashboard/Admin/Investor/Profile: redirect tests and layout checks
+- Contact Form: accessibility on homepage
+- Footer: viewport fit, link tappability
+- Navigation: hamburger menu, touch targets
+- Touch Target Analysis: homepage and login page
+- Form Inputs: size, labels
+
+Fixed Issues:
+- Services.tsx: Changed text-[10px] to text-xs (12px minimum for accessibility)
+- Updated responsive tests to use scroll behavior checking instead of element size checking
+- Fixed contact section test to check homepage instead of about page
+
+Test Files Created:
+- tests/e2e/responsive.spec.ts (35 tests)
+
+All tests verified passing on Chromium browser.
+
+**Completed**: 2026-01-12
 
 ### [ ] Task 27: Test all pages at tablet viewport (768px)
 **Status**:  Todo
