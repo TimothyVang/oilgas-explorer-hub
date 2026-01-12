@@ -347,13 +347,17 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-midnight relative overflow-hidden">
       
-      {/* Premium Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[#020410]" />
-        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent/20 rounded-full blur-[150px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
+      {/* Background - matches homepage Hero */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,20,40,1)_0%,rgba(2,4,16,1)_100%)]" />
+      
+      {/* Single centered glow orb */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+      
+      {/* Bold background typography */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span className="text-[15vw] font-black tracking-tighter bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent opacity-[0.03]">
+          ADMIN
+        </span>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8 pt-32">
@@ -377,69 +381,62 @@ const AdminDashboard = () => {
           </Button>
         </div>
 
-        {/* Admin Card - Glassmorphism */}
-        <div className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl shadow-2xl p-8 max-w-6xl mx-auto relative overflow-hidden">
-          {/* Top highlight */}
-          <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          
+        {/* Admin Card - Clean glassmorphism */}
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 max-w-6xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-14 h-14 bg-rose-500/20 rounded-2xl flex items-center justify-center">
-              <Shield className="w-7 h-7 text-rose-400" />
+            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+              <Shield className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">
+              <h1 className="text-2xl font-bold text-white">
                 Admin Dashboard
               </h1>
-              <p className="text-gray-400">
-                Manage users, documents, and view activity
+              <p className="text-white/60 text-sm">
+                Manage users, documents, and activity
               </p>
             </div>
           </div>
 
-          {/* Stats */}
+          {/* Stats - simplified to match homepage */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-              <Users className="w-6 h-6 text-primary mx-auto mb-2" />
-              <p className="text-2xl font-bold text-white">
+            <div className="text-center py-4">
+              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
                 {profiles.length}
               </p>
-              <p className="text-sm text-gray-400">Total Users</p>
+              <p className="text-sm text-white/50 mt-1">Total Users</p>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-              <Shield className="w-6 h-6 text-rose-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-white">
+            <div className="text-center py-4">
+              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
                 {userRoles.filter((r) => r.role === "admin").length}
               </p>
-              <p className="text-sm text-gray-400">Admins</p>
+              <p className="text-sm text-white/50 mt-1">Admins</p>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-              <Users className="w-6 h-6 text-accent mx-auto mb-2" />
-              <p className="text-2xl font-bold text-white">
+            <div className="text-center py-4">
+              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
                 {userRoles.filter((r) => r.role === "moderator").length}
               </p>
-              <p className="text-sm text-gray-400">Moderators</p>
+              <p className="text-sm text-white/50 mt-1">Moderators</p>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-              <CheckCircle className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-white">
+            <div className="text-center py-4">
+              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
                 {ndaSignedCount}
               </p>
-              <p className="text-sm text-gray-400">NDAs Signed</p>
+              <p className="text-sm text-white/50 mt-1">NDAs Signed</p>
             </div>
           </div>
 
-          {/* Tabs */}
+          {/* Tabs - minimal styling */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6 bg-white/5 border border-white/10">
-              <TabsTrigger value="users" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
+            <TabsList className="mb-6 bg-white/5 border border-white/10 p-1">
+              <TabsTrigger value="users" className="gap-2 text-white/60 data-[state=active]:bg-white/10 data-[state=active]:text-white">
                 <Users className="w-4 h-4" />
                 Users
               </TabsTrigger>
-              <TabsTrigger value="documents" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
+              <TabsTrigger value="documents" className="gap-2 text-white/60 data-[state=active]:bg-white/10 data-[state=active]:text-white">
                 <FileText className="w-4 h-4" />
                 Documents
               </TabsTrigger>
-              <TabsTrigger value="activity" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-white">
+              <TabsTrigger value="activity" className="gap-2 text-white/60 data-[state=active]:bg-white/10 data-[state=active]:text-white">
                 <Activity className="w-4 h-4" />
                 Activity
               </TabsTrigger>
