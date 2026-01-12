@@ -2,11 +2,11 @@
 
 ## Progress Summary
 - **Total Tasks**: 47
-- **Completed**: 24
+- **Completed**: 25
 - **In Progress**: 0
-- **Todo**: 23
-- **Completion**: 51.1%
-- **Last Updated**: 2026-01-12T14:20:28.242145
+- **Todo**: 22
+- **Completion**: 53.2%
+- **Last Updated**: 2026-01-12T14:24:11.094750
 
 ---
 
@@ -537,12 +537,27 @@ Build succeeds.
 
 **Completed**: 2026-01-12
 
-### [ ] Task 29: Fix admin tables on mobile
-**Status**:  Todo
+### [x] Task 29: Fix admin tables on mobile
+**Status**:  Done
 **Priority**: HIGH
 **Description**: Make admin tables horizontally scrollable or stacked
 **Files**: `src/pages/AdminDashboard.tsx`
 **Verification**: Admin tables usable on mobile
+**Notes**: Task 29 Complete - Fix admin tables on mobile
+
+Made all admin tables horizontally scrollable on mobile:
+- AdminDashboard.tsx: Users table overflow-x-auto with min-w-[800px]
+- ActivityLogTable.tsx: Activity log overflow-x-auto with min-w-[600px]
+- DocumentsManager.tsx: Documents table overflow-x-auto with min-w-[700px]
+
+Changes:
+- Added overflow-x-auto to table container divs
+- Added min-width to Table components for proper scrolling
+- All 35 responsive E2E tests passing
+- All 210 unit tests passing
+- Build succeeds
+
+**Completed**: 2026-01-12
 
 ### [ ] Task 30: Fix document cards mobile layout
 **Status**:  Todo

@@ -466,8 +466,8 @@ const AdminDashboard = () => {
                 </div>
               ) : (
                 <>
-                  <div className="rounded-xl border border-white/10 overflow-hidden bg-white/5">
-                    <Table>
+                  <div className="rounded-xl border border-white/10 overflow-hidden bg-white/5 overflow-x-auto">
+                    <Table className="min-w-[800px]">
                       <TableHeader>
                         <TableRow className="border-white/10 hover:bg-white/5">
                           <TableHead className="w-12 text-gray-300">

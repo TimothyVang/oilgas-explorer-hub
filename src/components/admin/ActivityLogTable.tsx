@@ -125,8 +125,8 @@ export const ActivityLogTable = ({ profiles, userIdFilter }: ActivityLogTablePro
         </Button>
       </div>
 
-      <div className="border rounded-lg overflow-hidden">
-        <Table>
+      <div className="border rounded-lg overflow-hidden overflow-x-auto">
+        <Table className="min-w-[600px]">
           <TableHeader>
             <TableRow>
               <TableHead>User</TableHead>

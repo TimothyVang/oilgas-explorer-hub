@@ -211,8 +211,8 @@ export const DocumentsManager = () => {
         </div>
       </div>
 
-      <div className="border rounded-lg">
-        <Table>
+      <div className="border rounded-lg overflow-x-auto">
+        <Table className="min-w-[700px]">
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
