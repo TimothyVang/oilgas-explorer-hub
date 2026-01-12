@@ -53,39 +53,33 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-midnight text-white font-sans selection:bg-cyan-500/30 overflow-hidden relative">
 
-      {/* Premium Background - Matching Homepage */}
+      {/* Premium Background - Matching Homepage Hero */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-midnight" />
-        {/* Radial gradient matching Hero */}
+        {/* Clean radial gradient like homepage */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-midnight to-midnight" />
-        {/* Dramatic glow orbs */}
-        <div className="absolute top-[-200px] right-[-200px] w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-pulse-glow" />
-        <div className="absolute bottom-[-200px] left-[-200px] w-[600px] h-[600px] bg-accent/15 rounded-full blur-[150px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
-        {/* Holographic grid - matching Services */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)] pointer-events-none" />
+        {/* Single centered glow orb - matches homepage */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-primary/10 rounded-full blur-[150px] animate-pulse-glow" />
       </div>
 
-      {/* Floating Background Typography - Like Homepage */}
-      <div className="fixed inset-0 z-0 pointer-events-none select-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02]">
-          <h1 className="text-[30vw] font-black leading-none text-white tracking-tighter whitespace-nowrap">
-            PORTAL
-          </h1>
-        </div>
+      {/* Large Background Typography - Like Homepage "EVOLVED" */}
+      <div className="fixed inset-0 z-0 pointer-events-none select-none overflow-hidden flex items-center justify-center">
+        <h1 className="text-[18vw] font-black uppercase leading-none text-transparent bg-clip-text bg-gradient-to-b from-white/[0.04] to-white/[0.01] tracking-tighter">
+          PORTAL
+        </h1>
       </div>
 
       <div className="relative z-10 flex h-dvh md:h-screen p-4 md:p-6 gap-6 flex-col md:flex-row">
 
-        {/* FLOATING SIDEBAR (Desktop) - Enhanced */}
+        {/* FLOATING SIDEBAR (Desktop) - Clean glassmorphism */}
         <motion.aside
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="w-20 hidden md:flex flex-col items-center py-8 bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] relative overflow-hidden group/sidebar"
+          className="w-20 hidden md:flex flex-col items-center py-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl relative overflow-hidden"
         >
-          {/* Holographic grid effect */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2rem]" />
-          <div className="absolute top-0 left-[20%] right-[20%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          {/* Top highlight */}
+          <div className="absolute top-0 left-[20%] right-[20%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
           
           {/* Brand Mark - Links to Home */}
           <TooltipProvider delayDuration={0}>
@@ -157,41 +151,39 @@ const Dashboard = () => {
         {/* MAIN HUD AREA */}
         <div className="flex-1 flex flex-col gap-4 md:gap-6 overflow-hidden">
 
-          {/* Header HUD - Enhanced */}
+          {/* Header - Clean glassmorphism */}
           <motion.header
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="relative flex items-center justify-between bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] px-4 md:px-8 py-3.5 md:py-4 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)] shrink-0 overflow-hidden group"
+            className="relative flex items-center justify-between bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl px-4 md:px-8 py-3.5 md:py-4 shrink-0 overflow-hidden"
           >
-            {/* Holographic grid on hover */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2rem]" />
-            <div className="absolute top-0 left-[5%] right-[5%] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            {/* Top highlight */}
+            <div className="absolute top-0 left-[5%] right-[5%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
             
             <div className="relative z-10">
               <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-                <span className="hidden md:inline text-gray-300">COMMAND CENTER</span>
-                <span className="md:hidden text-gray-300">CMD</span>
-                <span className="text-white/30 mx-2">//</span>
-                <span className="bg-gradient-to-r from-primary via-cyan-400 to-accent bg-clip-text text-transparent">{activeTab.toUpperCase()}</span>
+                <span className="hidden md:inline text-white/70">Investor Portal</span>
+                <span className="md:hidden text-white/70">Portal</span>
+                <span className="text-white/20 mx-2">/</span>
+                <span className="text-white">{activeTab}</span>
               </h1>
-              <p className="text-[11px] text-cyan-400/60 tracking-[0.2em] uppercase mt-1.5 font-medium">System Operational • {new Date().toLocaleDateString()}</p>
+              <p className="text-[11px] text-white/40 tracking-wide mt-1 font-medium">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </div>
 
             <div className="flex items-center gap-6 relative z-10">
-              <div className="hidden lg:flex items-center gap-2.5 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full backdrop-blur-sm">
-                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
-                <span className="text-[11px] text-emerald-400 font-medium tracking-wide">LIVE DATA FEED</span>
+              <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                <span className="text-[11px] text-emerald-400 font-medium">Connected</span>
               </div>
 
               <div className="flex items-center gap-4 pl-6 border-l border-white/10">
                 <div className="text-right hidden sm:block">
-                  <p className="text-sm font-semibold text-white leading-none">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</p>
-                  <p className="text-[11px] text-gray-500 mt-1.5 font-medium">{isAdmin ? "Admin Access" : "Investor Access"}</p>
+                  <p className="text-sm font-medium text-white leading-none">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User"}</p>
+                  <p className="text-[11px] text-white/40 mt-1">{isAdmin ? "Admin" : "Investor"}</p>
                 </div>
-                <div className="relative w-11 h-11 rounded-full ring-2 ring-primary/40 ring-offset-2 ring-offset-midnight bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center font-bold text-white shadow-[0_0_30px_rgba(0,102,255,0.4)]">
+                <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center font-semibold text-white text-sm">
                   {user?.email?.[0]?.toUpperCase() || "U"}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-midnight shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-midnight" />
                 </div>
               </div>
             </div>
@@ -495,44 +487,34 @@ const Dashboard = () => {
   );
 };
 
-// Helper for the KPI Cards
+// Helper for the KPI Cards - Simplified to match homepage
 const StatsCard = ({ title, displayValue, sub, icon: Icon, trend, delay }: any) => (
-  <HolographicCard delay={delay} variant="elevated" className="p-6 group/card">
-    <div className="flex justify-between items-start mb-5">
-      <div className={`relative p-3.5 rounded-2xl transition-all duration-500 ${
+  <HolographicCard delay={delay} variant="elevated" className="p-6">
+    <div className="flex justify-between items-start mb-4">
+      <div className={`p-3 rounded-xl ${
         trend === 'up' 
-          ? 'bg-gradient-to-br from-emerald-500/25 to-emerald-500/5 text-emerald-400 group-hover/card:shadow-[0_0_25px_rgba(16,185,129,0.3)]' 
+          ? 'bg-emerald-500/10 text-emerald-400' 
           : trend === 'down' 
-            ? 'bg-gradient-to-br from-rose-500/25 to-rose-500/5 text-rose-400 group-hover/card:shadow-[0_0_25px_rgba(244,63,94,0.3)]' 
-            : 'bg-gradient-to-br from-primary/25 to-primary/5 text-primary group-hover/card:shadow-[0_0_25px_rgba(0,102,255,0.3)]'
+            ? 'bg-rose-500/10 text-rose-400' 
+            : 'bg-white/10 text-primary'
       }`}>
-        <Icon className="w-6 h-6" />
-        <div className={`absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover/card:opacity-50 transition-opacity duration-500 ${
-          trend === 'up' ? 'bg-emerald-500/30' : trend === 'down' ? 'bg-rose-500/30' : 'bg-primary/30'
-        }`} />
+        <Icon className="w-5 h-5" />
       </div>
       {trend !== 'neutral' && (
-        <span className={`text-xs font-bold px-2.5 py-1.5 rounded-full border backdrop-blur-sm ${
+        <span className={`text-xs font-medium px-2 py-1 rounded-full ${
           trend === 'up' 
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-            : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+            ? 'bg-emerald-500/10 text-emerald-400' 
+            : 'bg-rose-500/10 text-rose-400'
         }`}>
-          {trend === 'up' ? '↗ Active' : '↘ Alert'}
+          {trend === 'up' ? '✓ Active' : '! Alert'}
         </span>
       )}
     </div>
-    <h3 className="text-4xl font-bold text-white mb-1.5 tracking-tight bg-gradient-to-br from-white to-gray-300 bg-clip-text text-transparent">
+    <h3 className="text-3xl font-bold text-white mb-1 tracking-tight">
       {displayValue}
     </h3>
-    <p className="text-sm text-gray-400 font-medium tracking-wide">{title}</p>
-    <p className={`text-xs mt-2 flex items-center gap-1.5 ${
-      trend === 'up' ? 'text-emerald-500/80' : trend === 'down' ? 'text-rose-500/80' : 'text-gray-500'
-    }`}>
-      <span className={`w-1.5 h-1.5 rounded-full ${
-        trend === 'up' ? 'bg-emerald-500 animate-pulse' : trend === 'down' ? 'bg-rose-500 animate-pulse' : 'bg-gray-500'
-      }`} />
-      {sub}
-    </p>
+    <p className="text-sm text-white/60 font-medium">{title}</p>
+    <p className="text-xs mt-2 text-white/40">{sub}</p>
   </HolographicCard>
 );
 
