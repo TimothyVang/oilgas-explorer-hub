@@ -935,7 +935,7 @@ Frontend Components:
   - Updated investor_documents with version fields
 
 Build: Verified production build succeeds
-Commit: Pending
+Commit: a4d0bae
 
 ### [ ] Task #41: Implement 2FA (TOTP)
 
