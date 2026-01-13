@@ -38,6 +38,47 @@ export type Database = {
         }
         Relationships: []
       }
+      document_versions: {
+        Row: {
+          id: string
+          document_id: string
+          version_number: number
+          file_url: string
+          file_size: number | null
+          uploaded_by: string | null
+          change_notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          document_id: string
+          version_number?: number
+          file_url: string
+          file_size?: number | null
+          uploaded_by?: string | null
+          change_notes?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          document_id?: string
+          version_number?: number
+          file_url?: string
+          file_size?: number | null
+          uploaded_by?: string | null
+          change_notes?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_versions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "investor_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       investor_documents: {
         Row: {
           created_at: string
@@ -46,6 +87,8 @@ export type Database = {
           id: string
           title: string
           updated_at: string
+          current_version: number
+          file_size: number | null
         }
         Insert: {
           created_at?: string
@@ -54,6 +97,8 @@ export type Database = {
           id?: string
           title: string
           updated_at?: string
+          current_version?: number
+          file_size?: number | null
         }
         Update: {
           created_at?: string
@@ -62,6 +107,8 @@ export type Database = {
           id?: string
           title?: string
           updated_at?: string
+          current_version?: number
+          file_size?: number | null
         }
         Relationships: []
       }

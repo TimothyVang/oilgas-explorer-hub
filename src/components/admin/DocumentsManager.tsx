@@ -26,11 +26,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, MoreHorizontal, Pencil, Trash2, Download, FileText, Loader2, RefreshCw, Users } from "lucide-react";
+import { Plus, MoreHorizontal, Pencil, Trash2, Download, FileText, Loader2, RefreshCw, Users, History, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { DocumentForm } from "./DocumentForm";
 import { DocumentUserAssignment } from "./DocumentUserAssignment";
+import { DocumentVersionHistory } from "./DocumentVersionHistory";
+import { UploadNewVersion } from "./UploadNewVersion";
 import { logActivity } from "@/lib/logActivity";
 
 interface InvestorDocument {
@@ -40,6 +42,8 @@ interface InvestorDocument {
   file_url: string;
   created_at: string;
   updated_at: string;
+  current_version: number;
+  file_size: number | null;
   assigned_count?: number;
 }
 
@@ -53,6 +57,10 @@ export const DocumentsManager = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [assignmentOpen, setAssignmentOpen] = useState(false);
   const [assigningDocument, setAssigningDocument] = useState<InvestorDocument | null>(null);
+  const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
+  const [versionHistoryDocument, setVersionHistoryDocument] = useState<InvestorDocument | null>(null);
+  const [uploadVersionOpen, setUploadVersionOpen] = useState(false);
+  const [uploadVersionDocument, setUploadVersionDocument] = useState<InvestorDocument | null>(null);
 
   const fetchDocuments = async () => {
     setLoading(true);
@@ -119,6 +127,16 @@ export const DocumentsManager = () => {
   const handleAssignUsers = (doc: InvestorDocument) => {
     setAssigningDocument(doc);
     setAssignmentOpen(true);
+  };
+
+  const handleViewVersionHistory = (doc: InvestorDocument) => {
+    setVersionHistoryDocument(doc);
+    setVersionHistoryOpen(true);
+  };
+
+  const handleUploadNewVersion = (doc: InvestorDocument) => {
+    setUploadVersionDocument(doc);
+    setUploadVersionOpen(true);
   };
 
   const deleteFileFromStorage = async (fileUrl: string) => {
@@ -218,6 +236,7 @@ export const DocumentsManager = () => {
               <TableHead>Title</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Type</TableHead>
+              <TableHead>Version</TableHead>
               <TableHead>Assigned</TableHead>
               <TableHead>Created</TableHead>
               <TableHead className="w-[80px]">Actions</TableHead>
@@ -226,13 +245,13 @@ export const DocumentsManager = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8">
+                <TableCell colSpan={7} className="text-center py-8">
                   <Loader2 className="w-6 h-6 animate-spin mx-auto text-muted-foreground" />
                 </TableCell>
               </TableRow>
             ) : documents.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8">
+                <TableCell colSpan={7} className="text-center py-8">
                   <FileText className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
                   <p className="text-muted-foreground">No documents yet</p>
                   <Button variant="link" size="sm" onClick={handleAddDocument}>
@@ -253,7 +272,17 @@ export const DocumentsManager = () => {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge 
+                    <Badge
+                      variant="outline"
+                      className="cursor-pointer hover:bg-primary/10"
+                      onClick={() => handleViewVersionHistory(doc)}
+                    >
+                      <History className="w-3 h-3 mr-1" />
+                      v{doc.current_version || 1}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
                       variant={doc.assigned_count && doc.assigned_count > 0 ? "default" : "outline"}
                       className="cursor-pointer"
                       onClick={() => handleAssignUsers(doc)}
@@ -287,6 +316,15 @@ export const DocumentsManager = () => {
                             <Download className="w-4 h-4 mr-2" />
                             Download
                           </a>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => handleViewVersionHistory(doc)}>
+                          <History className="w-4 h-4 mr-2" />
+                          Version History
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUploadNewVersion(doc)}>
+                          <Upload className="w-4 h-4 mr-2" />
+                          Upload New Version
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleEditDocument(doc)}>
@@ -365,6 +403,30 @@ export const DocumentsManager = () => {
           onOpenChange={setAssignmentOpen}
           documentId={assigningDocument.id}
           documentTitle={assigningDocument.title}
+          onSuccess={fetchDocuments}
+        />
+      )}
+
+      {/* Version History Dialog */}
+      {versionHistoryDocument && (
+        <DocumentVersionHistory
+          open={versionHistoryOpen}
+          onOpenChange={setVersionHistoryOpen}
+          documentId={versionHistoryDocument.id}
+          documentTitle={versionHistoryDocument.title}
+          currentVersion={versionHistoryDocument.current_version || 1}
+          onSuccess={fetchDocuments}
+        />
+      )}
+
+      {/* Upload New Version Dialog */}
+      {uploadVersionDocument && (
+        <UploadNewVersion
+          open={uploadVersionOpen}
+          onOpenChange={setUploadVersionOpen}
+          documentId={uploadVersionDocument.id}
+          documentTitle={uploadVersionDocument.title}
+          currentVersion={uploadVersionDocument.current_version || 1}
           onSuccess={fetchDocuments}
         />
       )}

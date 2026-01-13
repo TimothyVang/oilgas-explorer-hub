@@ -1,10 +1,10 @@
 # Project Checklist: Oil & Gas Explorer Hub - Production Enhancement
 **Created:** 2026-01-12T04:06:18.311040
 
-## Progress: 41/47 tasks completed (87.2%)
-- [x] Done: 41
+## Progress: 42/47 tasks completed (89.4%)
+- [x] Done: 42
 - [>] In Progress: 0
-- [ ] Todo: 6
+- [ ] Todo: 5
 
 ---
 
@@ -893,11 +893,49 @@ All tests passing:
 
 Commit: 886e149
 
-### [ ] Task #40: Add document versioning
+### [x] Task #40: Add document versioning
 
 Track document revisions, allow version uploads
 
-**Status:** Todo
+**Status:** Done
+**Completed:** 2026-01-12T23:20:00.000000
+
+**Notes:**
+Task 40 Complete - Document versioning implementation
+
+Database Changes:
+- Created migration: supabase/migrations/20260112230000_document_versioning.sql
+  - New document_versions table with RLS policies
+  - Added current_version and file_size columns to investor_documents
+  - Trigger to auto-create initial version on document insert
+  - Indexes for performance optimization
+
+Frontend Components:
+- Created src/components/admin/DocumentVersionHistory.tsx
+  - Dialog to view all versions with timestamps and change notes
+  - Download any version functionality
+  - Restore previous version feature
+  - Delete non-current versions with confirmation
+  - Activity logging for all version operations
+
+- Created src/components/admin/UploadNewVersion.tsx
+  - Drag-and-drop file upload dialog
+  - Change notes support for version tracking
+  - Auto-increment version numbering
+  - File type and size validation (20MB limit)
+  - Activity logging for uploads
+
+- Updated src/components/admin/DocumentsManager.tsx
+  - Added Version column with clickable badge showing version number
+  - Version History and Upload New Version menu options
+  - Integration with both version dialogs
+
+- Updated src/integrations/supabase/types.ts
+  - Added document_versions table TypeScript types
+  - Updated investor_documents with version fields
+
+Build: Verified production build succeeds
+Commit: Pending
 
 ### [ ] Task #41: Implement 2FA (TOTP)
 
@@ -1163,4 +1201,69 @@ Notes for Next Session:
 - Tasks 4-6 require actual company information (email, DocuSign, contact details)
 - Consider implementing Task 40 (document versioning) or Task 41 (2FA)
 - App is stable and production-ready for current feature set
+
+
+### Session 21 - 2026-01-12T23:20:00.000000
+Session 21 Complete - Document Versioning Implementation
+
+Accomplished:
+- Completed Task #40: Add document versioning - Track document revisions, allow version uploads
+
+Database Changes:
+- Created migration: supabase/migrations/20260112230000_document_versioning.sql
+  - New document_versions table with fields: id, document_id, version_number, file_url, file_size, uploaded_by, change_notes, created_at
+  - Row Level Security (RLS) policies for admins and users with document access
+  - Indexes for document_id and created_at for performance
+  - Trigger to auto-create initial version (v1) when document is first created
+  - Unique constraint on (document_id, version_number)
+  - Added current_version (default 1) and file_size columns to investor_documents
+
+Frontend Components:
+- Created src/components/admin/DocumentVersionHistory.tsx (~350 lines)
+  - Dialog component showing all versions of a document
+  - Table with version number, upload date, uploaded by, file size, change notes
+  - Download button for each version
+  - Restore previous version with confirmation dialog
+  - Delete non-current versions with confirmation
+  - Activity logging for restore and delete operations
+  - Proper loading states and error handling
+
+- Created src/components/admin/UploadNewVersion.tsx (~250 lines)
+  - Dialog for uploading new document versions
+  - Drag-and-drop file upload zone
+  - File type validation (PDF, Word, Excel, PowerPoint)
+  - File size validation (20MB limit)
+  - Change notes textarea for version tracking
+  - Auto-increment version number
+  - Activity logging for uploads
+
+- Updated src/components/admin/DocumentsManager.tsx
+  - Added imports: History and Upload icons, new dialog components
+  - Extended InvestorDocument interface with current_version and file_size
+  - Added state for version history and upload dialogs
+  - Added handler functions: handleViewVersionHistory, handleUploadNewVersion
+  - Added "Version" column to table with clickable badge (v1, v2, etc.)
+  - Added menu items: "Version History" and "Upload New Version"
+  - Integrated both dialogs at component bottom
+
+- Updated src/integrations/supabase/types.ts
+  - Added document_versions table TypeScript types (Row, Insert, Update)
+  - Updated investor_documents types with current_version and file_size fields
+
+Progress: 42/47 tasks complete (89.4%)
+
+Remaining Tasks (5):
+- Tasks 4-6: External configuration (email, DocuSign, company info) - require company data
+- Task 41: Implement 2FA (TOTP)
+- Task 46: Add email notification preferences
+
+Verification:
+- Production build succeeds (4143 modules, 5.42s)
+- HMR updates working correctly
+- Dev server running on port 8086
+
+Notes for Next Session:
+- Consider implementing Task 41 (2FA with TOTP) or Task 46 (email notification preferences)
+- Tasks 4-6 still require actual company information to configure
+- Document versioning feature ready for testing when Supabase migration is applied
 
