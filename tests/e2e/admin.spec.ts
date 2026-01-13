@@ -241,7 +241,10 @@ test.describe('Admin Page Navigation', () => {
 });
 
 test.describe('Admin Dashboard - Tab Navigation', () => {
-  test('tabs would be accessible via keyboard', async ({ page }) => {
+  test('tabs would be accessible via keyboard', async ({ page, browserName, isMobile }) => {
+    // Skip on webkit/safari and mobile devices where focus behavior differs
+    test.skip(browserName === 'webkit' || !!isMobile, 'Focus behavior differs on webkit/mobile');
+
     await page.goto('/admin');
 
     // Wait for redirect

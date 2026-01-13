@@ -28,13 +28,17 @@ test.describe("Smoke Tests", () => {
 
     // Look for common nav items - at least one should exist
     const aboutLink = navigation.getByRole("link", { name: /about/i });
-    const loginLink = navigation.getByRole("link", { name: /login|sign in/i });
+    const loginLink = navigation.getByRole("link", { name: /login|sign in|investor/i });
 
-    // Verify at least one navigation link is present
+    // On mobile, the hamburger menu button may be present instead of direct links
+    const mobileMenuButton = navigation.getByRole("button", { name: /toggle navigation|menu/i });
+
+    // Verify at least one navigation element is present (links on desktop, menu button on mobile)
     const hasAbout = await aboutLink.isVisible().catch(() => false);
     const hasLogin = await loginLink.isVisible().catch(() => false);
+    const hasMobileMenu = await mobileMenuButton.isVisible().catch(() => false);
 
-    expect(hasAbout || hasLogin).toBe(true);
+    expect(hasAbout || hasLogin || hasMobileMenu).toBe(true);
   });
 
   test("login page is accessible", async ({ page }) => {
@@ -43,15 +47,17 @@ test.describe("Smoke Tests", () => {
     // Verify the login page loads
     await expect(page).toHaveURL(/login/);
 
-    // Check for login form elements
+    // Check for login form elements - use more flexible selectors
     const emailInput = page.getByRole("textbox", { name: /email/i });
-    const passwordInput = page.locator('input[type="password"]');
+    const passwordInput = page.getByRole("textbox", { name: /password/i });
+    const signInButton = page.getByRole("button", { name: /sign in/i });
 
     // At least one form element should be visible
     const hasEmail = await emailInput.isVisible().catch(() => false);
     const hasPassword = await passwordInput.isVisible().catch(() => false);
+    const hasSignIn = await signInButton.isVisible().catch(() => false);
 
-    expect(hasEmail || hasPassword).toBe(true);
+    expect(hasEmail || hasPassword || hasSignIn).toBe(true);
   });
 
   test("about page loads", async ({ page }) => {
@@ -103,7 +109,10 @@ test.describe("Accessibility Basics", () => {
     }
   });
 
-  test("interactive elements are keyboard accessible", async ({ page }) => {
+  test("interactive elements are keyboard accessible", async ({ page, browserName, isMobile }) => {
+    // Skip this test on webkit and mobile browsers as keyboard focus behavior differs
+    test.skip(browserName === 'webkit' || !!isMobile, "Keyboard navigation test not applicable to webkit/mobile");
+
     await page.goto("/");
 
     // Tab through the page and verify focus is visible

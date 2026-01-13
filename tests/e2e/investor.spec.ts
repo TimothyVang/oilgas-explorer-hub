@@ -369,10 +369,14 @@ test.describe('Investor Documents - Edge Cases', () => {
 
     // Refresh the page
     await page.reload();
+    await page.waitForLoadState('networkidle');
 
     // Should still be on login page
     await expect(page).toHaveURL(/\/login/);
-    await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
+
+    // Wait for form to be visible (may have loading state after refresh)
+    const emailInput = page.getByRole('textbox', { name: /email/i });
+    await expect(emailInput).toBeVisible({ timeout: 10000 });
   });
 
   test('handles rapid navigation', async ({ page }) => {

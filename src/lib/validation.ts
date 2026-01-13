@@ -73,12 +73,24 @@ export const resetPasswordSchema = z.object({
   path: ["confirmPassword"],
 });
 
+// Contact form schema
+export const contactSchema = z.object({
+  name: nameSchema,
+  email: emailSchema,
+  message: z
+    .string()
+    .min(1, "Message is required")
+    .min(10, "Message must be at least 10 characters")
+    .max(2000, "Message must be less than 2000 characters"),
+});
+
 // Type exports
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type ProfileFormData = z.infer<typeof profileSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+export type ContactFormData = z.infer<typeof contactSchema>;
 
 /**
  * Helper function to extract field errors from Zod validation
