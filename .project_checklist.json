@@ -945,7 +945,7 @@
       "description": "Add TOTP 2FA support with QR codes and backup codes",
       "priority": "MEDIUM",
       "phase": 6,
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [],
       "files": [
         "src/components/TwoFactorSetup.tsx",
@@ -954,11 +954,15 @@
       "verification": "Can enable 2FA, scan QR, verify code works",
       "created_at": "2026-01-12T04:06:18.311040",
       "started_at": null,
-      "completed_at": null,
+      "completed_at": "2026-01-12T23:37:45.401822",
       "notes": [
         {
           "timestamp": "2026-01-12T23:28:51.074270",
           "content": "Starting 2FA TOTP implementation"
+        },
+        {
+          "timestamp": "2026-01-12T23:37:45.401842",
+          "content": "Task 41 Complete - Implement 2FA (TOTP)\n\nImplementation:\n- useMFA hook: Supabase MFA API wrapper with enrollment, verification, unenrollment\n- TwoFactorSetup component: Enable/disable 2FA from Profile page\n  - QR code generation using qrcode library\n  - Manual secret key option\n  - Backup codes generation (8 codes, XXXX-XXXX format)\n  - Step-by-step setup wizard (QR -> Verify -> Backup -> Complete)\n- TwoFactorVerify component: Login verification step\n  - 6-digit OTP input with auto-submit\n  - Back to login option\n- AuthContext updates:\n  - Added mfaRequired, currentAAL state\n  - signIn returns mfaRequired flag\n  - checkMFAStatus method\n- Login page: Shows MFA verification when required\n- Profile page: Security section with TwoFactorSetup\n\nTesting:\n- 22 useMFA hook tests\n- Updated AuthContext tests with MFA mocks\n- All 310 unit tests passing\n- All 11 smoke tests passing\n- Production build verified\n\nDependencies added: qrcode, @types/qrcode\nCommit: f2c9fbf\n"
         }
       ]
     },
@@ -1062,7 +1066,7 @@
       "description": "Let users control which emails they receive",
       "priority": "MEDIUM",
       "phase": 6,
-      "status": "Todo",
+      "status": "In Progress",
       "dependencies": [],
       "files": [
         "src/pages/Profile.tsx"
@@ -1071,7 +1075,12 @@
       "created_at": "2026-01-12T04:06:18.311040",
       "started_at": null,
       "completed_at": null,
-      "notes": []
+      "notes": [
+        {
+          "timestamp": "2026-01-12T23:38:01.119707",
+          "content": "Starting email notification preferences implementation"
+        }
+      ]
     },
     {
       "id": 47,

@@ -13,6 +13,7 @@ import { FormError, useFormErrors } from "@/components/ui/form-error";
 import { getUserMessage } from "@/lib/errorMessages";
 import { ProfileSkeleton } from "@/components/loading/PageLoadingSkeleton";
 import { TwoFactorSetup } from "@/components/auth/TwoFactorSetup";
+import { NotificationPreferences } from "@/components/settings/NotificationPreferences";
 interface Profile {
   id: string;
   user_id: string;
@@ -379,6 +380,12 @@ const Profile = () => {
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 mt-6">
           <h2 className="text-xl font-bold text-white mb-6">Security</h2>
           <TwoFactorSetup />
+        </div>
+
+        {/* Notifications Section */}
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 mt-6">
+          <h2 className="text-xl font-bold text-white mb-6">Notifications</h2>
+          <NotificationPreferences />
         </div>
 
         {/* Company Name */}

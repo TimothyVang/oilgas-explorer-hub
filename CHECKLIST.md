@@ -1,10 +1,10 @@
 # Project Checklist: Oil & Gas Explorer Hub - Production Enhancement
 **Created:** 2026-01-12T04:06:18.311040
 
-## Progress: 42/47 tasks completed (89.4%)
-- [x] Done: 42
+## Progress: 43/47 tasks completed (91.5%)
+- [x] Done: 43
 - [>] In Progress: 1
-- [ ] Todo: 4
+- [ ] Todo: 3
 
 ---
 
@@ -919,14 +919,44 @@ Frontend Components:
 Build: Verified production build succeeds
 Commit: a4d0bae
 
-### [-] Task #41: Implement 2FA (TOTP)
+### [x] Task #41: Implement 2FA (TOTP)
 
 Add TOTP 2FA support with QR codes and backup codes
 
-**Status:** In Progress
+**Status:** Done
+**Completed:** 2026-01-12T23:37:45.401822
 
 **Notes:**
 - [2026-01-12T23:28:51.074270] Starting 2FA TOTP implementation
+- [2026-01-12T23:37:45.401842] Task 41 Complete - Implement 2FA (TOTP)
+
+Implementation:
+- useMFA hook: Supabase MFA API wrapper with enrollment, verification, unenrollment
+- TwoFactorSetup component: Enable/disable 2FA from Profile page
+  - QR code generation using qrcode library
+  - Manual secret key option
+  - Backup codes generation (8 codes, XXXX-XXXX format)
+  - Step-by-step setup wizard (QR -> Verify -> Backup -> Complete)
+- TwoFactorVerify component: Login verification step
+  - 6-digit OTP input with auto-submit
+  - Back to login option
+- AuthContext updates:
+  - Added mfaRequired, currentAAL state
+  - signIn returns mfaRequired flag
+  - checkMFAStatus method
+- Login page: Shows MFA verification when required
+- Profile page: Security section with TwoFactorSetup
+
+Testing:
+- 22 useMFA hook tests
+- Updated AuthContext tests with MFA mocks
+- All 310 unit tests passing
+- All 11 smoke tests passing
+- Production build verified
+
+Dependencies added: qrcode, @types/qrcode
+Commit: f2c9fbf
+
 
 ### [x] Task #42: Add comprehensive audit trails
 
@@ -1087,11 +1117,14 @@ Testing:
 - Production build verified
 - 11 smoke E2E tests passing
 
-### [ ] Task #46: Add email notification preferences
+### [-] Task #46: Add email notification preferences
 
 Let users control which emails they receive
 
-**Status:** Todo
+**Status:** In Progress
+
+**Notes:**
+- [2026-01-12T23:38:01.119707] Starting email notification preferences implementation
 
 ### [x] Task #47: Implement session timeout with renewal
 
