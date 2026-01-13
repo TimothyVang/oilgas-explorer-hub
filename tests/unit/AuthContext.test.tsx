@@ -22,6 +22,8 @@ const mockGetSession = vi.fn();
 const mockSignUp = vi.fn();
 const mockSignInWithPassword = vi.fn();
 const mockSignOut = vi.fn();
+const mockGetAuthenticatorAssuranceLevel = vi.fn();
+const mockListFactors = vi.fn();
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
@@ -31,6 +33,10 @@ vi.mock("@/integrations/supabase/client", () => ({
       signUp: (...args: unknown[]) => mockSignUp(...args),
       signInWithPassword: (...args: unknown[]) => mockSignInWithPassword(...args),
       signOut: () => mockSignOut(),
+      mfa: {
+        getAuthenticatorAssuranceLevel: () => mockGetAuthenticatorAssuranceLevel(),
+        listFactors: () => mockListFactors(),
+      },
     },
   },
 }));
@@ -77,6 +83,15 @@ describe("AuthContext", () => {
     vi.clearAllMocks();
     // Default mock implementations
     mockGetSession.mockResolvedValue({ data: { session: null } });
+    // Default MFA mocks
+    mockGetAuthenticatorAssuranceLevel.mockResolvedValue({
+      data: { currentLevel: "aal1", nextLevel: "aal1" },
+      error: null,
+    });
+    mockListFactors.mockResolvedValue({
+      data: { totp: [] },
+      error: null,
+    });
   });
 
   describe("useAuth hook", () => {
@@ -364,7 +379,7 @@ describe("AuthContext", () => {
       await user.click(screen.getByText("Sign In"));
 
       await waitFor(() => {
-        expect(signInResult).toEqual({ error: null });
+        expect(signInResult).toEqual({ error: null, mfaRequired: false });
       });
     });
 

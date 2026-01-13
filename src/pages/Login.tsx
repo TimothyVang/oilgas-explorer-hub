@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { loginSchema, signupSchema, validateForm } from "@/lib/validation";
 import { FormError, useFormErrors } from "@/components/ui/form-error";
 import { getUserMessage } from "@/lib/errorMessages";
+import { TwoFactorVerify } from "@/components/auth/TwoFactorVerify";
 
 
 const Login = () => {
@@ -20,15 +21,20 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showVerificationMessage, setShowVerificationMessage] = useState(false);
-  const { signIn, signUp, user, loading } = useAuth();
+  const [showMFAVerify, setShowMFAVerify] = useState(false);
+  const { signIn, signUp, user, loading, mfaRequired, checkMFAStatus } = useAuth();
   const navigate = useNavigate();
   const { errors, setErrors, clearError, clearAllErrors } = useFormErrors();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user && !mfaRequired) {
       navigate("/dashboard");
     }
-  }, [user, loading, navigate]);
+    // Show MFA verification if required
+    if (mfaRequired && user) {
+      setShowMFAVerify(true);
+    }
+  }, [user, loading, mfaRequired, navigate]);
 
   // Clear errors when switching between sign in and sign up
   useEffect(() => {
@@ -95,15 +101,18 @@ const Login = () => {
           setShowVerificationMessage(true);
         }
       } else {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes("Invalid login credentials")) {
+        const result = await signIn(email, password);
+        if (result.error) {
+          if (result.error.message.includes("Invalid login credentials")) {
             toast.error("Invalid email or password. Please try again.");
-          } else if (error.message.includes("Email not confirmed")) {
+          } else if (result.error.message.includes("Email not confirmed")) {
             toast.error("Please verify your email before signing in. Check your inbox for the verification link.");
           } else {
-            toast.error(getUserMessage(error));
+            toast.error(getUserMessage(result.error));
           }
+        } else if (result.mfaRequired) {
+          // MFA is required, show verification screen
+          setShowMFAVerify(true);
         } else {
           toast.success("Welcome back!");
           navigate("/dashboard");
@@ -151,8 +160,21 @@ const Login = () => {
 
         {/* Login Card - Clean glassmorphism */}
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
-          
-            {showVerificationMessage ? (
+
+            {showMFAVerify ? (
+              <TwoFactorVerify
+                onSuccess={() => {
+                  toast.success("Welcome back!");
+                  checkMFAStatus();
+                  navigate("/dashboard");
+                }}
+                onBack={() => {
+                  setShowMFAVerify(false);
+                  // Sign out to allow re-login
+                  supabase.auth.signOut();
+                }}
+              />
+            ) : showVerificationMessage ? (
               <div className="text-center space-y-4 relative z-10">
                 <div className="w-16 h-16 bg-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(52,211,153,0.3)]">
                   <CheckCircle className="w-8 h-8 text-emerald-400" />

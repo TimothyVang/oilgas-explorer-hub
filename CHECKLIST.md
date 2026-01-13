@@ -3,8 +3,8 @@
 
 ## Progress: 42/47 tasks completed (89.4%)
 - [x] Done: 42
-- [>] In Progress: 0
-- [ ] Todo: 5
+- [>] In Progress: 1
+- [ ] Todo: 4
 
 ---
 
@@ -18,7 +18,7 @@ Run `npm install` in project root. Verify node_modules is created.
 **Completed:** 2026-01-12T04:09:27.898908
 
 **Notes:**
-Dependencies installed successfully. 392 packages installed.
+- [2026-01-12T23:28:45.741338] Dependencies installed successfully. 392 packages installed.
 
 ### [x] Task #2: Verify development server starts
 
@@ -28,7 +28,7 @@ Confirm `npm run dev` starts without errors on http://localhost:8080
 **Completed:** 2026-01-12T04:09:27.900098
 
 **Notes:**
-Dev server starts without errors on http://localhost:8080
+- [2026-01-12T23:28:45.741357] Dev server starts without errors on http://localhost:8080
 
 ### [x] Task #3: Run ESLint and fix critical errors
 
@@ -38,7 +38,7 @@ Execute `npm run lint`, fix any blocking compilation errors
 **Completed:** 2026-01-12T04:15:18.000981
 
 **Notes:**
-ESLint errors fixed:
+- [2026-01-12T23:28:45.741359] ESLint errors fixed:
 - command.tsx: Replaced empty interface with type alias
 - textarea.tsx: Replaced empty interface with type alias
 - tailwind.config.ts: Replaced require() with ES6 import
@@ -55,7 +55,7 @@ Replace 'onboarding@resend.dev' with actual company email domain
 **Status:** Todo
 
 **Notes:**
-Ready for configuration. Email sender is now configurable via EMAIL_FROM env var (set in Supabase Edge Functions secrets). See .env.production.example for documentation. Requires: verified domain in Resend, actual company email address.
+- [2026-01-12T23:28:45.741359] Ready for configuration. Email sender is now configurable via EMAIL_FROM env var (set in Supabase Edge Functions secrets). See .env.production.example for documentation. Requires: verified domain in Resend, actual company email address.
 
 ### [ ] Task #5: Configure production DocuSign environment
 
@@ -64,7 +64,7 @@ Replace demo DocuSign URL with production environment
 **Status:** Todo
 
 **Notes:**
-Ready for configuration. DocuSign URL is now configurable via VITE_DOCUSIGN_NDA_URL env var. See .env.production.example for documentation. Requires: production DocuSign account, PowerForm creation.
+- [2026-01-12T23:28:45.741360] Ready for configuration. DocuSign URL is now configurable via VITE_DOCUSIGN_NDA_URL env var. See .env.production.example for documentation. Requires: production DocuSign account, PowerForm creation.
 
 ### [ ] Task #6: Update company configuration
 
@@ -73,7 +73,7 @@ Replace placeholder company info (phone, address, social media) in Contact and F
 **Status:** Todo
 
 **Notes:**
-Ready for configuration. Company info is centralized in src/constants/siteConfig.ts with TODO comments. Requires: actual company phone, address, social media URLs.
+- [2026-01-12T23:28:45.741361] Ready for configuration. Company info is centralized in src/constants/siteConfig.ts with TODO comments. Requires: actual company phone, address, social media URLs.
 
 ### [x] Task #7: Create .env.production.example file
 
@@ -83,7 +83,7 @@ Document all required production environment variables with descriptions
 **Completed:** 2026-01-12T04:19:39.332685
 
 **Notes:**
-Created .env.production.example with comprehensive documentation:
+- [2026-01-12T23:28:45.741362] Created .env.production.example with comprehensive documentation:
 - Supabase configuration (project ID, keys, URL)
 - Edge Functions secrets (RESEND_API_KEY, DOCUSIGN_WEBHOOK_SECRET, EMAIL_FROM, SITE_URL)
 - DocuSign integration (VITE_DOCUSIGN_NDA_URL now configurable)
@@ -102,7 +102,7 @@ Run `npm run build`, ensure no build errors
 **Completed:** 2026-01-12T04:19:52.795764
 
 **Notes:**
-Production build verified:
+- [2026-01-12T23:28:45.741363] Production build verified:
 - npm run build completes successfully
 - dist/ directory created with all assets
 - No build errors
@@ -122,7 +122,7 @@ Install Vitest + React Testing Library, create vitest.config.ts, setup test util
 **Completed:** 2026-01-12T04:36:24.625551
 
 **Notes:**
-Vitest test environment fully configured:
+- [2026-01-12T23:28:45.741363] Vitest test environment fully configured:
 - vitest.config.ts with jsdom environment, path aliases, coverage config
 - tests/setup.ts with mocks for matchMedia, IntersectionObserver, ResizeObserver
 - Package.json scripts: test, test:run, test:coverage
@@ -138,7 +138,7 @@ Test signUp, signIn, signOut, session management functions
 **Completed:** 2026-01-12T04:38:55.502856
 
 **Notes:**
-AuthContext tests complete:
+- [2026-01-12T23:28:45.741368] AuthContext tests complete:
 - tests/unit/AuthContext.test.tsx: 16 tests
 - useAuth hook: Throws error when used outside AuthProvider
 - AuthProvider: Initialization, loading state, auth listener setup
@@ -158,7 +158,7 @@ Test cn(), logActivity, and other helper functions in src/lib/
 **Completed:** 2026-01-12T04:38:08.846617
 
 **Notes:**
-Tests for utility functions complete:
+- [2026-01-12T23:28:45.741368] Tests for utility functions complete:
 - tests/unit/utils.test.ts: 6 tests for cn() utility
 - tests/unit/logActivity.test.ts: 22 tests for logActivity
   - Authentication checks (user present/absent)
@@ -175,7 +175,7 @@ Test complete flow: signup -> email verify -> login -> dashboard
 **Completed:** 2026-01-12T04:49:03.081829
 
 **Notes:**
-Integration tests complete:
+- [2026-01-12T23:28:45.741369] Integration tests complete:
 - tests/integration/auth-flow.test.tsx: 18 tests
 - Signup flow: form rendering, validation, success/error handling
 - Login flow: validation, credential checking, error messages
@@ -196,7 +196,7 @@ Install Playwright, create playwright.config.ts, configure browsers
 **Completed:** 2026-01-12T04:40:56.695344
 
 **Notes:**
-Playwright E2E testing infrastructure complete:
+- [2026-01-12T23:28:45.741370] Playwright E2E testing infrastructure complete:
 - playwright.config.ts: Multi-browser config (Chrome, Firefox, Safari, mobile)
 - tests/e2e/smoke.spec.ts: 11 smoke tests
   - Smoke tests: homepage, navigation, login page, about page, 404
@@ -215,7 +215,7 @@ Playwright test for complete user signup and login flow
 **Completed:** 2026-01-12T10:45:40.581287
 
 **Notes:**
-E2E auth tests complete:
+- [2026-01-12T23:28:45.741371] E2E auth tests complete:
 - tests/e2e/auth.spec.ts: 34 tests
 - Login Page: form validation, empty fields, loading state, remember me
 - Signup Form: validation, email format, short password, toggling
@@ -236,7 +236,7 @@ Test admin user management and document management
 **Completed:** 2026-01-12T10:49:28.982351
 
 **Notes:**
-E2E tests for Admin Dashboard complete:
+- [2026-01-12T23:28:45.741371] E2E tests for Admin Dashboard complete:
 - tests/e2e/admin.spec.ts: 22 tests
 - Access Control: unauthenticated redirect tests
 - UI Elements: login/loading state checks
@@ -255,7 +255,7 @@ Test NDA signing workflow and document access
 **Completed:** 2026-01-12T10:51:32.600785
 
 **Notes:**
-E2E tests for Investor Portal complete:
+- [2026-01-12T23:28:45.741372] E2E tests for Investor Portal complete:
 - tests/e2e/investor.spec.ts: 31 tests
 - Access Control: unauthenticated redirect tests
 - Page Structure: heading, email/password fields, sign in button
@@ -279,7 +279,7 @@ Test all forms with invalid data, verify error messages
 **Completed:** 2026-01-12T10:54:50.126816
 
 **Notes:**
-E2E tests for Form Validation complete:
+- [2026-01-12T23:28:45.741373] E2E tests for Form Validation complete:
 - tests/e2e/forms.spec.ts: 39 tests
 - Login Form: required fields, email/password validation, invalid credentials, loading state
 - Signup Form: all fields, name input, validation, password requirements, toggle
@@ -302,7 +302,7 @@ Run coverage report, add tests for uncovered critical paths
 **Completed:** 2026-01-12T15:28:57.432550
 
 **Notes:**
-Test coverage goal achieved:
+- [2026-01-12T23:28:45.741374] Test coverage goal achieved:
 - Statement coverage: 84.7% (exceeds 80% target)
 - Branch coverage: 75.35%
 - Function coverage: 77.63%
@@ -333,7 +333,7 @@ Wrap App with ErrorBoundary to catch all uncaught errors
 **Completed:** 2026-01-12T04:42:13.335729
 
 **Notes:**
-Root error boundary verified and tested:
+- [2026-01-12T23:28:45.741375] Root error boundary verified and tested:
 - ErrorBoundary component already wrapping App in src/App.tsx
 - Well-designed fallback UI with Go to Homepage and Reload Page buttons
 - Shows error details in development mode
@@ -356,7 +356,7 @@ Ensure every async operation shows loading spinner or skeleton
 **Completed:** 2026-01-12T11:20:02.174331
 
 **Notes:**
-Loading states implemented everywhere:
+- [2026-01-12T23:28:45.741376] Loading states implemented everywhere:
 - Created LoadingSpinner, PageLoading, InlineLoading components
 - Created PageLoadingSkeleton with variants for all page types
   - DashboardSkeleton, AdminDashboardSkeleton, ProfileSkeleton, LoginSkeleton
@@ -376,7 +376,7 @@ Use Zod schemas for all forms, add user-friendly error messages
 **Completed:** 2026-01-12T13:37:12.736250
 
 **Notes:**
-Form validation complete:
+- [2026-01-12T23:28:45.741377] Form validation complete:
 - Login.tsx: Uses loginSchema/signupSchema with inline FormError components
 - Profile.tsx: Uses profileSchema with inline FormError components
 - Validation clears on field change with clearError()
@@ -398,7 +398,7 @@ Implement exponential backoff for Supabase query failures
 **Completed:** 2026-01-12T13:24:06.060527
 
 **Notes:**
-Completed:
+- [2026-01-12T23:28:45.741378] Completed:
 - src/lib/retry.ts - Full retry utility with exponential backoff
   - withRetry() - Core retry function
   - retryableQuery() - Supabase query wrapper
@@ -418,7 +418,7 @@ Replace technical error messages with helpful user-facing text
 **Completed:** 2026-01-12T13:43:30.266884
 
 **Notes:**
-User-friendly error messages complete:
+- [2026-01-12T23:28:45.741379] User-friendly error messages complete:
 - Created errorMessages.ts utility with:
   - getFriendlyError() - converts technical errors to user-friendly messages
   - getUserMessage() - quick accessor for just the message
@@ -439,7 +439,7 @@ Show banner when network is offline, queue operations
 **Completed:** 2026-01-12T13:46:26.606948
 
 **Notes:**
-Offline detection complete:
+- [2026-01-12T23:28:45.741380] Offline detection complete:
 - Created useOnlineStatus hook with:
   - Browser online/offline event detection
   - Optional polling for connection verification
@@ -463,7 +463,7 @@ Configure Sentry or similar for production error tracking
 **Completed:** 2026-01-12T14:37:14.724197
 
 **Notes:**
-Sentry error monitoring integration complete:
+- [2026-01-12T23:28:45.741381] Sentry error monitoring integration complete:
 - Created src/lib/sentry.ts with comprehensive error tracking utilities
 - Updated main.tsx to initialize Sentry on app startup
 - Updated ErrorBoundary to capture exceptions with Sentry
@@ -482,7 +482,7 @@ Use Playwright to test all pages at iPhone SE width
 **Completed:** 2026-01-12T14:06:34.825849
 
 **Notes:**
-Task 26 Complete - Mobile Viewport Testing (375px)
+- [2026-01-12T23:28:45.741382] Task 26 Complete - Mobile Viewport Testing (375px)
 
 Comprehensive mobile responsive tests created and all 35 tests passing.
 
@@ -516,7 +516,7 @@ Test all pages at iPad width
 **Completed:** 2026-01-12T14:07:22.754180
 
 **Notes:**
-Task 27 Complete - Tablet viewport testing (768px)
+- [2026-01-12T23:28:45.741383] Task 27 Complete - Tablet viewport testing (768px)
 
 Tablet tests were implemented as part of Task 26 in tests/e2e/responsive.spec.ts.
 
@@ -538,7 +538,7 @@ Ensure hamburger menu works, proper touch targets
 **Completed:** 2026-01-12T14:19:43.742721
 
 **Notes:**
-Task 28 Complete - Fix navigation menu on mobile
+- [2026-01-12T23:28:45.741384] Task 28 Complete - Fix navigation menu on mobile
 
 Added 44px minimum touch targets to all mobile navigation elements:
 - MobileNavLink component: min-h-[44px] min-w-[44px] px-4 py-2
@@ -562,7 +562,7 @@ Make admin tables horizontally scrollable or stacked
 **Completed:** 2026-01-12T14:24:11.094735
 
 **Notes:**
-Task 29 Complete - Fix admin tables on mobile
+- [2026-01-12T23:28:45.741385] Task 29 Complete - Fix admin tables on mobile
 
 Made all admin tables horizontally scrollable on mobile:
 - AdminDashboard.tsx: Users table overflow-x-auto with min-w-[800px]
@@ -585,7 +585,7 @@ Ensure document cards stack properly, text readable
 **Completed:** 2026-01-12T14:27:11.812041
 
 **Notes:**
-Task 30 Complete - Fix document cards mobile layout
+- [2026-01-12T23:28:45.741386] Task 30 Complete - Fix document cards mobile layout
 
 Made DocumentCard component responsive for mobile:
 - Reduced padding on mobile (p-4 on mobile, p-5 on sm+)
@@ -609,7 +609,7 @@ Verify all forms work with mobile keyboards, proper input types
 **Completed:** 2026-01-12T14:30:20.595205
 
 **Notes:**
-Task 31 Complete - Test forms with mobile keyboards
+- [2026-01-12T23:28:45.741387] Task 31 Complete - Test forms with mobile keyboards
 
 Added autocomplete and enterKeyHint attributes to all form inputs for better mobile keyboard support:
 
@@ -646,7 +646,7 @@ Use `/review-design` command on each page to identify issues
 **Completed:** 2026-01-12T22:17:06.855428
 
 **Notes:**
-Design review completed with comprehensive analysis:
+- [2026-01-12T23:28:45.741388] Design review completed with comprehensive analysis:
 
 Screenshots captured:
 - Homepage: Hero section, services cards, stats, footer all properly styled
@@ -683,7 +683,7 @@ Use `/accessibility-audit --level AA` on all interactive components
 **Completed:** 2026-01-12T22:19:07.925416
 
 **Notes:**
-Accessibility audit complete - WCAG 2.2 Level AA compliance verified.
+- [2026-01-12T23:28:45.741389] Accessibility audit complete - WCAG 2.2 Level AA compliance verified.
 
 Created comprehensive accessibility test suite: tests/e2e/accessibility.spec.ts
 31 tests covering all major WCAG 2.2 Level AA success criteria:
@@ -746,7 +746,7 @@ Address all issues identified in accessibility audit
 **Completed:** 2026-01-12T22:19:17.811322
 
 **Notes:**
-No accessibility violations found during audit.
+- [2026-01-12T23:28:45.741390] No accessibility violations found during audit.
 
 All 31 WCAG 2.2 Level AA tests passed on first run, indicating:
 - Proper heading structure implemented
@@ -775,7 +775,7 @@ Replace simple spinners with content-shaped skeletons
 **Completed:** 2026-01-12T15:07:24.150706
 
 **Notes:**
-Implementation complete:
+- [2026-01-12T23:28:45.741391] Implementation complete:
 - Added ActivitySkeleton to Dashboard for activity timeline and tasks
 - Replaced inline spinners with AdminDashboardSkeleton on Admin page
 - Added TableSkeleton for Admin users table loading state  
@@ -794,7 +794,7 @@ Add page transitions, modal animations using Framer Motion
 **Completed:** 2026-01-12T15:47:13.801388
 
 **Notes:**
-Animation components library complete:
+- [2026-01-12T23:28:45.741392] Animation components library complete:
 - Created src/components/animations/ with reusable components
 - PageTransition, FadeIn, SlideIn, ScaleIn for page animations
 - AnimatedList, AnimatedGrid, AnimatedTableRow for list animations
@@ -813,7 +813,7 @@ Convert images to WebP, add lazy loading
 **Completed:** 2026-01-12T15:49:29.166605
 
 **Notes:**
-Image optimization complete:
+- [2026-01-12T23:28:45.741392] Image optimization complete:
 - Added loading="lazy" and decoding="async" to all images
 - Created LazyImage component with Intersection Observer
 - Created OptimizedImage component for srcset support
@@ -831,7 +831,7 @@ Check all text meets WCAG 4.5:1, UI elements 3:1
 **Completed:** 2026-01-12T22:23:18.642402
 
 **Notes:**
-Task 38 Complete - Color Contrast Verification
+- [2026-01-12T23:28:45.741393] Task 38 Complete - Color Contrast Verification
 
 Color Palette Analysis:
 - Background: HSL(222, 47%, 11%) = #0d1321 (dark navy)
@@ -866,7 +866,7 @@ Add search bar to navigation, search documents/users/pages
 **Completed:** 2026-01-12T15:38:38.098037
 
 **Notes:**
-Task 39 Complete - Global Search Feature
+- [2026-01-12T23:28:45.741394] Task 39 Complete - Global Search Feature
 
 Implementation:
 - Created GlobalSearch.tsx with Command Dialog (Ctrl+K / Cmd+K shortcut)
@@ -901,7 +901,7 @@ Track document revisions, allow version uploads
 **Completed:** 2026-01-12T23:20:00.000000
 
 **Notes:**
-Task 40 Complete - Document versioning implementation
+- [2026-01-12T23:22:06.412910] Task 40 Complete - Document versioning implementation
 
 Database Changes:
 - Created migration: supabase/migrations/20260112230000_document_versioning.sql
@@ -912,36 +912,21 @@ Database Changes:
 
 Frontend Components:
 - Created src/components/admin/DocumentVersionHistory.tsx
-  - Dialog to view all versions with timestamps and change notes
-  - Download any version functionality
-  - Restore previous version feature
-  - Delete non-current versions with confirmation
-  - Activity logging for all version operations
-
 - Created src/components/admin/UploadNewVersion.tsx
-  - Drag-and-drop file upload dialog
-  - Change notes support for version tracking
-  - Auto-increment version numbering
-  - File type and size validation (20MB limit)
-  - Activity logging for uploads
-
 - Updated src/components/admin/DocumentsManager.tsx
-  - Added Version column with clickable badge showing version number
-  - Version History and Upload New Version menu options
-  - Integration with both version dialogs
-
 - Updated src/integrations/supabase/types.ts
-  - Added document_versions table TypeScript types
-  - Updated investor_documents with version fields
 
 Build: Verified production build succeeds
 Commit: a4d0bae
 
-### [ ] Task #41: Implement 2FA (TOTP)
+### [-] Task #41: Implement 2FA (TOTP)
 
 Add TOTP 2FA support with QR codes and backup codes
 
-**Status:** Todo
+**Status:** In Progress
+
+**Notes:**
+- [2026-01-12T23:28:51.074270] Starting 2FA TOTP implementation
 
 ### [x] Task #42: Add comprehensive audit trails
 
@@ -951,7 +936,7 @@ Log all admin actions, document access, profile changes
 **Completed:** 2026-01-12T22:30:41.763990
 
 **Notes:**
-Task 42 Complete - Add comprehensive audit trails
+- [2026-01-12T23:28:45.741396] Task 42 Complete - Add comprehensive audit trails
 
 Implementation:
 - Created src/components/admin/AuditTrail.tsx with enhanced features:
@@ -996,7 +981,7 @@ Add date range, status, role filters to admin tables
 **Completed:** 2026-01-12T22:35:00.000000
 
 **Notes:**
-Task 43 Complete - Implement advanced filtering (admin)
+- [2026-01-12T23:28:45.741397] Task 43 Complete - Implement advanced filtering (admin)
 
 Implementation:
 - Enhanced UserFilters.tsx with comprehensive filtering options:
@@ -1034,7 +1019,7 @@ Allow bulk delete, bulk role change, bulk email
 **Completed:** 2026-01-12T22:45:00.000000
 
 **Notes:**
-Task 44 Complete - Add bulk operations (admin)
+- [2026-01-12T23:28:45.741398] Task 44 Complete - Add bulk operations (admin)
 
 Implementation:
 - Enhanced BulkActionsBar.tsx with comprehensive bulk operations:
@@ -1116,7 +1101,7 @@ Auto-logout after inactivity, show renewal prompt before timeout
 **Completed:** 2026-01-12T14:56:59.705403
 
 **Notes:**
-Session timeout feature complete:
+- [2026-01-12T23:28:45.741399] Session timeout feature complete:
 - useSessionTimeout hook: Tracks user activity, shows warning before timeout
 - SessionTimeout component: Modal dialog with Stay Logged In / Log Out options
 - Integrated in App.tsx with 30-minute timeout, 2-minute warning
@@ -1201,69 +1186,4 @@ Notes for Next Session:
 - Tasks 4-6 require actual company information (email, DocuSign, contact details)
 - Consider implementing Task 40 (document versioning) or Task 41 (2FA)
 - App is stable and production-ready for current feature set
-
-
-### Session 21 - 2026-01-12T23:20:00.000000
-Session 21 Complete - Document Versioning Implementation
-
-Accomplished:
-- Completed Task #40: Add document versioning - Track document revisions, allow version uploads
-
-Database Changes:
-- Created migration: supabase/migrations/20260112230000_document_versioning.sql
-  - New document_versions table with fields: id, document_id, version_number, file_url, file_size, uploaded_by, change_notes, created_at
-  - Row Level Security (RLS) policies for admins and users with document access
-  - Indexes for document_id and created_at for performance
-  - Trigger to auto-create initial version (v1) when document is first created
-  - Unique constraint on (document_id, version_number)
-  - Added current_version (default 1) and file_size columns to investor_documents
-
-Frontend Components:
-- Created src/components/admin/DocumentVersionHistory.tsx (~350 lines)
-  - Dialog component showing all versions of a document
-  - Table with version number, upload date, uploaded by, file size, change notes
-  - Download button for each version
-  - Restore previous version with confirmation dialog
-  - Delete non-current versions with confirmation
-  - Activity logging for restore and delete operations
-  - Proper loading states and error handling
-
-- Created src/components/admin/UploadNewVersion.tsx (~250 lines)
-  - Dialog for uploading new document versions
-  - Drag-and-drop file upload zone
-  - File type validation (PDF, Word, Excel, PowerPoint)
-  - File size validation (20MB limit)
-  - Change notes textarea for version tracking
-  - Auto-increment version number
-  - Activity logging for uploads
-
-- Updated src/components/admin/DocumentsManager.tsx
-  - Added imports: History and Upload icons, new dialog components
-  - Extended InvestorDocument interface with current_version and file_size
-  - Added state for version history and upload dialogs
-  - Added handler functions: handleViewVersionHistory, handleUploadNewVersion
-  - Added "Version" column to table with clickable badge (v1, v2, etc.)
-  - Added menu items: "Version History" and "Upload New Version"
-  - Integrated both dialogs at component bottom
-
-- Updated src/integrations/supabase/types.ts
-  - Added document_versions table TypeScript types (Row, Insert, Update)
-  - Updated investor_documents types with current_version and file_size fields
-
-Progress: 42/47 tasks complete (89.4%)
-
-Remaining Tasks (5):
-- Tasks 4-6: External configuration (email, DocuSign, company info) - require company data
-- Task 41: Implement 2FA (TOTP)
-- Task 46: Add email notification preferences
-
-Verification:
-- Production build succeeds (4143 modules, 5.42s)
-- HMR updates working correctly
-- Dev server running on port 8086
-
-Notes for Next Session:
-- Consider implementing Task 41 (2FA with TOTP) or Task 46 (email notification preferences)
-- Tasks 4-6 still require actual company information to configure
-- Document versioning feature ready for testing when Supabase migration is applied
 
