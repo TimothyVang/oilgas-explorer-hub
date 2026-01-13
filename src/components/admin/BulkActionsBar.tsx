@@ -14,9 +14,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FileText, RotateCcw, ChevronDown, Loader2, X } from "lucide-react";
+import { FileText, RotateCcw, ChevronDown, Loader2, X, Trash2, Shield, UserCog } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { logActivity } from "@/lib/logActivity";
@@ -36,6 +40,8 @@ interface BulkActionsBarProps {
   currentUserId: string;
 }
 
+type RoleType = "admin" | "moderator" | "user" | "none";
+
 export const BulkActionsBar = ({
   selectedUsers,
   onClearSelection,
@@ -44,31 +50,20 @@ export const BulkActionsBar = ({
 }: BulkActionsBarProps) => {
   const [resetNdaDialogOpen, setResetNdaDialogOpen] = useState(false);
   const [assignDocsDialogOpen, setAssignDocsDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [roleChangeDialogOpen, setRoleChangeDialogOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<RoleType>("user");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [documents, setDocuments] = useState<{ id: string; title: string }[]>([]);
-  const [loadingDocs, setLoadingDocs] = useState(false);
+
+  // Filter out current user from operations
+  const usersExcludingCurrent = selectedUsers.filter(
+    (u) => u.user_id !== currentUserId
+  );
 
   // Filter out current user and users without NDA signed for reset action
   const usersWithNdaSigned = selectedUsers.filter(
     (u) => u.nda_signed && u.user_id !== currentUserId
   );
-
-  const fetchDocuments = async () => {
-    setLoadingDocs(true);
-    try {
-      const { data, error } = await supabase
-        .from("investor_documents")
-        .select("id, title")
-        .order("title");
-
-      if (error) throw error;
-      setDocuments(data || []);
-    } catch (error) {
-      console.error("Error fetching documents:", error);
-    } finally {
-      setLoadingDocs(false);
-    }
-  };
 
   const handleBulkResetNda = async () => {
     setIsProcessing(true);
@@ -153,7 +148,7 @@ export const BulkActionsBar = ({
       return;
     }
 
-    for (const user of selectedUsers.filter((u) => u.user_id !== currentUserId)) {
+    for (const user of usersExcludingCurrent) {
       try {
         // Get existing assignments for this user
         const { data: existing } = await supabase
@@ -162,7 +157,7 @@ export const BulkActionsBar = ({
           .eq("user_id", user.user_id);
 
         const existingDocIds = new Set((existing || []).map((e) => e.document_id));
-        
+
         // Filter to only new assignments
         const newAssignments = allDocs
           .filter((doc) => !existingDocIds.has(doc.id))
@@ -204,6 +199,144 @@ export const BulkActionsBar = ({
     onActionComplete();
   };
 
+  const handleBulkRoleChange = async () => {
+    setIsProcessing(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const user of usersExcludingCurrent) {
+      try {
+        if (selectedRole === "none") {
+          // Remove role
+          const { error } = await supabase
+            .from("user_roles")
+            .delete()
+            .eq("user_id", user.user_id);
+
+          if (error && error.code !== "PGRST116") throw error; // Ignore "no rows deleted" error
+
+          await logActivity("admin_role_removed", {
+            target_user_id: user.user_id,
+            target_user_name: user.full_name || "Unknown",
+            bulk_action: true,
+          });
+        } else {
+          // Check if role exists
+          const { data: existing } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", user.user_id)
+            .single();
+
+          if (existing) {
+            // Update existing role
+            const { error } = await supabase
+              .from("user_roles")
+              .update({ role: selectedRole })
+              .eq("user_id", user.user_id);
+
+            if (error) throw error;
+
+            await logActivity("admin_role_changed", {
+              target_user_id: user.user_id,
+              target_user_name: user.full_name || "Unknown",
+              previous_role: existing.role,
+              new_role: selectedRole,
+              bulk_action: true,
+            });
+          } else {
+            // Insert new role
+            const { error } = await supabase
+              .from("user_roles")
+              .insert({ user_id: user.user_id, role: selectedRole });
+
+            if (error) throw error;
+
+            await logActivity("admin_role_assigned", {
+              target_user_id: user.user_id,
+              target_user_name: user.full_name || "Unknown",
+              new_role: selectedRole,
+              bulk_action: true,
+            });
+          }
+        }
+
+        successCount++;
+      } catch (error) {
+        console.error("Failed to change role for", user.email, error);
+        failCount++;
+      }
+    }
+
+    toast({
+      title: "Bulk Role Change Complete",
+      description: `Successfully updated ${successCount} user(s)${failCount > 0 ? `, ${failCount} failed` : ""}.`,
+    });
+
+    setIsProcessing(false);
+    setRoleChangeDialogOpen(false);
+    onClearSelection();
+    onActionComplete();
+  };
+
+  const handleBulkDelete = async () => {
+    setIsProcessing(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    const { data: sessionData } = await supabase.auth.getSession();
+
+    for (const user of usersExcludingCurrent) {
+      try {
+        const response = await supabase.functions.invoke("delete-user", {
+          body: { user_id: user.user_id },
+          headers: {
+            Authorization: `Bearer ${sessionData.session?.access_token}`,
+          },
+        });
+
+        if (response.error) throw new Error(response.error.message);
+        if (response.data?.error) throw new Error(response.data.error);
+
+        await logActivity("admin_user_deleted", {
+          deleted_user_id: user.user_id,
+          deleted_user_name: user.full_name || "Unknown",
+          bulk_action: true,
+        });
+
+        successCount++;
+      } catch (error) {
+        console.error("Failed to delete user", user.email, error);
+        failCount++;
+      }
+    }
+
+    toast({
+      title: "Bulk Delete Complete",
+      description: `Successfully deleted ${successCount} user(s)${failCount > 0 ? `, ${failCount} failed` : ""}.`,
+      variant: successCount > 0 ? "default" : "destructive",
+    });
+
+    setIsProcessing(false);
+    setDeleteDialogOpen(false);
+    onClearSelection();
+    onActionComplete();
+  };
+
+  const openRoleChangeDialog = (role: RoleType) => {
+    setSelectedRole(role);
+    setRoleChangeDialogOpen(true);
+  };
+
+  const getRoleLabel = (role: RoleType) => {
+    switch (role) {
+      case "admin": return "Admin";
+      case "moderator": return "Moderator";
+      case "user": return "User";
+      case "none": return "No Role";
+    }
+  };
+
   if (selectedUsers.length === 0) return null;
 
   return (
@@ -231,10 +364,11 @@ export const BulkActionsBar = ({
                 <ChevronDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-56">
+              {/* Document Actions */}
               <DropdownMenuItem
                 onClick={() => setAssignDocsDialogOpen(true)}
-                disabled={selectedUsers.filter((u) => u.user_id !== currentUserId).length === 0}
+                disabled={usersExcludingCurrent.length === 0}
               >
                 <FileText className="w-4 h-4 mr-2" />
                 Assign All Documents
@@ -245,6 +379,47 @@ export const BulkActionsBar = ({
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
                 Reset NDA ({usersWithNdaSigned.length})
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              {/* Role Change Submenu */}
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger disabled={usersExcludingCurrent.length === 0}>
+                  <Shield className="w-4 h-4 mr-2" />
+                  Change Role
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onClick={() => openRoleChangeDialog("admin")}>
+                    <UserCog className="w-4 h-4 mr-2 text-red-500" />
+                    Set as Admin
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => openRoleChangeDialog("moderator")}>
+                    <UserCog className="w-4 h-4 mr-2 text-blue-500" />
+                    Set as Moderator
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => openRoleChangeDialog("user")}>
+                    <UserCog className="w-4 h-4 mr-2 text-gray-500" />
+                    Set as User
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => openRoleChangeDialog("none")}>
+                    <UserCog className="w-4 h-4 mr-2 text-gray-400" />
+                    Remove Role
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+
+              <DropdownMenuSeparator />
+
+              {/* Danger Zone */}
+              <DropdownMenuItem
+                onClick={() => setDeleteDialogOpen(true)}
+                disabled={usersExcludingCurrent.length === 0}
+                className="text-red-500 focus:text-red-500 focus:bg-red-500/10"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Users ({usersExcludingCurrent.length})
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -287,7 +462,7 @@ export const BulkActionsBar = ({
             <AlertDialogDescription>
               This will assign all investor documents to{" "}
               <strong>
-                {selectedUsers.filter((u) => u.user_id !== currentUserId).length} user(s)
+                {usersExcludingCurrent.length} user(s)
               </strong>
               . Users who already have access to specific documents will not receive
               duplicate assignments.
@@ -306,6 +481,92 @@ export const BulkActionsBar = ({
                 </>
               ) : (
                 "Assign Documents"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Bulk Role Change Dialog */}
+      <AlertDialog open={roleChangeDialogOpen} onOpenChange={setRoleChangeDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {selectedRole === "none" ? "Remove Roles" : `Set Role to ${getRoleLabel(selectedRole)}`}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedRole === "none" ? (
+                <>
+                  Are you sure you want to remove the role from{" "}
+                  <strong>{usersExcludingCurrent.length} user(s)</strong>? They will
+                  lose any special permissions associated with their current roles.
+                </>
+              ) : (
+                <>
+                  Are you sure you want to set the role to{" "}
+                  <strong>{getRoleLabel(selectedRole)}</strong> for{" "}
+                  <strong>{usersExcludingCurrent.length} user(s)</strong>?
+                  {selectedRole === "admin" && (
+                    <span className="block mt-2 text-amber-500">
+                      Warning: Admin users have full access to all system features.
+                    </span>
+                  )}
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleBulkRoleChange} disabled={isProcessing}>
+              {isProcessing ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Confirm"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Bulk Delete Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-500">Delete Users</AlertDialogTitle>
+            <AlertDialogDescription>
+              <span className="text-red-500 font-semibold">Warning: This action cannot be undone!</span>
+              <br /><br />
+              Are you sure you want to permanently delete{" "}
+              <strong>{usersExcludingCurrent.length} user(s)</strong>? This will remove
+              all their data including:
+              <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
+                <li>Profile information</li>
+                <li>Document access records</li>
+                <li>Activity history</li>
+                <li>Authentication credentials</li>
+              </ul>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleBulkDelete}
+              disabled={isProcessing}
+              className="bg-red-500 hover:bg-red-600 focus:ring-red-500"
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete {usersExcludingCurrent.length} User{usersExcludingCurrent.length !== 1 ? "s" : ""}
+                </>
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
