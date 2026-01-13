@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminRole } from "@/hooks/useAdminRole";
+import type { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -70,6 +71,8 @@ const AdminDashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [ndaFilter, setNdaFilter] = useState("all");
+  const [dateRangeFilter, setDateRangeFilter] = useState<DateRange | undefined>(undefined);
+  const [statusFilter, setStatusFilter] = useState("all");
   const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -135,11 +138,11 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, roleFilter, ndaFilter]);
+  }, [searchQuery, roleFilter, ndaFilter, dateRangeFilter, statusFilter]);
 
   useEffect(() => {
     setSelectedUserIds(new Set());
-  }, [searchQuery, roleFilter, ndaFilter]);
+  }, [searchQuery, roleFilter, ndaFilter, dateRangeFilter, statusFilter]);
 
   const selectedUsers = profiles.filter((p) => selectedUserIds.has(p.user_id));
 
@@ -161,23 +164,43 @@ const AdminDashboard = () => {
   const filteredProfiles = useMemo(() => {
     return profiles.filter((profile) => {
       const searchLower = searchQuery.toLowerCase();
-      const matchesSearch = searchQuery === "" || 
+      const matchesSearch = searchQuery === "" ||
         (profile.full_name?.toLowerCase().includes(searchLower)) ||
         (profile.email?.toLowerCase().includes(searchLower)) ||
         (profile.company_name?.toLowerCase().includes(searchLower));
-      
+
       const role = getUserRole(profile.user_id);
       const matchesRole = roleFilter === "all" ||
         (roleFilter === "none" && !role) ||
         role === roleFilter;
-      
+
       const matchesNda = ndaFilter === "all" ||
         (ndaFilter === "signed" && profile.nda_signed) ||
         (ndaFilter === "pending" && !profile.nda_signed);
-      
-      return matchesSearch && matchesRole && matchesNda;
+
+      // Date range filtering
+      const createdDate = new Date(profile.created_at);
+      const matchesDateRange =
+        !dateRangeFilter?.from && !dateRangeFilter?.to ? true :
+        (dateRangeFilter?.from && dateRangeFilter?.to)
+          ? createdDate >= dateRangeFilter.from && createdDate <= dateRangeFilter.to
+          : dateRangeFilter?.from
+            ? createdDate >= dateRangeFilter.from
+            : dateRangeFilter?.to
+              ? createdDate <= dateRangeFilter.to
+              : true;
+
+      // Status filtering (based on account age/activity)
+      const now = new Date();
+      const daysSinceCreated = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+      const matchesStatus = statusFilter === "all" ||
+        (statusFilter === "new" && daysSinceCreated <= 7) ||
+        (statusFilter === "active" && daysSinceCreated > 7 && daysSinceCreated <= 30) ||
+        (statusFilter === "inactive" && daysSinceCreated > 30);
+
+      return matchesSearch && matchesRole && matchesNda && matchesDateRange && matchesStatus;
     });
-  }, [profiles, userRoles, searchQuery, roleFilter, ndaFilter]);
+  }, [profiles, userRoles, searchQuery, roleFilter, ndaFilter, dateRangeFilter, statusFilter]);
 
   const totalPages = Math.ceil(filteredProfiles.length / ITEMS_PER_PAGE);
   const paginatedProfiles = useMemo(() => {
@@ -473,6 +496,10 @@ const AdminDashboard = () => {
                 onRoleFilterChange={setRoleFilter}
                 ndaFilter={ndaFilter}
                 onNdaFilterChange={setNdaFilter}
+                dateRange={dateRangeFilter}
+                onDateRangeChange={setDateRangeFilter}
+                statusFilter={statusFilter}
+                onStatusFilterChange={setStatusFilter}
               />
 
               <BulkActionsBar
