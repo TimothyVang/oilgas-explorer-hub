@@ -22,8 +22,10 @@ import {
 import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Eye } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserFilters } from "@/components/admin/UserFilters";
+import { logActivity } from "@/lib/logActivity";
 import { ActivityLogTable } from "@/components/admin/ActivityLogTable";
 import { DocumentsManager } from "@/components/admin/DocumentsManager";
+import { AuditTrail } from "@/components/admin/AuditTrail";
 import { UserActionsDropdown } from "@/components/admin/UserActionsDropdown";
 import { UserDetailModal } from "@/components/admin/UserDetailModal";
 import { BulkActionsBar } from "@/components/admin/BulkActionsBar";
@@ -227,6 +229,12 @@ const AdminDashboard = () => {
             variant: "destructive",
           });
         } else {
+          const targetUser = profiles.find(p => p.user_id === userId);
+          await logActivity("admin_role_removed", {
+            target_user_id: userId,
+            target_user_name: targetUser?.full_name || "Unknown",
+            previous_role: currentRole,
+          });
           toast({
             title: "Role Removed",
             description: "User role has been removed.",
@@ -248,6 +256,13 @@ const AdminDashboard = () => {
             variant: "destructive",
           });
         } else {
+          const targetUser = profiles.find(p => p.user_id === userId);
+          await logActivity("admin_role_changed", {
+            target_user_id: userId,
+            target_user_name: targetUser?.full_name || "Unknown",
+            previous_role: currentRole,
+            new_role: newRole,
+          });
           toast({
             title: "Role Updated",
             description: `User role has been updated to ${newRole}.`,
@@ -266,6 +281,12 @@ const AdminDashboard = () => {
             variant: "destructive",
           });
         } else {
+          const targetUser = profiles.find(p => p.user_id === userId);
+          await logActivity("admin_role_assigned", {
+            target_user_id: userId,
+            target_user_name: targetUser?.full_name || "Unknown",
+            new_role: newRole,
+          });
           toast({
             title: "Role Assigned",
             description: `User role has been set to ${newRole}.`,
@@ -298,6 +319,10 @@ const AdminDashboard = () => {
         throw new Error(response.data.error);
       }
 
+      await logActivity("admin_user_deleted", {
+        deleted_user_id: userId,
+        deleted_user_name: userName || "Unknown",
+      });
       toast({
         title: "User Deleted",
         description: `${userName || "User"} has been deleted successfully.`,
@@ -600,12 +625,9 @@ const AdminDashboard = () => {
               <DocumentsManager />
             </TabsContent>
 
-            {/* Activity Tab */}
+            {/* Activity Tab - Enhanced Audit Trail */}
             <TabsContent value="activity">
-              <ActivityLogTable 
-                userIdFilter={activityUserFilter}
-                profiles={profiles}
-              />
+              <AuditTrail profiles={profiles} />
             </TabsContent>
           </Tabs>
         </div>

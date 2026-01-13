@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export type ActivityAction = 
+export type ActivityAction =
   | "sign_in"
   | "sign_out"
   | "profile_update"
@@ -12,7 +12,11 @@ export type ActivityAction =
   | "admin_document_updated"
   | "admin_document_deleted"
   | "admin_bulk_document_assign"
-  | "admin_bulk_nda_reset";
+  | "admin_bulk_nda_reset"
+  | "admin_role_changed"
+  | "admin_role_assigned"
+  | "admin_role_removed"
+  | "admin_user_deleted";
 
 interface ActivityMetadata {
   [key: string]: string | number | boolean | null | undefined;
@@ -24,7 +28,7 @@ export const logActivity = async (
 ): Promise<void> => {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    
+
     if (!user) {
       console.log("No user found, skipping activity log");
       return;
