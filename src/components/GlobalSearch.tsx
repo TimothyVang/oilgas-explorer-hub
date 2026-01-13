@@ -24,6 +24,7 @@ import {
   Briefcase,
   Users,
   TrendingUp,
+  BarChart3,
 } from "lucide-react";
 
 interface SearchItem {
@@ -139,6 +140,15 @@ export function GlobalSearch() {
       icon: Shield,
       action: () => navigate("/admin"),
       keywords: ["management", "users", "system", "administration"],
+      requiresAdmin: true,
+    },
+    {
+      id: "reports",
+      name: "Reports & Analytics",
+      description: "View platform metrics and trends",
+      icon: BarChart3,
+      action: () => navigate("/admin/reports"),
+      keywords: ["analytics", "charts", "metrics", "statistics", "dashboard"],
       requiresAdmin: true,
     },
   ];

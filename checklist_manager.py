@@ -212,10 +212,18 @@ class ChecklistManager:
 
             if task.get("notes"):
                 lines.append("\n**Notes:**\n")
-                for note in task["notes"]:
-                    timestamp = note.get("timestamp", "")
-                    content = note.get("content", "")
-                    lines.append(f"- [{timestamp}] {content}\n")
+                notes = task["notes"]
+                # Handle both old string format and new list format
+                if isinstance(notes, str):
+                    lines.append(f"{notes}\n")
+                elif isinstance(notes, list):
+                    for note in notes:
+                        if isinstance(note, str):
+                            lines.append(f"- {note}\n")
+                        elif isinstance(note, dict):
+                            timestamp = note.get("timestamp", "")
+                            content = note.get("content", "")
+                            lines.append(f"- [{timestamp}] {content}\n")
 
         # Add session logs if any
         sessions = self.get_session_logs()
@@ -223,8 +231,11 @@ class ChecklistManager:
             lines.append("\n---\n")
             lines.append("\n## Session History\n")
             for session in sessions:
-                lines.append(f"\n### Session {session['session_num']} - {session['timestamp']}\n")
-                lines.append(f"{session['summary']}\n")
+                session_num = session.get('session_num', '?')
+                timestamp = session.get('timestamp', session.get('date', ''))
+                summary = session.get('summary', '')
+                lines.append(f"\n### Session {session_num} - {timestamp}\n")
+                lines.append(f"{summary}\n")
 
         markdown_content = "".join(lines)
 

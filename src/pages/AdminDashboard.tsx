@@ -20,7 +20,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Eye } from "lucide-react";
+import { ArrowLeft, Shield, Users, RefreshCw, ChevronLeft, ChevronRight, FileText, Activity, CheckCircle, Eye, BarChart3 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { UserFilters } from "@/components/admin/UserFilters";
 import { logActivity } from "@/lib/logActivity";
@@ -428,18 +428,26 @@ const AdminDashboard = () => {
 
         {/* Admin Card - Clean glassmorphism */}
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 max-w-6xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
-              <Shield className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between gap-4 mb-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">
+                  Admin Dashboard
+                </h1>
+                <p className="text-white/60 text-sm">
+                  Manage users, documents, and activity
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">
-                Admin Dashboard
-              </h1>
-              <p className="text-white/60 text-sm">
-                Manage users, documents, and activity
-              </p>
-            </div>
+            <Button variant="outline" asChild className="bg-white/5 border-white/10 text-white hover:bg-white/10">
+              <Link to="/admin/reports">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Reports
+              </Link>
+            </Button>
           </div>
 
           {/* Stats - simplified to match homepage */}

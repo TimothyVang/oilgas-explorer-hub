@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
+import ReportingDashboard from "./pages/ReportingDashboard";
 import InvestorDocuments from "./pages/InvestorDocuments";
 import NotFound from "./pages/NotFound";
 
@@ -69,6 +70,11 @@ const App = () => (
               <Route path="/admin" element={
                 <ProtectedRoute requireAdmin>
                   <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/reports" element={
+                <ProtectedRoute requireAdmin>
+                  <ReportingDashboard />
                 </ProtectedRoute>
               } />
 
