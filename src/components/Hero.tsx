@@ -31,7 +31,7 @@ const Hero = () => {
         >
           <motion.h1 
             style={{ y: textY }}
-            className="text-[12vw] leading-[0.85] font-black uppercase text-center tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 relative z-20"
+            className="text-[12vw] leading-[0.85] font-black uppercase text-center tracking-tighter text-white relative z-20"
           >
             Energy <br />
             <span className="relative">

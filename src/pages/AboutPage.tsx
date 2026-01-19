@@ -59,7 +59,7 @@ const AboutPage = () => {
 
           <h1 className="text-6xl sm:text-7xl md:text-9xl font-black text-white mb-6 uppercase tracking-tighter drop-shadow-[0_0_50px_rgba(0,0,0,1)]">
             <TextDecode text="Legacy of" /> <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-200 to-accent animate-gradient-x">
+            <span className="text-primary font-bold">
               Excellence
             </span>
           </h1>
@@ -172,7 +172,7 @@ const ValueCard3D = ({ icon: Icon, title, desc, delay }: ValueCard3DProps) => {
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-      <div className="transform translate-z-10 relative z-10">
+      <div className="relative z-10">
         <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(37,99,235,0.4)]">
           <Icon className="w-10 h-10 text-white" />
         </div>

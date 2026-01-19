@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Table,
@@ -131,7 +131,7 @@ export const AuditTrail = ({ profiles }: AuditTrailProps) => {
   const [dateTo, setDateTo] = useState("");
   const [userIdFilter, setUserIdFilter] = useState<string>("all");
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setLoading(true);
 
     const from = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -186,13 +186,13 @@ export const AuditTrail = ({ profiles }: AuditTrailProps) => {
     }
 
     setLoading(false);
-  };
+  }, [currentPage, dateFrom, dateTo, userIdFilter, actionCategory, profiles]);
 
   useEffect(() => {
     if (profiles.length > 0) {
       fetchLogs();
     }
-  }, [profiles, currentPage, actionCategory, dateFrom, dateTo, userIdFilter]);
+  }, [profiles, fetchLogs]);
 
   // Reset page when filters change
   useEffect(() => {

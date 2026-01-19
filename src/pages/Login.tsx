@@ -39,6 +39,7 @@ const Login = () => {
   // Clear errors when switching between sign in and sign up
   useEffect(() => {
     clearAllErrors();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignUp]);
 
   const handleGoogleSignIn = async () => {

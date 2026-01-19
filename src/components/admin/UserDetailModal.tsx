@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -74,14 +74,7 @@ export const UserDetailModal = ({
   const [loadingActivity, setLoadingActivity] = useState(false);
   const [loadingDocs, setLoadingDocs] = useState(false);
 
-  useEffect(() => {
-    if (open && user) {
-      fetchActivityLogs();
-      fetchAssignedDocuments();
-    }
-  }, [open, user]);
-
-  const fetchActivityLogs = async () => {
+  const fetchActivityLogs = useCallback(async () => {
     if (!user) return;
     setLoadingActivity(true);
     try {
@@ -104,9 +97,9 @@ export const UserDetailModal = ({
     } finally {
       setLoadingActivity(false);
     }
-  };
+  }, [user]);
 
-  const fetchAssignedDocuments = async () => {
+  const fetchAssignedDocuments = useCallback(async () => {
     if (!user) return;
     setLoadingDocs(true);
     try {
@@ -140,7 +133,14 @@ export const UserDetailModal = ({
     } finally {
       setLoadingDocs(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (open && user) {
+      fetchActivityLogs();
+      fetchAssignedDocuments();
+    }
+  }, [open, user, fetchActivityLogs, fetchAssignedDocuments]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {

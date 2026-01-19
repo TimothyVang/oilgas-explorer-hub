@@ -40,7 +40,7 @@ const App = () => (
             timeoutDuration={SESSION_TIMEOUT_MS}
             warningDuration={SESSION_WARNING_MS}
           />
-          <BrowserRouter>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <GlobalSearch />
             <Routes>
               <Route path="/" element={<Index />} />

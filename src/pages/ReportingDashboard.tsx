@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminRole } from "@/hooks/useAdminRole";
@@ -185,7 +185,7 @@ const ReportingDashboard = () => {
     }
   }, [isAdmin, adminLoading, user, navigate]);
 
-  const fetchReportData = async () => {
+  const fetchReportData = useCallback(async () => {
     if (!user || !isAdmin) return;
 
     try {
@@ -334,13 +334,13 @@ const ReportingDashboard = () => {
       setLoadingData(false);
       setRefreshing(false);
     }
-  };
+  }, [user, isAdmin, timeRange]);
 
   useEffect(() => {
     if (user && isAdmin) {
       fetchReportData();
     }
-  }, [user, isAdmin, timeRange]);
+  }, [user, isAdmin, fetchReportData]);
 
   const statCards: StatCard[] = useMemo(() => [
     {

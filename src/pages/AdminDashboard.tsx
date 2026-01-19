@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminRole } from "@/hooks/useAdminRole";
@@ -98,9 +98,9 @@ const AdminDashboard = () => {
     }
   }, [isAdmin, adminLoading, user, navigate]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoadingData(true);
-    
+
     const { data: profilesData, error: profilesError } = await supabase
       .from("profiles")
       .select("*")
@@ -128,13 +128,13 @@ const AdminDashboard = () => {
     }
 
     setLoadingData(false);
-  };
+  }, []);
 
   useEffect(() => {
     if (isAdmin && user) {
       fetchData();
     }
-  }, [isAdmin, user]);
+  }, [isAdmin, user, fetchData]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -156,10 +156,10 @@ const AdminDashboard = () => {
     setSelectedUserIds(newSet);
   };
 
-  const getUserRole = (userId: string): "admin" | "moderator" | "user" | null => {
+  const getUserRole = useCallback((userId: string): "admin" | "moderator" | "user" | null => {
     const role = userRoles.find((r) => r.user_id === userId);
     return role?.role || null;
-  };
+  }, [userRoles]);
 
   const filteredProfiles = useMemo(() => {
     return profiles.filter((profile) => {
@@ -200,7 +200,7 @@ const AdminDashboard = () => {
 
       return matchesSearch && matchesRole && matchesNda && matchesDateRange && matchesStatus;
     });
-  }, [profiles, userRoles, searchQuery, roleFilter, ndaFilter, dateRangeFilter, statusFilter]);
+  }, [profiles, searchQuery, roleFilter, ndaFilter, dateRangeFilter, statusFilter, getUserRole]);
 
   const totalPages = Math.ceil(filteredProfiles.length / ITEMS_PER_PAGE);
   const paginatedProfiles = useMemo(() => {

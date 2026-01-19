@@ -27,7 +27,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           <div className="lg:col-span-2">
-            <h2 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 mb-6">
+            <h2 className="text-5xl font-bold text-white mb-6">
               Powering <br /> Tomorrow.
             </h2>
             <a href="#contact" className="inline-block px-8 py-3 rounded-full border border-white/40 bg-white/5 text-white font-bold hover:bg-white hover:text-black transition-all">

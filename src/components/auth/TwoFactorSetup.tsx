@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -62,7 +62,7 @@ export function TwoFactorSetup({ className }: TwoFactorSetupProps) {
   };
 
   // Start enrollment process
-  const handleStartEnroll = async () => {
+  const handleStartEnroll = useCallback(async () => {
     const result = await enrollTOTP("Authenticator App");
 
     if (result) {
@@ -85,7 +85,7 @@ export function TwoFactorSetup({ className }: TwoFactorSetupProps) {
         toast.error("Failed to generate QR code");
       }
     }
-  };
+  }, [enrollTOTP]);
 
   // Verify the TOTP code
   const handleVerify = async () => {
@@ -179,7 +179,7 @@ If you lose access to your authenticator app, you can use one of these codes to 
     if (isEnrollDialogOpen && setupStep === "qr" && !qrCodeUrl) {
       handleStartEnroll();
     }
-  }, [isEnrollDialogOpen, setupStep, qrCodeUrl]);
+  }, [isEnrollDialogOpen, setupStep, qrCodeUrl, handleStartEnroll]);
 
   if (isLoading) {
     return (

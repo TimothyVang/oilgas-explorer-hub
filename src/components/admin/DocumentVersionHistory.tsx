@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -72,7 +72,7 @@ export const DocumentVersionHistory = ({
   const [isRestoring, setIsRestoring] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
 
-  const fetchVersions = async () => {
+  const fetchVersions = useCallback(async () => {
     setLoading(true);
     try {
       // Fetch versions
@@ -86,7 +86,7 @@ export const DocumentVersionHistory = ({
 
       // Fetch uploader profiles
       const uploaderIds = [...new Set((versionsData || []).map((v) => v.uploaded_by).filter(Boolean))];
-      let profileMap = new Map<string, { full_name: string | null; email: string | null }>();
+      const profileMap = new Map<string, { full_name: string | null; email: string | null }>();
 
       if (uploaderIds.length > 0) {
         const { data: profiles } = await supabase
@@ -120,13 +120,13 @@ export const DocumentVersionHistory = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [documentId]);
 
   useEffect(() => {
     if (open && documentId) {
       fetchVersions();
     }
-  }, [open, documentId]);
+  }, [open, documentId, fetchVersions]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {

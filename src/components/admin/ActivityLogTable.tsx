@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Table,
@@ -39,9 +39,9 @@ export const ActivityLogTable = ({ profiles, userIdFilter }: ActivityLogTablePro
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setLoading(true);
-    
+
     const from = (currentPage - 1) * ITEMS_PER_PAGE;
     const to = from + ITEMS_PER_PAGE - 1;
 
@@ -49,11 +49,11 @@ export const ActivityLogTable = ({ profiles, userIdFilter }: ActivityLogTablePro
       .from("activity_logs")
       .select("*", { count: "exact" })
       .order("created_at", { ascending: false });
-    
+
     if (userIdFilter) {
       query = query.eq("user_id", userIdFilter);
     }
-    
+
     const { data, error, count } = await query.range(from, to);
 
     if (error) {
@@ -72,15 +72,15 @@ export const ActivityLogTable = ({ profiles, userIdFilter }: ActivityLogTablePro
       setLogs(enrichedLogs);
       setTotalCount(count || 0);
     }
-    
+
     setLoading(false);
-  };
+  }, [currentPage, userIdFilter, profiles]);
 
   useEffect(() => {
     if (profiles.length > 0) {
       fetchLogs();
     }
-  }, [profiles, currentPage, userIdFilter]);
+  }, [profiles, fetchLogs]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
