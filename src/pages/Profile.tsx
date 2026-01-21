@@ -83,7 +83,7 @@ const Profile = () => {
     clearAllErrors();
     const formData = { fullName, companyName, phone };
     const validation = validateForm(profileSchema, formData);
-    if (!validation.success) {
+    if (!validation.success && 'errors' in validation) {
       setErrors(validation.errors);
       return;
     }

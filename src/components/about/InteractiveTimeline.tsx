@@ -8,7 +8,7 @@ interface Milestone {
   side: "left" | "right";
 }
 
-const milestones = [
+const milestones: Milestone[] = [
     {
         year: "1995",
         title: "The Genesis",

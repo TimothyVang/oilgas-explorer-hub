@@ -1,13 +1,21 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+interface PageLoadingSkeletonProps {
+  message?: string;
+}
+
 /**
  * Full page loading skeleton for initial page loads
  */
-export const PageLoadingSkeleton = () => (
+export const PageLoadingSkeleton = ({ message }: PageLoadingSkeletonProps = {}) => (
   <div className="min-h-screen bg-midnight flex items-center justify-center">
     <div className="flex flex-col items-center gap-4">
       <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
-      <Skeleton className="h-4 w-24 bg-white/10" />
+      {message ? (
+        <span className="text-white/60 text-sm">{message}</span>
+      ) : (
+        <Skeleton className="h-4 w-24 bg-white/10" />
+      )}
     </div>
   </div>
 );
