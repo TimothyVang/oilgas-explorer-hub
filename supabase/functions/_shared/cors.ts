@@ -2,9 +2,9 @@
 // Restricts access to specific allowed origins instead of wildcard
 
 const ALLOWED_ORIGINS = [
-  // Production domains - add your actual domain here
-  'https://chpshvjvbtoflkwmljvf.lovableproject.com',
-  'https://bah-oil-gas.lovable.app',
+  // Production domains
+  'https://bah-oil.com',
+  'https://bahoilgas.lovable.app',
   // Development
   'http://localhost:5173',
   'http://localhost:3000',
