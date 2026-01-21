@@ -83,7 +83,7 @@ const Login = () => {
 
     const validation = validateForm(schema, formData);
 
-    if (!validation.success) {
+    if (!validation.success && 'errors' in validation) {
       setErrors(validation.errors);
       setIsLoading(false);
       return;
