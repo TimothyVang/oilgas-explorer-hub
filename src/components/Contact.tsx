@@ -24,11 +24,11 @@ const Contact = () => {
   const formY = useTransform(scrollYProgress, [0.1, 0.5], [80, 0]);
   const formOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
 
-  // Mouse-based 3D effect
+  // Mouse-based 3D effect - smoothed with spring
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-100, 100], [30, -30]);
-  const rotateY = useTransform(x, [-100, 100], [-30, 30]);
+  const rotateX = useTransform(y, [-100, 100], [8, -8]);
+  const rotateY = useTransform(x, [-100, 100], [-8, 8]);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -38,8 +38,8 @@ const Contact = () => {
     const mouseY = event.clientY - rect.top;
     const xPct = mouseX / width - 0.5;
     const yPct = mouseY / height - 0.5;
-    x.set(xPct * 200);
-    y.set(yPct * 200);
+    x.set(xPct * 100);
+    y.set(yPct * 100);
   };
 
   const handleMouseLeave = () => {
@@ -132,8 +132,8 @@ const Contact = () => {
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-              className="relative"
-            >
+              transition={{ type: "spring", stiffness: 150, damping: 20 }}
+              className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full -z-10 animate-pulse-glow" />
 
               <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[2rem] shadow-2xl relative z-10">
