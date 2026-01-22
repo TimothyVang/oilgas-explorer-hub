@@ -212,8 +212,20 @@ const ServiceCard = ({ service }: { service: Service }) => {
             decoding="async"
             alt={service.title}
             className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(197,169,98,0.3)]"
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            animate={{ 
+              y: [0, -8, 0],
+              rotate: [0, 1, 0, -1, 0],
+            }}
+            transition={{ 
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            whileHover={{ 
+              scale: 1.15,
+              y: -12,
+              transition: { duration: 0.4, ease: "easeOut" }
+            }}
           />
         </div>
 
