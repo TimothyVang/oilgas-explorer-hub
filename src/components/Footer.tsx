@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { siteConfig } from "@/constants/siteConfig";
+import bahLogo from "@/assets/bah-logo.jpg";
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
@@ -27,10 +28,11 @@ const Footer = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           <div className="lg:col-span-2">
-            <h2 className="text-5xl font-bold text-white mb-6">
-              Powering <br /> Tomorrow.
-            </h2>
-            <a href="#contact" className="inline-block px-8 py-3 rounded-full border border-white/40 bg-white/5 text-white font-bold hover:bg-white hover:text-black transition-all">
+            <img src={bahLogo} alt="BAH Oil LLC" className="h-20 w-auto object-contain mb-6" />
+            <p className="text-gray-400 text-lg mb-6 max-w-md">
+              Delivering excellence in oil and gas operations with a commitment to sustainable energy solutions.
+            </p>
+            <a href="#contact" className="inline-block px-8 py-3 rounded-full border border-primary/40 bg-primary/10 text-primary font-bold hover:bg-primary hover:text-secondary transition-all">
               Start a Project
             </a>
           </div>
@@ -57,7 +59,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
-          <p>&copy; {new Date().getFullYear()} BAH Energy. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} BAH Oil LLC. All rights reserved.</p>
         </div>
       </div>
     </footer>
