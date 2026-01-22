@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, Activity, TrendingUp, Database, LucideIcon } from "lucide-react";
 
 // Asset Imports
@@ -84,29 +86,91 @@ const services = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { 
+    opacity: 0, 
+    y: 60,
+    scale: 0.95,
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 100,
+      damping: 15,
+      mass: 1,
+    },
+  },
+};
+
+const headerVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 80,
+      damping: 20,
+    },
+  },
+};
+
 const Services = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+
   return (
-    <section id="services" className="py-24 bg-midnight overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-24 bg-midnight overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+        <motion.div 
+          className="text-center mb-16"
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={headerVariants}
+        >
+          <motion.h2 
+            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+            variants={headerVariants}
+          >
             Operational{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
               Intelligence
             </span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">
+          </motion.h2>
+          <motion.p 
+            className="text-xl text-muted-foreground max-w-2xl mx-auto font-light"
+            variants={headerVariants}
+          >
             High-yield asset optimization powered by next-gen infrastructure.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={containerVariants}
+        >
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -114,7 +178,11 @@ const Services = () => {
 
 const ServiceCard = ({ service }: { service: Service }) => {
   return (
-    <div className="relative h-[500px] group cursor-pointer">
+    <motion.div 
+      className="relative h-[500px] group cursor-pointer"
+      variants={cardVariants}
+      whileHover={{ y: -8, transition: { duration: 0.3 } }}
+    >
       <div className="h-full bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden transition-all duration-500 group-hover:bg-white/10 group-hover:border-primary/50 group-hover:shadow-[0_0_50px_rgba(197,169,98,0.15)]">
 
         {/* Holographic Grid Overlay */}
@@ -123,21 +191,29 @@ const ServiceCard = ({ service }: { service: Service }) => {
         {/* Tech Specs Overlay (Revealed on Hover) */}
         <div className="absolute top-6 right-6 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 flex flex-col items-end space-y-2">
           {service.tech_specs.map((spec: string, idx: number) => (
-            <div key={idx} className="flex items-center gap-2">
+            <motion.div 
+              key={idx} 
+              className="flex items-center gap-2"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.1 }}
+            >
               <span className="text-xs text-primary font-mono uppercase tracking-wider">{spec}</span>
               <div className="w-1 h-1 bg-primary rounded-full animate-ping" />
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* Image Container */}
         <div className="h-[50%] w-full flex items-center justify-center p-8 relative z-10">
-          <img
+          <motion.img
             src={service.img}
             loading="lazy"
             decoding="async"
             alt={service.title}
-            className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(197,169,98,0.3)] group-hover:scale-110 transition-transform duration-700"
+            className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(197,169,98,0.3)]"
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           />
         </div>
 
@@ -150,11 +226,19 @@ const ServiceCard = ({ service }: { service: Service }) => {
                 <span className="text-accent text-xs font-bold uppercase tracking-widest">{service.category}</span>
               </div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-1 tracking-tight">{service.title}</h3>
-              <p className="text-gray-400 text-sm font-light">{service.description}</p>
+              <p className="text-muted-foreground text-sm font-light">{service.description}</p>
             </div>
-            <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-300 group-hover:rotate-45 bg-white/5 flex-shrink-0">
+            <motion.div 
+              className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5 flex-shrink-0"
+              whileHover={{ 
+                rotate: 45, 
+                backgroundColor: "hsl(var(--primary))",
+                borderColor: "hsl(var(--primary))"
+              }}
+              transition={{ duration: 0.3 }}
+            >
               <ArrowUpRight className="text-white w-4 h-4" />
-            </div>
+            </motion.div>
           </div>
 
           {/* Investor Metrics Grid */}
@@ -165,13 +249,13 @@ const ServiceCard = ({ service }: { service: Service }) => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 const MetricCell = ({ label, value, icon: Icon }: MetricCellProps) => (
   <div className="group/metric">
-    <div className="flex items-center gap-1 mb-1 text-gray-500 group-hover/metric:text-primary transition-colors">
+    <div className="flex items-center gap-1 mb-1 text-muted-foreground group-hover/metric:text-primary transition-colors">
       <Icon size={10} />
       <span className="text-[10px] uppercase tracking-wider">{label}</span>
     </div>
