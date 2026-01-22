@@ -93,7 +93,7 @@ const Services = () => {
     target: targetRef,
     offset: ["start start", "end end"]
   });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-90%"]);
   
   // Parallax for background text - moves slower
   const bgTextY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
