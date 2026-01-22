@@ -100,7 +100,7 @@ const Services = () => {
   const bgTextOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.03, 0.05, 0.02]);
 
   return (
-    <section id="services" ref={targetRef} className="relative h-[300vh] bg-midnight overflow-hidden -mb-[100vh]">
+    <section id="services" ref={targetRef} className="relative h-[300vh] bg-midnight overflow-hidden -mb-[150vh]">
       {/* Data Stream Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <DataStreamBackground />
