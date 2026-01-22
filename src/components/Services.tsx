@@ -89,7 +89,10 @@ const services = [
 
 const Services = () => {
   const targetRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: targetRef });
+  const { scrollYProgress } = useScroll({ 
+    target: targetRef,
+    offset: ["start start", "end end"]
+  });
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-70%"]);
   
   // Parallax for background text - moves slower
