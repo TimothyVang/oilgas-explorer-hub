@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import bahLogo from "@/assets/bah-logo.jpg";
+import bahLogo from "@/assets/bah-logo.png";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
