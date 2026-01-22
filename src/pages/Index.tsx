@@ -14,10 +14,6 @@ const Index = () => {
         <Hero />
         {/* About Section replaced by Vision Teaser in Hero or separate page */}
         <Services />
-        {/* Smooth transition gradient between Services and Team */}
-        <div className="relative h-32 bg-gradient-to-b from-midnight via-midnight to-midnight z-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
-        </div>
         <Team />
         <Contact />
       </main>
