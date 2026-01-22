@@ -167,8 +167,8 @@ const Services = () => {
           animate={isInView ? "visible" : "hidden"}
           variants={containerVariants}
         >
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+          {services.map((service, index) => (
+            <ServiceCard key={service.id} service={service} floatDelay={index * 0.6} />
           ))}
         </motion.div>
       </div>
@@ -176,7 +176,7 @@ const Services = () => {
   );
 };
 
-const ServiceCard = ({ service }: { service: Service }) => {
+const ServiceCard = ({ service, floatDelay = 0 }: { service: Service; floatDelay?: number }) => {
   return (
     <motion.div 
       className="relative h-[500px] group cursor-pointer"
@@ -226,9 +226,10 @@ const ServiceCard = ({ service }: { service: Service }) => {
               rotate: [0, 1, 0, -1, 0],
             }}
             transition={{ 
-              duration: 4,
+              duration: 3.5 + floatDelay,
               repeat: Infinity,
               ease: "easeInOut",
+              delay: floatDelay,
             }}
             whileHover={{ 
               scale: 1.15,
