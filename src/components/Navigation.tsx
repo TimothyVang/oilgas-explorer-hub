@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import bahLogo from "@/assets/bah-logo.jpg";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -62,9 +63,12 @@ const Navigation = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4 z-50">
-            <Link to="/" className="text-2xl font-bold tracking-tighter flex-shrink-0">
-              <span className="text-white">BAH</span>
-              <span className="text-primary">.Energy</span>
+            <Link to="/" className="flex-shrink-0">
+              <img 
+                src={bahLogo} 
+                alt="BAH Oil LLC" 
+                className="h-12 w-auto object-contain"
+              />
             </Link>
             {/* Inline Breadcrumb */}
             {!isHomePage && (
