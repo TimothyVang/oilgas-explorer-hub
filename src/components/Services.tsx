@@ -205,13 +205,22 @@ const ServiceCard = ({ service }: { service: Service }) => {
         </div>
 
         {/* Image Container */}
-        <div className="h-[50%] w-full flex items-center justify-center p-8 relative z-10">
+        <div className="h-[55%] w-full flex items-center justify-center p-4 relative z-10">
+          {/* Ambient glow behind image */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-3/4 h-3/4 bg-gradient-radial from-primary/20 via-primary/5 to-transparent rounded-full blur-2xl" />
+          </div>
+          
           <motion.img
             src={service.img}
             loading="lazy"
             decoding="async"
             alt={service.title}
-            className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(197,169,98,0.3)]"
+            className="w-full h-full object-contain drop-shadow-[0_0_40px_rgba(197,169,98,0.4)]"
+            style={{
+              maskImage: 'radial-gradient(ellipse 70% 70% at center, black 50%, transparent 85%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at center, black 50%, transparent 85%)',
+            }}
             animate={{ 
               y: [0, -8, 0],
               rotate: [0, 1, 0, -1, 0],
