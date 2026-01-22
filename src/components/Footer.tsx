@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { siteConfig } from "@/constants/siteConfig";
-import bahLogo from "@/assets/bah-logo.png";
+import bahLogo from "@/assets/bah-logo-rounded.png";
 
 const Footer = () => {
   const footerRef = useRef<HTMLElement>(null);
