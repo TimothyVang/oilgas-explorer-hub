@@ -67,7 +67,7 @@ const Navigation = () => {
               <img 
                 src={bahLogo} 
                 alt="BAH Oil LLC" 
-                className="h-12 w-auto object-contain"
+                className="h-12 w-auto object-contain rounded-xl"
               />
             </Link>
             {/* Inline Breadcrumb */}
