@@ -26,7 +26,7 @@ interface TaskItem {
 }
 
 export const useInvestorDashboard = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<DashboardStats>({
     totalDocuments: 0,
     assignedDocuments: 0,
@@ -38,9 +38,16 @@ export const useInvestorDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchDashboardData = async () => {
+      // Wait for auth to finish loading first
+      if (authLoading) {
+        return; // Keep loading = true
+      }
+
       if (!user) {
-        setLoading(false);
+        if (isMounted) setLoading(false);
         return;
       }
 
@@ -144,26 +151,32 @@ export const useInvestorDashboard = () => {
           });
         }
 
-        setStats({
-          totalDocuments: totalDocs,
-          assignedDocuments: docsAssigned,
-          ndaSigned: profile?.nda_signed || false,
-          ndaSignedAt: profile?.nda_signed_at || null,
-          recentActivity: (activities || []).map((a) => ({
-            ...a,
-            metadata: a.metadata as Record<string, unknown>,
-          })),
-          pendingTasks: tasks,
-        });
+        if (isMounted) {
+          setStats({
+            totalDocuments: totalDocs,
+            assignedDocuments: docsAssigned,
+            ndaSigned: profile?.nda_signed || false,
+            ndaSignedAt: profile?.nda_signed_at || null,
+            recentActivity: (activities || []).map((a) => ({
+              ...a,
+              metadata: a.metadata as Record<string, unknown>,
+            })),
+            pendingTasks: tasks,
+          });
+        }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchDashboardData();
-  }, [user]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, authLoading]);
 
   return { stats, loading };
 };
