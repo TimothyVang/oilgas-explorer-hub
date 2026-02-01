@@ -64,11 +64,16 @@ const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4 z-50">
             <Link to="/" className="flex-shrink-0">
-              <img 
-                src={bahLogo} 
-                alt="BAH Oil LLC" 
-                className="h-12 w-auto object-contain rounded-xl"
-              />
+              <div className="h-12 w-12 rounded-xl overflow-hidden bg-transparent">
+                <img 
+                  src={bahLogo} 
+                  alt="BAH Oil LLC" 
+                  className="h-full w-full object-cover"
+                  style={{ 
+                    clipPath: 'inset(2px round 12px)',
+                  }}
+                />
+              </div>
             </Link>
             {/* Inline Breadcrumb */}
             {!isHomePage && (
