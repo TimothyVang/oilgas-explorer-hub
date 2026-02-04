@@ -3,8 +3,10 @@ import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import { Send, MapPin, Mail, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { siteConfig } from "@/constants/siteConfig";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Contact = () => {
+  const isMobile = useIsMobile();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,24 +15,25 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Scroll-based parallax
+  // Scroll-based parallax - disabled on mobile for performance
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
   });
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.3]);
-  const contentX = useTransform(scrollYProgress, [0, 0.5], [-60, 0]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], isMobile ? [1, 1] : [1, 1.3]);
+  const contentX = useTransform(scrollYProgress, [0, 0.5], isMobile ? [0, 0] : [-60, 0]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
-  const formY = useTransform(scrollYProgress, [0.1, 0.5], [80, 0]);
+  const formY = useTransform(scrollYProgress, [0.1, 0.5], isMobile ? [0, 0] : [80, 0]);
   const formOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
 
-  // Mouse-based 3D effect - smoothed with spring
+  // Mouse-based 3D effect - disabled on mobile
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useTransform(y, [-100, 100], [8, -8]);
   const rotateY = useTransform(x, [-100, 100], [-8, 8]);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (isMobile) return; // Skip 3D effect on mobile
     const rect = event.currentTarget.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -131,12 +134,13 @@ const Contact = () => {
             <motion.div
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+              style={isMobile ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
               transition={{ type: "spring", stiffness: 150, damping: 20 }}
               className="relative">
-              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full -z-10 animate-pulse-glow" />
+              {/* Reduced blur on mobile */}
+              <div className="absolute inset-0 bg-primary/20 blur-xl md:blur-3xl rounded-full -z-10 md:animate-pulse-glow" />
 
-              <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 rounded-[2rem] shadow-2xl relative z-10">
+              <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md md:backdrop-blur-xl border border-white/10 p-6 md:p-10 rounded-2xl md:rounded-[2rem] shadow-2xl relative z-10">
                 <div className="space-y-6">
                   <div>
                     <label className="text-sm uppercase tracking-widest text-accent mb-2 block">Name</label>
