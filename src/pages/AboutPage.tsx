@@ -7,6 +7,7 @@ import heroImage from "@/assets/pump-jacks.jpg";
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { InteractiveTimeline } from "@/components/about/InteractiveTimeline";
 import { useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ValueCard3DProps {
   icon: React.ComponentType<{ className?: string }>;
@@ -17,21 +18,24 @@ interface ValueCard3DProps {
 
 
 const AboutPage = () => {
+  const isMobile = useIsMobile();
   const { scrollYProgress } = useScroll();
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+  // Disable scroll-driven scale on mobile for performance
+  const scale = useTransform(scrollYProgress, [0, 1], isMobile ? [1, 1] : [1, 1.2]);
 
   return (
     <div className="min-h-screen bg-midnight overflow-hidden relative">
       <Navigation />
 
-      {/* FLUID BACKGROUND - Premium 2025 (No external dependencies) */}
+      {/* FLUID BACKGROUND - Optimized for mobile */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[#020410]" />
-        {/* CSS-based noise pattern */}
-        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-primary/20 rounded-full blur-[150px] animate-blob mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] animate-blob animation-delay-4000 mix-blend-screen" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
+        {/* CSS-based noise pattern - hidden on mobile */}
+        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none hidden md:block" />
+        {/* Reduced blur on mobile (50px vs 150px) */}
+        <div className="absolute top-0 right-0 w-[500px] md:w-[1000px] h-[500px] md:h-[1000px] bg-primary/20 rounded-full blur-[50px] md:blur-[150px] md:animate-blob mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-accent/20 rounded-full blur-[50px] md:blur-[150px] md:animate-blob md:animation-delay-4000 mix-blend-screen" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none hidden md:block" />
       </div>
 
       {/* Cinematic Hero */}
@@ -128,6 +132,7 @@ const TextDecode = ({ text }: { text: string }) => {
 };
 
 const ValueCard3D = ({ icon: Icon, title, desc, delay }: ValueCard3DProps) => {
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -135,7 +140,9 @@ const ValueCard3D = ({ icon: Icon, title, desc, delay }: ValueCard3DProps) => {
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
 
+  // Disable 3D mouse tracking on mobile for performance
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
     const rect = ref.current?.getBoundingClientRect();
     if (rect) {
       const width = rect.width;
@@ -144,7 +151,7 @@ const ValueCard3D = ({ icon: Icon, title, desc, delay }: ValueCard3DProps) => {
       const mouseY = e.clientY - rect.top;
       const xPct = mouseX / width - 0.5;
       const yPct = mouseY / height - 0.5;
-      x.set(xPct * 20); // Rotation intensity
+      x.set(xPct * 20);
       y.set(yPct * -20);
     }
   };
@@ -163,12 +170,12 @@ const ValueCard3D = ({ icon: Icon, title, desc, delay }: ValueCard3DProps) => {
       transition={{ delay }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{
+      style={isMobile ? undefined : {
         rotateY: mouseXSpring,
         rotateX: mouseYSpring,
         transformStyle: "preserve-3d"
       }}
-      className="p-10 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl hover:bg-white/10 transition-colors group cursor-pointer shadow-xl relative overflow-hidden"
+      className="p-10 bg-white/5 backdrop-blur-md md:backdrop-blur-xl border border-white/10 rounded-3xl hover:bg-white/10 transition-colors group cursor-pointer shadow-xl relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 

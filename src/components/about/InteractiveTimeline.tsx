@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Milestone {
   year: string;
@@ -36,13 +37,15 @@ const milestones: Milestone[] = [
 ];
 
 export const InteractiveTimeline = () => {
+    const isMobile = useIsMobile();
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"]
     });
 
-    const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+    // Disable scroll-driven animation on mobile
+    const scaleY = useTransform(scrollYProgress, [0, 1], isMobile ? [1, 1] : [0, 1]);
 
     return (
         <section ref={containerRef} className="py-32 relative overflow-hidden">
@@ -110,9 +113,9 @@ const TimelineItem = ({ item, index }: { item: Milestone, index: number }) => {
                 </div>
             </div>
 
-            {/* Central Node */}
+            {/* Central Node - ping animation disabled on mobile */}
             <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-midnight border-2 border-primary rounded-full z-20">
-                <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-20" />
+                <div className="absolute inset-0 bg-primary rounded-full md:animate-ping opacity-20" />
             </div>
 
             {/* Spacer for opposite side */}
