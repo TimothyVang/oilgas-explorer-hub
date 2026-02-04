@@ -76,7 +76,7 @@ const Contact = () => {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="relative min-h-screen py-32 bg-midnight flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} id="contact" className="relative min-h-screen py-16 md:py-32 bg-midnight flex items-center justify-center overflow-hidden">
       {/* Background Ambience with Parallax Scale */}
       <motion.div 
         style={{ scale: bgScale }}
@@ -84,27 +84,27 @@ const Contact = () => {
       />
 
       <div className="container mx-auto px-4 perspective-1000">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 md:gap-20 items-center">
 
           {/* Text Content with Slide-in Parallax */}
           <motion.div 
             style={{ x: contentX, opacity: contentOpacity }}
-            className="space-y-8 z-10"
+            className="space-y-6 md:space-y-8 z-10"
           >
             <motion.h2
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/50"
+              className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/50"
             >
               Let's <br /> Collaborate
             </motion.h2>
-            <p className="text-xl text-gray-400 max-w-md">
+            <p className="text-base md:text-xl text-gray-400 max-w-md">
               Ready to redefine your energy infrastructure?
               Connect with our expert team directly.
             </p>
 
-            <div className="space-y-6 pt-8">
+            <div className="space-y-4 md:space-y-6 pt-4 md:pt-8">
               {[
                 { icon: Phone, text: siteConfig.contact.phoneDisplay },
                 { icon: Mail, text: siteConfig.contact.email },
@@ -115,12 +115,12 @@ const Contact = () => {
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + idx * 0.1 }}
-                  className="flex items-center gap-4 text-gray-300 group"
+                  className="flex items-center gap-3 md:gap-4 text-gray-300 group"
                 >
-                  <div className="p-3 rounded-full border border-white/10 bg-white/5 group-hover:bg-primary/20 group-hover:border-primary transition-colors">
-                    <item.icon className="w-5 h-5" />
+                  <div className="p-2 md:p-3 rounded-full border border-white/10 bg-white/5 group-hover:bg-primary/20 group-hover:border-primary transition-colors">
+                    <item.icon className="w-4 h-4 md:w-5 md:h-5" />
                   </div>
-                  <span className="text-lg group-hover:text-white transition-colors">{item.text}</span>
+                  <span className="text-sm md:text-lg group-hover:text-white transition-colors">{item.text}</span>
                 </motion.div>
               ))}
             </div>
