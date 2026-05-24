@@ -15,8 +15,21 @@ const mockHandleDocumentAccess = vi.fn();
 const mockGetDocumentAccessUrl = vi.fn();
 const mockRetryLoad = vi.fn();
 const mockFetch = vi.fn();
-const mockCreateObjectURL = vi.fn();
-const mockRevokeObjectURL = vi.fn();
+const mockGetDocumentDownloadUrl = vi.fn();
+const { mockPdfGetDocument, mockPdfGetPage, mockPdfPageRender } = vi.hoisted(() => ({
+  mockPdfGetDocument: vi.fn(),
+  mockPdfGetPage: vi.fn(),
+  mockPdfPageRender: vi.fn(),
+}));
+
+vi.mock("pdfjs-dist/legacy/build/pdf.mjs", () => ({
+  GlobalWorkerOptions: {},
+  getDocument: mockPdfGetDocument,
+}));
+
+vi.mock("pdfjs-dist/legacy/build/pdf.worker.mjs?url", () => ({
+  default: "pdf.worker.js",
+}));
 
 vi.mock("@/hooks/useInvestorDocuments", () => ({
   useInvestorDocuments: vi.fn(() => ({
@@ -30,6 +43,7 @@ vi.mock("@/hooks/useInvestorDocuments", () => ({
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       })),
 }));
@@ -40,17 +54,25 @@ import { useInvestorDocuments } from "@/hooks/useInvestorDocuments";
 describe("DocumentsTab", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    Object.defineProperty(URL, "createObjectURL", { configurable: true, value: mockCreateObjectURL });
-    Object.defineProperty(URL, "revokeObjectURL", { configurable: true, value: mockRevokeObjectURL });
-    mockCreateObjectURL.mockReturnValue("blob:document-preview");
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({} as CanvasRenderingContext2D);
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => undefined);
     mockFetch.mockResolvedValue({
       ok: true,
-      blob: () => Promise.resolve(new Blob(["pdf"], { type: "application/pdf" })),
+      arrayBuffer: () => Promise.resolve(new Uint8Array([37, 80, 68, 70]).buffer),
+    });
+    mockPdfPageRender.mockReturnValue({ promise: Promise.resolve(), cancel: vi.fn() });
+    mockPdfGetPage.mockResolvedValue({
+      getViewport: ({ scale }: { scale: number }) => ({ width: 600 * scale, height: 800 * scale }),
+      render: mockPdfPageRender,
+    });
+    mockPdfGetDocument.mockReturnValue({
+      promise: Promise.resolve({ numPages: 1, getPage: mockPdfGetPage }),
     });
     vi.stubGlobal("fetch", mockFetch);
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
@@ -67,6 +89,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
@@ -88,6 +111,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
@@ -106,6 +130,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
@@ -141,6 +166,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
@@ -174,6 +200,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
 
@@ -216,6 +243,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
 
@@ -252,6 +280,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
 
@@ -264,10 +293,54 @@ describe("DocumentsTab", () => {
         "https://signed.example/snapshot.pdf",
         expect.objectContaining({ credentials: "omit" }),
       ));
-      expect(screen.getByTitle(/Deal Snapshot preview/i)).toHaveAttribute(
-        "src",
-        "blob:document-preview#toolbar=0&navpanes=0&scrollbar=1",
-      );
+      await waitFor(() => expect(mockPdfGetDocument).toHaveBeenCalledTimes(1));
+      await waitFor(() => expect(mockPdfGetPage).toHaveBeenCalledWith(1));
+      expect(screen.getByLabelText(/Deal Snapshot PDF preview/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/PDF page 1/i)).toBeInTheDocument();
+    });
+
+    it("should allow spreadsheet sources to save the original Excel file", async () => {
+      mockGetDocumentAccessUrl.mockResolvedValue("https://signed.example/budget-preview.pdf");
+      mockGetDocumentDownloadUrl.mockResolvedValue("https://signed.example/budget.xlsx");
+      vi.mocked(useInvestorDocuments).mockReturnValue({
+        user: { id: "user-1", email: "test@example.com" },
+        ndaStatus: { nda_signed: true, nda_signed_at: "2024-01-01T00:00:00Z" },
+        documents: [{
+          id: "sheet-1",
+          title: "AFE Budget Preview",
+          description: "Spreadsheet-style support.",
+          created_at: "2024-01-01",
+          category: "financials",
+          asset_type: "document",
+          file_size: 1024,
+          mime_type: "application/pdf",
+          original_filename: "AFE Budget.xlsx",
+          download_storage_path: "briefing-20260524/originals/AFE Budget.xlsx",
+          download_filename: "AFE Budget.xlsx",
+          download_mime_type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          download_file_size: 2048,
+          thumbnail_path: null,
+          sort_order: 0,
+          is_featured: true,
+        }],
+        loading: false,
+        loadError: null,
+        accessLoadingId: null,
+        retryLoad: mockRetryLoad,
+        handleSignNda: mockHandleSignNda,
+        handleDocumentAccess: mockHandleDocumentAccess,
+        getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
+        DOCUSIGN_NDA_URL: "https://demo.docusign.net",
+      });
+
+      render(<DocumentsTab />);
+      fireEvent.click(screen.getByRole("button", { name: /open afe budget preview/i }));
+
+      const saveButton = await screen.findByRole("button", { name: /save excel/i });
+      fireEvent.click(saveButton);
+
+      await waitFor(() => expect(mockGetDocumentDownloadUrl).toHaveBeenCalledTimes(1));
     });
 
     it("should show empty state when no documents assigned", () => {

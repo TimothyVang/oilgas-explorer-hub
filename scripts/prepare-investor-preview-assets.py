@@ -134,16 +134,6 @@ ASSETS = [
         "is_featured": False,
         "preview_name": "jackson-mapping-deck.pdf",
     },
-    {
-        "source": "ops ledger/IMG_5121.heic",
-        "title": "Operations Reference Image",
-        "description": "Browser preview image supporting the operations review materials.",
-        "category": "operations",
-        "asset_type": "image",
-        "sort_order": 6,
-        "is_featured": False,
-        "preview_name": "operations-reference-image.jpg",
-    },
 ]
 
 

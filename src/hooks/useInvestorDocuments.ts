@@ -26,6 +26,10 @@ export interface InvestorDocument {
   file_size: number | null;
   mime_type: string | null;
   original_filename: string | null;
+  download_storage_path?: string | null;
+  download_filename?: string | null;
+  download_mime_type?: string | null;
+  download_file_size?: number | null;
   thumbnail_path: string | null;
   sort_order: number;
   is_featured: boolean;
@@ -40,8 +44,11 @@ interface SignedUrlResponse {
   signed_url?: string;
   expires_at?: string;
   expires_in?: number;
+  mode?: "preview" | "download_original";
   error?: string;
 }
+
+type AssetAccessMode = "preview" | "download_original";
 
 const DOCUSIGN_NDA_URL = import.meta.env.VITE_DOCUSIGN_NDA_URL ||
   "https://demo.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=fe62249a-9ae4-4146-9473-730060811d53&env=demo&acct=31150f9e-848b-4280-bbd7-cc8dcbaecef2&v=2";
@@ -129,7 +136,7 @@ export const useInvestorDocuments = () => {
             const { data: docsData, error: docsError } = await withTimeout(
               supabase
                 .from("investor_documents")
-                .select("id, title, description, created_at, category, asset_type, file_size, mime_type, original_filename, thumbnail_path, sort_order, is_featured")
+                .select("id, title, description, created_at, category, asset_type, file_size, mime_type, original_filename, download_storage_path, download_filename, download_mime_type, download_file_size, thumbnail_path, sort_order, is_featured")
                 .in("id", documentIds)
                 .order("category", { ascending: true })
                 .order("sort_order", { ascending: true })
@@ -175,7 +182,7 @@ export const useInvestorDocuments = () => {
     window.open(DOCUSIGN_NDA_URL, "_blank");
   };
 
-  const getDocumentAccessUrl = async (doc: InvestorDocument): Promise<string | null> => {
+  const getDocumentAccessUrl = async (doc: InvestorDocument, mode: AssetAccessMode = "preview"): Promise<string | null> => {
     setAccessLoadingId(doc.id);
     try {
       if (isDemoInvestorUser(user)) {
@@ -184,7 +191,7 @@ export const useInvestorDocuments = () => {
 
       const { data, error } = await withTimeout(
         supabase.functions.invoke<SignedUrlResponse>("create-asset-access-url", {
-          body: { document_id: doc.id },
+          body: { document_id: doc.id, mode },
         }),
         "Secure file request timed out.",
         ACCESS_TIMEOUT_MS,
@@ -206,6 +213,10 @@ export const useInvestorDocuments = () => {
     } finally {
       setAccessLoadingId(null);
     }
+  };
+
+  const getDocumentDownloadUrl = (doc: InvestorDocument): Promise<string | null> => {
+    return getDocumentAccessUrl(doc, "download_original");
   };
 
   const handleDocumentAccess = async (doc: InvestorDocument) => {
@@ -232,6 +243,7 @@ export const useInvestorDocuments = () => {
     handleSignNda,
     handleDocumentAccess,
     getDocumentAccessUrl,
+    getDocumentDownloadUrl,
     DOCUSIGN_NDA_URL,
   };
 };

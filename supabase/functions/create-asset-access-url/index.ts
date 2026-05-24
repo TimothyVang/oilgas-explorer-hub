@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
 
   const { data: document, error: documentError } = await supabaseAdmin
     .from("investor_documents")
-    .select("id, storage_path, original_filename, title")
+    .select("id, storage_path, original_filename, title, download_storage_path, download_filename, download_mime_type, download_file_size")
     .eq("id", documentId)
     .maybeSingle();
 
@@ -118,10 +118,15 @@ Deno.serve(async (req) => {
   let storagePath = document.storage_path as string | null;
   let downloadName = (document.original_filename as string | null) || (document.title as string | null) || true;
 
+  if (mode === "download_original") {
+    storagePath = document.download_storage_path as string | null;
+    downloadName = (document.download_filename as string | null) || (document.original_filename as string | null) || downloadName;
+  }
+
   if (versionId) {
     const { data: version, error: versionError } = await supabaseAdmin
       .from("document_versions")
-      .select("id, document_id, storage_path, original_filename, mime_type")
+      .select("id, document_id, storage_path, original_filename, mime_type, download_storage_path, download_filename, download_mime_type, download_file_size")
       .eq("id", versionId)
       .eq("document_id", documentId)
       .maybeSingle();
@@ -133,11 +138,16 @@ Deno.serve(async (req) => {
 
     storagePath = version.storage_path as string | null;
     downloadName = (version.original_filename as string | null) || downloadName;
+
+    if (mode === "download_original") {
+      storagePath = version.download_storage_path as string | null;
+      downloadName = (version.download_filename as string | null) || (version.original_filename as string | null) || downloadName;
+    }
   }
 
   if (!storagePath) {
     await logAccess(req, supabaseAdmin, userId, documentId, versionId ?? null, false, "missing_storage_path");
-    return json({ error: "Asset is missing private storage path" }, 409, corsHeaders);
+    return json({ error: mode === "download_original" ? "Original file download is not available" : "Asset is missing private storage path" }, 409, corsHeaders);
   }
 
   const signedUrlOptions = mode === "download_original"
