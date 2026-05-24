@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { siteConfig } from "@/constants/siteConfig";
+import heroOilRigsImage from "@/assets/hero-oil-rigs.jpg";
 
 const bahStrengths = [
-  ["Find", "Defined South Texas opportunities are identified through records, maps, field context, and established conventional geology."],
-  ["De-risk", "Geoscience, petroleum engineering, and field evidence shape each development plan before field work advances."],
-  ["Develop", "Trinity Sands Holdings executes as operator of record, controlling sequence, timing, and cost."],
+  ["01", "Find", "Records, maps, and South Texas field context identify where conventional redevelopment makes sense."],
+  ["02", "De-risk", "Geoscience, petroleum engineering, and field evidence shape the development plan before field work advances."],
+  ["03", "Develop", "Trinity Sands Holdings executes as operator of record, controlling sequence, timing, and cost."],
 ];
 
 const trustPoints = ["Zapata County", "Conventional Vertical", "Known Horizons", "Operator of Record"];
@@ -72,34 +73,42 @@ const Hero = () => {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative min-w-0 border-2 border-secondary bg-white p-5 shadow-[6px_6px_0_#C09B4C] md:p-6 md:shadow-[10px_10px_0_#C09B4C] lg:max-w-[500px] lg:justify-self-end"
+          className="relative min-w-0 overflow-hidden border-2 border-secondary bg-secondary text-white shadow-[6px_6px_0_#C09B4C] md:shadow-[10px_10px_0_#C09B4C] lg:max-w-[520px] lg:justify-self-end"
         >
-          <div className="mb-5 flex items-start justify-between gap-4 border-b-2 border-secondary pb-5">
-            <div>
-              <p className="kinetic-label text-xs text-primary">Principal-Led Development</p>
-              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">An Operating Company That Finds and Builds Projects</h2>
+          <div className="relative h-64 border-b-2 border-primary">
+            <img src={heroOilRigsImage} alt="Oil and gas field operations at dusk" className="h-full w-full object-cover" loading="eager" decoding="async" />
+            <div className="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/45 to-transparent" />
+            <div className="absolute left-4 top-4 border-2 border-primary bg-secondary/90 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[-0.02em] text-primary">
+              Operator-grade field execution
             </div>
-            <span className="rounded-full border-2 border-secondary bg-secondary px-3 py-1 font-mono text-xs font-bold uppercase text-white">
-              BAH
-            </span>
+            <div className="absolute bottom-4 left-4 right-4 grid grid-cols-3 border-2 border-primary bg-secondary/90 text-center font-mono text-[10px] font-bold uppercase tracking-[-0.02em] text-primary">
+              <span className="border-r border-primary/60 px-2 py-2">Zapata Trend</span>
+              <span className="border-r border-primary/60 px-2 py-2">Conventional</span>
+              <span className="px-2 py-2">Operator</span>
+            </div>
           </div>
 
-          <div className="space-y-3">
-            {bahStrengths.map(([title, body]) => (
-              <article key={title} className="grid gap-3 border-2 border-secondary bg-[#F8F6F0] p-3 sm:grid-cols-[48px_1fr]">
-                <div className="flex h-11 w-11 items-center justify-center bg-primary font-mono text-sm font-bold text-secondary">
-                  {title.slice(0, 1)}
-                </div>
-                <div>
-                  <h3 className="kinetic-heading text-2xl md:text-3xl">{title}</h3>
-                  <p className="mt-1.5 text-xs font-semibold leading-relaxed text-secondary/70 md:text-sm">{body}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+          <div className="p-5 md:p-6">
+            <p className="kinetic-label text-xs text-primary">Principal-led development</p>
+            <h2 className="kinetic-heading mt-2 text-4xl text-white md:text-5xl">An operating company that finds and builds projects.</h2>
 
-          <div className="mt-4 border-2 border-primary bg-primary p-3 font-body text-sm font-bold leading-snug text-secondary">
-            Public materials establish identity, competence, and credibility. Project-specific materials remain behind approved investor login.
+            <div className="mt-5 space-y-3">
+              {bahStrengths.map(([index, title, body]) => (
+                <article key={title} className="grid gap-3 border border-primary/50 bg-[#08263F] p-3 sm:grid-cols-[48px_1fr]">
+                  <div className="flex h-11 w-11 items-center justify-center bg-primary font-mono text-xs font-bold text-secondary">
+                    {index}
+                  </div>
+                  <div>
+                    <h3 className="kinetic-heading text-2xl text-white md:text-3xl">{title}</h3>
+                    <p className="mt-1.5 text-xs font-semibold leading-relaxed text-white/65 md:text-sm">{body}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-4 border-2 border-primary bg-primary p-3 font-body text-sm font-bold leading-snug text-secondary">
+              Credentialed portal access is reserved for existing relationships.
+            </div>
           </div>
         </motion.aside>
       </div>

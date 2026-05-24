@@ -4,16 +4,23 @@ import pumpJacksImage from "@/assets/pump-jacks.jpg";
 const evidenceItems = [
   {
     title: "Field Photography",
-    body: "Site documentation, equipment context, and field conditions captured for operating decisions.",
+    body: "Site documentation and equipment context captured for operating decisions.",
     image: pumpJacksImage,
     alt: "Oilfield equipment documented in the field",
   },
   {
     title: "Operating Data",
-    body: "Records and operating context organized so the logic of each project remains clear.",
+    body: "Operating context organized so the logic of each project remains clear.",
     image: heroOilRigsImage,
     alt: "Oil and gas field operations at dusk",
   },
+];
+
+const evidenceSignals = [
+  ["Well Records", "Completion, production, and operating records tied to the project thesis."],
+  ["Map Packages", "Maps and offsets organized for technical clarity without deal-specific disclosure."],
+  ["Site Evidence", "Field photos and observations connect the record set to physical conditions."],
+  ["Operating Context", "Access, equipment, vendor timing, and sequence constraints treated as execution inputs."],
 ];
 
 const ProjectReviewPreview = () => {
@@ -33,44 +40,62 @@ const ProjectReviewPreview = () => {
           </p>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-3">
-          {evidenceItems.map((item) => (
-            <article key={item.title} className="overflow-hidden border-2 border-secondary bg-white shadow-[6px_6px_0_#C09B4C]">
-              <img src={item.image} alt={item.alt} className="h-64 w-full object-cover" loading="lazy" decoding="async" />
-              <div className="border-t-2 border-secondary p-5">
-                <p className="kinetic-label text-xs text-primary">Evidence</p>
-                <h3 className="kinetic-heading mt-3 text-4xl">{item.title}</h3>
-                <p className="mt-3 text-sm font-semibold leading-relaxed text-secondary/70">{item.body}</p>
+        <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+          <article className="overflow-hidden border-2 border-secondary bg-secondary text-white shadow-[8px_8px_0_#C09B4C]">
+            <div className="relative h-[420px]">
+              <img src={evidenceItems[0].image} alt={evidenceItems[0].alt} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+              <div className="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/20 to-transparent" />
+              <div className="absolute bottom-5 left-5 right-5 border-2 border-primary bg-secondary/90 p-5">
+                <p className="kinetic-label text-xs text-primary">Field photography</p>
+                <h3 className="kinetic-heading mt-2 text-5xl text-white">Physical evidence first.</h3>
+                <p className="mt-3 max-w-2xl text-sm font-semibold leading-relaxed text-white/70">
+                  Site documentation, equipment context, and field conditions support practical operating decisions.
+                </p>
               </div>
-            </article>
-          ))}
-
-          <article className="border-2 border-secondary bg-secondary p-5 text-white shadow-[6px_6px_0_#C09B4C]">
-            <div className="h-64 border-2 border-primary/70 bg-[linear-gradient(rgba(192,155,76,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.22)_1px,transparent_1px)] bg-[size:28px_28px] p-4">
-              <div className="h-full border border-primary/50 bg-[#08263F]/80 p-4">
-                <div className="h-2 w-28 bg-primary" />
-                <div className="mt-6 grid grid-cols-3 gap-2">
-                  <span className="h-12 border border-primary/50" />
-                  <span className="h-12 border border-primary/50" />
-                  <span className="h-12 border border-primary/50" />
-                </div>
-                <div className="mt-8 h-1 w-full bg-primary/60" />
-                <div className="mt-4 h-1 w-3/4 bg-primary/40" />
-                <div className="mt-4 h-1 w-1/2 bg-primary/30" />
-              </div>
-            </div>
-            <div className="pt-5">
-              <p className="kinetic-label text-xs text-primary">Evidence</p>
-              <h3 className="kinetic-heading mt-3 text-4xl">Map & Record Packages</h3>
-              <p className="mt-3 text-sm font-semibold leading-relaxed text-white/65">Maps and well records are organized for technical clarity without disclosing deal-specific data.</p>
             </div>
           </article>
+
+          <div className="grid gap-5">
+            <article className="border-2 border-secondary bg-secondary p-5 text-white shadow-[6px_6px_0_#C09B4C]">
+              <div className="h-56 border-2 border-primary/70 bg-[linear-gradient(rgba(192,155,76,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.22)_1px,transparent_1px)] bg-[size:28px_28px] p-4">
+                <div className="relative h-full overflow-hidden border border-primary/50 bg-[#08263F]/80 p-4">
+                  <div className="absolute left-6 top-8 h-24 w-40 rotate-[-12deg] border-2 border-primary/60" />
+                  <div className="absolute right-8 top-10 h-16 w-28 rotate-[8deg] border border-primary/50" />
+                  <div className="absolute bottom-10 left-10 h-1 w-48 bg-primary/70" />
+                  <div className="absolute bottom-16 left-16 h-1 w-32 bg-primary/40" />
+                  <div className="absolute bottom-6 right-8 h-10 w-10 rounded-full border-2 border-primary" />
+                </div>
+              </div>
+              <p className="kinetic-label mt-5 text-xs text-primary">Map & record packages</p>
+              <p className="mt-2 text-sm font-semibold leading-relaxed text-white/65">
+                A technical record wall should feel organized, verifiable, and operational, not promotional.
+              </p>
+            </article>
+
+            <article className="overflow-hidden border-2 border-secondary bg-white shadow-[6px_6px_0_#C09B4C]">
+              <img src={evidenceItems[1].image} alt={evidenceItems[1].alt} className="h-44 w-full object-cover" loading="lazy" decoding="async" />
+              <div className="border-t-2 border-secondary p-5">
+                <p className="kinetic-label text-xs text-primary">Operating data</p>
+                <p className="mt-2 text-sm font-semibold leading-relaxed text-secondary/70">{evidenceItems[1].body}</p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-4">
+          {evidenceSignals.map(([title, body]) => (
+            <article key={title} className="border-2 border-secondary bg-white p-4 transition-transform hover:-translate-y-1 hover:shadow-[5px_5px_0_#C09B4C]">
+              <p className="kinetic-label text-[10px] text-primary">Evidence signal</p>
+              <h3 className="kinetic-heading mt-3 text-3xl">{title}</h3>
+              <p className="mt-3 text-xs font-semibold leading-relaxed text-secondary/65">{body}</p>
+            </article>
+          ))}
         </div>
 
         <div className="mt-8 border-2 border-primary bg-primary p-5 text-secondary">
           <p className="kinetic-label text-xs">Public/private separation</p>
           <p className="mt-2 max-w-4xl font-body text-base font-bold leading-snug">
-            Captions and public evidence describe capability only. Current-project materials and economics stay inside the secure portal.
+            Public captions describe operating capability only. Private project files remain inside the secure portal.
           </p>
         </div>
       </div>
