@@ -66,7 +66,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-opportunity-snapshot",
     title: "Opportunity Snapshot",
-    description: "Concise investor snapshot covering structure, review sequence, and core private materials available in the BAH deal room.",
+    description: "Concise investor snapshot covering structure, review sequence, and assigned private files.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "pitch",
     asset_type: "document",
@@ -136,7 +136,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-technical-economics",
     title: "Technical Economics Appendix",
-    description: "Private technical appendix slot for the asset case and economic support materials.",
+    description: "Private technical appendix for the project case and economic support materials.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "financials",
     asset_type: "document",

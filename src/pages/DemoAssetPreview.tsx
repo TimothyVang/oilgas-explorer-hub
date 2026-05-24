@@ -12,10 +12,10 @@ const DemoAssetPreview = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-secondary p-6 text-white">
         <div className="max-w-lg border-2 border-primary bg-[#08263F] p-8 text-center">
-          <h1 className="kinetic-heading text-4xl text-white">Asset Not Found</h1>
-          <p className="mt-3 text-sm text-white/60">This asset is not in the assigned Deal Room list.</p>
+          <h1 className="kinetic-heading text-4xl text-white">File Not Found</h1>
+          <p className="mt-3 text-sm text-white/60">This file is not in your assigned list.</p>
           <Button asChild className="mt-6 rounded-full border-primary bg-primary text-secondary hover:bg-white">
-            <Link to="/investor-documents">Back to Deal Room</Link>
+            <Link to="/investor-documents">Back to Files</Link>
           </Button>
         </div>
       </div>
@@ -34,27 +34,27 @@ const DemoAssetPreview = () => {
       <main className="relative z-10 mx-auto max-w-5xl">
         <Link to="/investor-documents" className="kinetic-label mb-6 inline-flex items-center gap-2 text-primary transition-transform hover:translate-x-2">
           <ArrowLeft className="h-4 w-4" />
-          Back to Deal Room
+          Back to Files
         </Link>
 
         <section className="grid gap-6 border-2 border-primary bg-[#08263F] p-6 md:grid-cols-[1fr_320px] md:p-8">
           <div>
             <div className="mb-5 flex flex-wrap items-center gap-2">
-              <Badge className="border-primary/40 bg-primary/10 text-primary">Investor Preview</Badge>
+              <Badge className="border-primary/40 bg-primary/10 text-primary">Investor File</Badge>
               <Badge variant="outline" className="border-white/20 text-white/70">{asset.category.replace("_", " ")}</Badge>
-              <Badge variant="outline" className="border-white/20 text-white/70">{asset.asset_type}</Badge>
+              <Badge variant="outline" className="border-white/20 text-white/70">{asset.asset_type === "document" ? "file" : asset.asset_type}</Badge>
             </div>
 
             <div className="mb-6 flex h-16 w-16 items-center justify-center border-2 border-primary bg-secondary text-primary">
               <Icon className="h-8 w-8" />
             </div>
 
-            <p className="kinetic-label text-xs text-primary">Confidential asset preview</p>
+            <p className="kinetic-label text-xs text-primary">Confidential investor file</p>
             <h1 className="kinetic-heading mt-3 text-5xl text-white md:text-7xl">{asset.title}</h1>
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/65">{asset.description}</p>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <Meta label="File" value={asset.original_filename || "Private asset"} />
+              <Meta label="File" value={asset.original_filename || "Private file"} />
               <Meta label="Size" value={formatFileSize(asset.file_size)} />
               <Meta label="Delivery" value="Signed URL ready" />
             </div>
@@ -65,15 +65,15 @@ const DemoAssetPreview = () => {
               <div className="mb-4 flex h-12 w-12 items-center justify-center border border-green-500/40 bg-green-500/10 text-green-300">
                 <ShieldCheck className="h-6 w-6" />
               </div>
-              <h2 className="font-mono text-lg font-bold uppercase text-white">Secure preview available</h2>
+              <h2 className="font-mono text-lg font-bold uppercase text-white">Secure file available</h2>
               <p className="mt-3 text-sm leading-relaxed text-white/60">
-                This preview confirms the investor flow, categories, access state, and asset metadata. Final private file delivery uses approved account access.
+                Open the assigned file, then return to your list when you are done.
               </p>
             </div>
 
             <Button asChild className="mt-6 rounded-full border-primary bg-primary text-secondary hover:bg-white">
               <Link to="/investor-documents">
-                Continue Review
+                Back to Files
                 <Download className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -99,7 +99,7 @@ const getIcon = (asset: typeof demoInvestorDocuments[number]) => {
 };
 
 const formatFileSize = (size: number | null) => {
-  if (!size) return "Private asset";
+  if (!size) return "Private file";
   if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
   return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 };

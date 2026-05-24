@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useInvestorDocuments, type DealRoomCategory, type InvestorDocument } from "@/hooks/useInvestorDocuments";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,23 +27,17 @@ import { motion } from "framer-motion";
 import { DocumentCardsSkeleton } from "@/components/loading/PageLoadingSkeleton";
 
 const categories: Array<{ id: DealRoomCategory; label: string; description: string }> = [
-  { id: "overview", label: "Start Here", description: "Orientation, thesis, and first-review materials." },
-  { id: "pitch", label: "Pitch", description: "Teasers, snapshots, and investment decks." },
-  { id: "financials", label: "Financials", description: "Economics, budgets, and model support." },
-  { id: "mapping", label: "Maps", description: "Lease, field, and technical mapping support." },
-  { id: "operations", label: "Operations", description: "Operating notes, site context, and supporting records." },
-  { id: "field_videos", label: "Field Videos", description: "Private field and operations clips." },
-  { id: "management", label: "Team", description: "Management and technical leadership credentials." },
-];
-
-const reviewSteps = [
-  { step: "1", title: "Start with the featured item", body: "This is the clearest first file for your review." },
-  { step: "2", title: "Use sections to filter", body: "Only sections with assigned files are shown." },
-  { step: "3", title: "Open files securely", body: "Each button creates a private link when you need it." },
+  { id: "overview", label: "Start Here", description: "Begin with these files." },
+  { id: "pitch", label: "Pitch", description: "Overview and investment files." },
+  { id: "financials", label: "Financials", description: "Models, budgets, and economics." },
+  { id: "mapping", label: "Maps", description: "Lease, field, and technical maps." },
+  { id: "operations", label: "Operations", description: "Operating notes and records." },
+  { id: "field_videos", label: "Videos", description: "Field and operations clips." },
+  { id: "management", label: "Team", description: "Leadership background." },
 ];
 
 const assetTypeLabels = {
-  document: "Document",
+  document: "File",
   video: "Video",
   image: "Image",
 };
@@ -110,7 +104,7 @@ export const DocumentsTab = () => {
         </div>
 
         <p className="kinetic-label mb-2 text-xs text-primary">Connection status</p>
-        <h2 className="kinetic-heading mb-3 text-4xl text-white">Deal Room Needs a Refresh</h2>
+        <h2 className="kinetic-heading mb-3 text-4xl text-white">Files Need a Refresh</h2>
         <p className="mb-8 max-w-md text-sm leading-relaxed text-white/60">{loadError}</p>
 
         <Button
@@ -118,7 +112,7 @@ export const DocumentsTab = () => {
           className="rounded-none border-2 border-primary bg-primary px-8 py-6 font-mono text-xs font-bold uppercase text-secondary hover:bg-white"
         >
           <RefreshCw className="mr-2 h-5 w-5" />
-          Retry Deal Room
+          Retry Files
         </Button>
       </HolographicCard>
     );
@@ -132,17 +126,16 @@ export const DocumentsTab = () => {
         </div>
 
         <p className="kinetic-label mb-2 text-xs text-primary">Access setup</p>
-        <h2 className="kinetic-heading mb-3 text-4xl text-white">Deal Room Access Pending</h2>
+        <h2 className="kinetic-heading mb-3 text-4xl text-white">Files Not Ready Yet</h2>
         <p className="mb-8 max-w-md text-sm leading-relaxed text-white/60">
-          Your account is active. BAH will assign private deal-room files when your investor profile is ready for review.
+          BAH will notify you when your investor files are ready.
         </p>
 
         <div className="mb-8 flex w-full gap-4 border-2 border-primary/40 bg-secondary p-4 text-left">
           <AlertCircle className="h-5 w-5 flex-shrink-0 text-primary" />
           <div>
-            <p className="mb-1 text-sm font-bold text-primary">Investor profile recognized</p>
             <p className="text-xs text-primary/80">
-              Signed in as <span className="rounded bg-white/10 px-1 font-mono text-white">{user?.email}</span>. Refresh once BAH assigns files.
+              Signed in as <span className="rounded bg-white/10 px-1 font-mono text-white">{user?.email}</span>.
             </p>
           </div>
         </div>
@@ -164,17 +157,17 @@ export const DocumentsTab = () => {
               <AssetPreviewFrame doc={previewAsset.doc} url={previewAsset.url} />
 
               <DialogHeader className="border-l-0 border-primary p-6 text-left lg:border-l-2">
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Secure browser preview</p>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Secure file</p>
                 <DialogTitle className="kinetic-heading text-4xl leading-none text-white md:text-5xl">
                   {previewAsset.doc.title}
                 </DialogTitle>
                 <DialogDescription className="text-sm leading-relaxed text-white/65">
-                  {previewAsset.doc.description || "Confidential BAH investor file prepared for private deal-room review."}
+                  {previewAsset.doc.description || "Confidential BAH investor file."}
                 </DialogDescription>
                 <div className="border-t-2 border-primary/40 pt-4 font-mono text-xs uppercase text-white/45">
                   <p>{formatFileSize(previewAsset.doc.file_size)}</p>
                   <p>{previewAsset.doc.original_filename || "Private investor file"}</p>
-                  <p>Preview links expire automatically. Reopen the file if the preview times out.</p>
+                  <p>Links expire. Reopen the file if needed.</p>
                 </div>
               </DialogHeader>
             </div>
@@ -189,9 +182,9 @@ export const DocumentsTab = () => {
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="font-mono text-sm font-bold uppercase text-white">Deal Room Unlocked</h3>
+              <h3 className="font-mono text-sm font-bold uppercase text-white">Access Active</h3>
               <p className="font-mono text-xs uppercase text-primary">
-                Investor access verified • {ndaStatus.nda_signed_at ? new Date(ndaStatus.nda_signed_at).toLocaleDateString() : "Demo review"}
+                Verified • {ndaStatus.nda_signed_at ? new Date(ndaStatus.nda_signed_at).toLocaleDateString() : "Demo review"}
               </p>
             </div>
           </div>
@@ -204,29 +197,19 @@ export const DocumentsTab = () => {
       {documents.length === 0 ? (
         <div className="border-2 border-primary bg-[#08263F] p-12 text-center">
           <FileText className="mx-auto mb-4 h-12 w-12 text-primary" />
-          <p className="kinetic-heading mb-2 text-3xl text-white">No assets assigned yet.</p>
-          <p className="text-sm text-white/55">Your account is ready. BAH will assign private deal-room materials to this investor profile.</p>
+          <p className="kinetic-heading mb-2 text-3xl text-white">No files assigned yet.</p>
+          <p className="text-sm text-white/55">BAH will add files here when they are ready.</p>
         </div>
       ) : (
         <>
-          <div className="grid gap-3 md:grid-cols-3">
-            {reviewSteps.map((item) => (
-              <div key={item.step} className="border-2 border-primary/50 bg-[#08263F] p-4">
-                <p className="mb-2 font-mono text-xs font-bold uppercase text-primary">Step {item.step}</p>
-                <h3 className="font-mono text-sm font-bold uppercase text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/55">{item.body}</p>
-              </div>
-            ))}
-          </div>
-
           {featuredAsset && (
             <HolographicCard className="border-primary bg-[#08263F] p-6" delay={0.15}>
               <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
                 <div>
-                  <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Recommended first review</p>
+                  <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Start Here</p>
                   <h2 className="kinetic-heading text-4xl text-white md:text-5xl">{featuredAsset.title}</h2>
                   <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/60">
-                    {featuredAsset.description || "Start here for the clearest path through the private investor materials."}
+                    {featuredAsset.description || "Open this first."}
                   </p>
                 </div>
                 <Button
@@ -244,7 +227,7 @@ export const DocumentsTab = () => {
           <Tabs defaultValue={visibleCategories[0]?.id || "overview"} className="space-y-5">
             <div className="space-y-2 md:space-y-0">
               {visibleCategories.length > 3 && (
-                <p className="kinetic-label text-[10px] text-primary/70 md:hidden">Swipe to view all assigned sections</p>
+                <p className="kinetic-label text-[10px] text-primary/70 md:hidden">Swipe for more sections</p>
               )}
               <div className="relative">
                 <div className="overflow-x-auto pb-2 pr-8 md:pr-0">
@@ -288,7 +271,7 @@ export const DocumentsTab = () => {
                   </div>
                 ) : (
                   <div className="border-2 border-white/20 bg-[#08263F] p-8 text-center font-mono text-sm uppercase text-white/45">
-                    No assigned assets in this section yet.
+                    No files here yet.
                   </div>
                 )}
               </TabsContent>
@@ -302,7 +285,7 @@ export const DocumentsTab = () => {
 
 const DocumentCard = ({ doc, onClick, delay, loading }: { doc: InvestorDocument; onClick: () => void; delay: number; loading: boolean }) => {
   const Icon = getAssetIcon(doc);
-  const label = assetTypeLabels[doc.asset_type] || "Asset";
+  const label = assetTypeLabels[doc.asset_type] || "File";
 
   return (
     <motion.button
@@ -313,7 +296,7 @@ const DocumentCard = ({ doc, onClick, delay, loading }: { doc: InvestorDocument;
       onClick={onClick}
       disabled={loading}
       aria-label={`Open ${doc.title}`}
-      className="group relative flex min-h-[280px] flex-col overflow-hidden border-2 border-white/20 bg-[#08263F] p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:bg-secondary disabled:cursor-wait disabled:opacity-70"
+      className="group relative flex min-h-[220px] flex-col overflow-hidden border-2 border-white/20 bg-[#08263F] p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:bg-secondary disabled:cursor-wait disabled:opacity-70"
     >
       <div className="absolute inset-0 bg-[linear-gradient(rgba(192,155,76,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.08)_1px,transparent_1px)] bg-[size:28px_28px] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="relative z-10 flex h-full flex-col">
@@ -331,14 +314,9 @@ const DocumentCard = ({ doc, onClick, delay, loading }: { doc: InvestorDocument;
           {doc.title}
         </h4>
 
-        <p className="mb-6 line-clamp-3 flex-1 text-sm leading-relaxed text-white/55">
-          {doc.description || "Confidential investor asset available in the BAH deal room."}
-        </p>
-
-        <div className="flex items-center justify-between gap-3 border-t-2 border-primary/40 pt-4">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t-2 border-primary/40 pt-4">
           <div className="font-mono text-[11px] uppercase text-white/45">
             <p>{formatFileSize(doc.file_size)}</p>
-            <p>{new Date(doc.created_at).toLocaleDateString()}</p>
           </div>
           <span className="flex min-h-[34px] items-center border border-primary bg-primary px-3 font-mono text-[10px] font-bold uppercase text-secondary transition-colors duration-300 group-hover:bg-white">
             {loading ? "Opening" : getAssetActionLabel(doc)}
@@ -361,8 +339,8 @@ const getAssetIcon = (doc: InvestorDocument) => {
 };
 
 const getAssetActionLabel = (doc: InvestorDocument) => {
-  if (doc.asset_type === "video") return "Preview Video";
-  return "Preview";
+  if (doc.asset_type === "video") return "Play";
+  return "Open";
 };
 
 const AssetPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string }) => {
@@ -393,15 +371,98 @@ const AssetPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string })
     );
   }
 
+  return <DocumentPreviewFrame doc={doc} url={url} />;
+};
+
+const DocumentPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string }) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let objectUrl: string | null = null;
+    let cancelled = false;
+
+    setPreviewUrl(null);
+    setPreviewError(null);
+
+    const loadPreview = async () => {
+      try {
+        const response = await fetch(url, { credentials: "omit", signal: controller.signal });
+        if (!response.ok) throw new Error(`Preview request failed with ${response.status}`);
+
+        const sourceBlob = await response.blob();
+        const previewBlob = new Blob([sourceBlob], { type: getPreviewMimeType(doc, sourceBlob.type) });
+        objectUrl = URL.createObjectURL(previewBlob);
+
+        if (!cancelled) {
+          setPreviewUrl(objectUrl);
+        }
+      } catch (error) {
+        if (!cancelled && !controller.signal.aborted) {
+          console.error("Error preparing document preview:", error);
+          setPreviewError("This browser could not prepare the secure preview.");
+        }
+      }
+    };
+
+    loadPreview();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [doc, url]);
+
+  if (previewError) {
+    return (
+      <div className="flex h-[70vh] flex-col items-center justify-center gap-4 bg-white p-8 text-center text-secondary">
+        <FileText className="h-12 w-12 text-secondary/45" />
+        <div>
+          <p className="font-mono text-sm font-bold uppercase">File preview unavailable</p>
+          <p className="mt-2 max-w-sm text-sm text-secondary/65">{previewError}</p>
+        </div>
+        <Button asChild className="rounded-none border-2 border-secondary bg-secondary font-mono text-xs font-bold uppercase text-white hover:bg-primary hover:text-secondary">
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            Open Secure File
+          </a>
+        </Button>
+      </div>
+    );
+  }
+
+  if (!previewUrl) {
+    return (
+      <div className="flex h-[70vh] items-center justify-center bg-white text-secondary">
+        <div className="text-center font-mono text-xs font-bold uppercase tracking-[0.2em] text-secondary/55">
+          Preparing secure file...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[70vh] bg-white">
-      <iframe src={url} title={`${doc.title} preview`} className="h-full w-full border-0" />
+      <iframe
+        src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=1`}
+        title={`${doc.title} preview`}
+        className="h-full w-full border-0"
+      />
     </div>
   );
 };
 
+const getPreviewMimeType = (doc: InvestorDocument, blobType: string) => {
+  if (doc.asset_type === "document" || doc.mime_type === "application/pdf" || doc.original_filename?.match(/\.pdf$/i)) {
+    return "application/pdf";
+  }
+
+  return blobType || doc.mime_type || "application/octet-stream";
+};
+
 const formatFileSize = (size: number | null) => {
-  if (!size) return "Secure asset";
+  if (!size) return "Secure file";
   if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
   return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 };

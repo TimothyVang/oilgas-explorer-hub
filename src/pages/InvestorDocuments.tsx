@@ -20,7 +20,7 @@ const InvestorDocuments = () => {
     <div className="relative min-h-screen overflow-hidden bg-secondary text-white">
       <div className="fixed inset-0 z-0 bg-[linear-gradient(rgba(192,155,76,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.12)_1px,transparent_1px)] bg-[size:56px_56px]" />
       <div className="pointer-events-none fixed inset-0 z-0 flex select-none items-center justify-center overflow-hidden">
-        <span className="kinetic-heading text-[16vw] text-primary opacity-[0.06]">DEAL ROOM</span>
+        <span className="kinetic-heading text-[16vw] text-primary opacity-[0.06]">FILES</span>
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-4 md:px-6 md:py-6">
@@ -52,10 +52,10 @@ const InvestorDocuments = () => {
         >
           <section className="mb-6 grid gap-4 border-2 border-primary bg-[#08263F] p-5 md:grid-cols-[1fr_auto] md:items-end md:p-6">
             <div>
-              <p className="kinetic-label text-xs text-primary">Private investor workspace</p>
-              <h1 className="kinetic-heading mt-2 text-5xl text-white md:text-7xl">Investor Deal Room</h1>
+              <p className="kinetic-label text-xs text-primary">Private investor files</p>
+              <h1 className="kinetic-heading mt-2 text-5xl text-white md:text-7xl">Investor Files</h1>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">
-                Your assigned BAH files are below. Start with the recommended item, then use the section buttons to review only what you need.
+                Open the files BAH has assigned to you.
               </p>
             </div>
             <div className="grid grid-cols-2 border-2 border-primary md:w-[360px]">
@@ -71,7 +71,7 @@ const InvestorDocuments = () => {
                   <FileText className="h-5 w-5" />
                 </div>
                 <p className="kinetic-label text-[10px] text-white/50">Files</p>
-                <p className="font-mono text-sm font-bold uppercase text-primary">Private Links</p>
+                <p className="font-mono text-sm font-bold uppercase text-primary">Secure</p>
               </div>
             </div>
           </section>

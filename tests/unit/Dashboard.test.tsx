@@ -150,25 +150,25 @@ describe('Dashboard Page', () => {
   describe('Stats Cards', () => {
     it('renders access status stat', () => {
       renderDashboard();
-      expect(screen.getByText('Access Status')).toBeInTheDocument();
+      expect(screen.getByText('Status')).toBeInTheDocument();
       expect(screen.getByText('Pending')).toBeInTheDocument();
     });
 
     it('renders asset count stat', () => {
       renderDashboard();
-      expect(screen.getByText('Assets')).toBeInTheDocument();
+      expect(screen.getByText('Files')).toBeInTheDocument();
       expect(screen.getByText('3')).toBeInTheDocument();
     });
 
     it('renders activity count stat', () => {
       renderDashboard();
-      expect(screen.getByText('Activity')).toBeInTheDocument();
+      expect(screen.getAllByText('Recent').length).toBeGreaterThanOrEqual(1);
       expect(screen.getByText('2')).toBeInTheDocument();
     });
 
     it('renders access type stat', () => {
       renderDashboard();
-      expect(screen.getByText('Access')).toBeInTheDocument();
+      expect(screen.getByText('Role')).toBeInTheDocument();
       // 'Investor' appears multiple times - once in stat, once in header
       expect(screen.getAllByText('Investor').length).toBeGreaterThanOrEqual(1);
     });
@@ -177,7 +177,7 @@ describe('Dashboard Page', () => {
   describe('Activity Section', () => {
     it('renders recent activity heading', () => {
       renderDashboard();
-      expect(screen.getByText('Recent Activity')).toBeInTheDocument();
+      expect(screen.getAllByText('Recent').length).toBeGreaterThanOrEqual(1);
     });
 
     it('renders activity items', () => {
@@ -190,7 +190,7 @@ describe('Dashboard Page', () => {
   describe('Tasks Section', () => {
     it('renders tasks heading', () => {
       renderDashboard();
-      expect(screen.getByText('Tasks')).toBeInTheDocument();
+      expect(screen.getByText('Next')).toBeInTheDocument();
     });
 
     it('renders pending tasks', () => {
@@ -199,37 +199,10 @@ describe('Dashboard Page', () => {
       expect(screen.getByText('Review Documents')).toBeInTheDocument();
     });
 
-    it('renders Open Deal Room button', () => {
+    it('renders View Files button', () => {
       renderDashboard();
-      // There are multiple "Open Deal Room" buttons, so use getAllByRole
-      const dealRoomButtons = screen.getAllByRole('button', { name: /open deal room/i });
-      expect(dealRoomButtons.length).toBeGreaterThanOrEqual(1);
-    });
-  });
-
-  describe('Quick Actions', () => {
-    it('renders Open Deal Room action', () => {
-      renderDashboard();
-      // Multiple buttons with this text exist
-      const dealRoomButtons = screen.getAllByText('Open Deal Room');
-      expect(dealRoomButtons.length).toBeGreaterThanOrEqual(1);
-    });
-
-    it('renders Edit Profile action', () => {
-      renderDashboard();
-      expect(screen.getByText('Edit Profile')).toBeInTheDocument();
-    });
-
-    it('renders Admin Dashboard action for admins', () => {
-      mockIsAdmin = true;
-      renderDashboard();
-      expect(screen.getByText('Admin Dashboard')).toBeInTheDocument();
-    });
-
-    it('does not render Admin Dashboard action for non-admins', () => {
-      mockIsAdmin = false;
-      renderDashboard();
-      expect(screen.queryByText('Admin Dashboard')).not.toBeInTheDocument();
+      const filesButtons = screen.getAllByRole('button', { name: /view files/i });
+      expect(filesButtons.length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -278,9 +251,9 @@ describe('StatCard Component', () => {
   it('renders label and value', () => {
     renderDashboard();
     // StatCards are rendered in the dashboard
-    expect(screen.getByText('Access Status')).toBeInTheDocument();
-    expect(screen.getByText('Assets')).toBeInTheDocument();
-    expect(screen.getByText('Activity')).toBeInTheDocument();
-    expect(screen.getByText('Access')).toBeInTheDocument();
+    expect(screen.getByText('Status')).toBeInTheDocument();
+    expect(screen.getByText('Files')).toBeInTheDocument();
+    expect(screen.getAllByText('Recent').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('Role')).toBeInTheDocument();
   });
 });

@@ -14,6 +14,9 @@ const mockHandleSignNda = vi.fn();
 const mockHandleDocumentAccess = vi.fn();
 const mockGetDocumentAccessUrl = vi.fn();
 const mockRetryLoad = vi.fn();
+const mockFetch = vi.fn();
+const mockCreateObjectURL = vi.fn();
+const mockRevokeObjectURL = vi.fn();
 
 vi.mock("@/hooks/useInvestorDocuments", () => ({
   useInvestorDocuments: vi.fn(() => ({
@@ -37,6 +40,18 @@ import { useInvestorDocuments } from "@/hooks/useInvestorDocuments";
 describe("DocumentsTab", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    Object.defineProperty(URL, "createObjectURL", { configurable: true, value: mockCreateObjectURL });
+    Object.defineProperty(URL, "revokeObjectURL", { configurable: true, value: mockRevokeObjectURL });
+    mockCreateObjectURL.mockReturnValue("blob:document-preview");
+    mockFetch.mockResolvedValue({
+      ok: true,
+      blob: () => Promise.resolve(new Blob(["pdf"], { type: "application/pdf" })),
+    });
+    vi.stubGlobal("fetch", mockFetch);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   describe("Loading State", () => {
@@ -76,7 +91,7 @@ describe("DocumentsTab", () => {
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      expect(screen.getByText(/Deal Room Access Pending/i)).toBeInTheDocument();
+      expect(screen.getByText(/Deal Room Access Pending|Files Not Ready Yet/i)).toBeInTheDocument();
     });
 
     it("should call retryLoad when refresh access is clicked", async () => {
@@ -129,11 +144,11 @@ describe("DocumentsTab", () => {
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      expect(screen.getByText(/Deal Room Unlocked/i)).toBeInTheDocument();
+      expect(screen.getByText(/Deal Room Unlocked|Access Active/i)).toBeInTheDocument();
       expect(screen.getAllByText(/Deal Snapshot/i).length).toBeGreaterThan(0);
     });
 
-    it("should open video assets in an in-page player with title and description", async () => {
+    it("should open video files in an in-page player with title and description", async () => {
       mockGetDocumentAccessUrl.mockResolvedValue("https://signed.example/video.mp4");
       vi.mocked(useInvestorDocuments).mockReturnValue({
         user: { id: "user-1", email: "test@example.com" },
@@ -163,7 +178,7 @@ describe("DocumentsTab", () => {
       });
 
       render(<DocumentsTab />);
-      fireEvent.click(screen.getByRole("button", { name: /preview video/i }));
+      fireEvent.click(screen.getByRole("button", { name: /open rig walkthrough/i }));
 
       await waitFor(() => expect(mockGetDocumentAccessUrl).toHaveBeenCalledTimes(1));
       expect(mockHandleDocumentAccess).not.toHaveBeenCalled();
@@ -205,13 +220,13 @@ describe("DocumentsTab", () => {
       });
 
       render(<DocumentsTab />);
-      fireEvent.click(screen.getByRole("button", { name: /preview video/i }));
+      fireEvent.click(screen.getByRole("button", { name: /open rig walkthrough/i }));
 
       await waitFor(() => expect(mockGetDocumentAccessUrl).toHaveBeenCalledTimes(1));
       expect(document.querySelector("video")).not.toBeInTheDocument();
     });
 
-    it("should open document assets in an in-page preview", async () => {
+    it("should open document files in an in-page preview", async () => {
       mockGetDocumentAccessUrl.mockResolvedValue("https://signed.example/snapshot.pdf");
       vi.mocked(useInvestorDocuments).mockReturnValue({
         user: { id: "user-1", email: "test@example.com" },
@@ -241,11 +256,18 @@ describe("DocumentsTab", () => {
       });
 
       render(<DocumentsTab />);
-      fireEvent.click(screen.getByRole("button", { name: /^preview$/i }));
+      fireEvent.click(screen.getByRole("button", { name: /open deal snapshot/i }));
 
       await waitFor(() => expect(mockGetDocumentAccessUrl).toHaveBeenCalledTimes(1));
       expect(mockHandleDocumentAccess).not.toHaveBeenCalled();
-      expect(screen.getByTitle(/Deal Snapshot preview/i)).toHaveAttribute("src", "https://signed.example/snapshot.pdf");
+      await waitFor(() => expect(mockFetch).toHaveBeenCalledWith(
+        "https://signed.example/snapshot.pdf",
+        expect.objectContaining({ credentials: "omit" }),
+      ));
+      expect(screen.getByTitle(/Deal Snapshot preview/i)).toHaveAttribute(
+        "src",
+        "blob:document-preview#toolbar=0&navpanes=0&scrollbar=1",
+      );
     });
 
     it("should show empty state when no documents assigned", () => {
@@ -263,7 +285,7 @@ describe("DocumentsTab", () => {
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      expect(screen.getByText(/No assets assigned yet/i)).toBeInTheDocument();
+      expect(screen.getByText(/No (assets|files) assigned yet/i)).toBeInTheDocument();
     });
   });
 });

@@ -67,22 +67,16 @@ export const useInvestorDashboard = () => {
                 metadata: { mode: "demo" },
               },
               {
-                id: "demo-assets",
-                action: "deal_room_assets_available",
+                id: "demo-files",
+                action: "investor_files_ready",
                 created_at: "2026-05-24T00:00:00Z",
                 metadata: { count: demoInvestorDocuments.length },
               },
             ],
             pendingTasks: [
               {
-                id: "review-featured",
-                title: "Review Featured Deck",
-                status: "scheduled",
-                type: "document",
-              },
-              {
-                id: "review-videos",
-                title: "Preview Field Videos",
+                id: "review-files",
+                title: "Open Investor Files",
                 status: "pending",
                 type: "document",
               },
@@ -124,71 +118,52 @@ export const useInvestorDashboard = () => {
           .order("created_at", { ascending: false })
           .limit(50);
 
-        // Build dynamic tasks based on real status
+        // Keep the dashboard focused on one plain-language next step.
         const tasks: TaskItem[] = [];
+        const docsAssigned = assignedCount || 0;
 
-        // Access task
         if (!profile?.nda_signed) {
           tasks.push({
             id: "access-pending",
-            title: "Investor Access Pending",
+            title: "Access review in progress",
             status: "critical",
             type: "nda",
           });
-        } else {
-          tasks.push({
-            id: "access-active",
-            title: "Investor Access Active",
-            status: "done",
-            type: "document",
-          });
-        }
-
-        // Document access task
-        const docsAssigned = assignedCount || 0;
-        if (docsAssigned === 0 && profile?.nda_signed) {
+        } else if (docsAssigned === 0) {
           tasks.push({
             id: "docs-pending",
-            title: "Awaiting Document Access",
+            title: "Waiting for assigned files",
             status: "pending",
             type: "document",
           });
-        } else if (docsAssigned > 0) {
+        } else {
+          const { data: accessLogs } = await supabase
+            .from("activity_logs")
+            .select("metadata")
+            .eq("user_id", user.id)
+            .eq("action", "document_access");
+
+          const accessedDocIds = new Set(
+            (accessLogs || [])
+              .map((log) => (log.metadata as Record<string, unknown>)?.document_id)
+              .filter(Boolean)
+          );
+
+          const { data: assignedDocDetails } = await supabase
+            .from("user_document_access")
+            .select("document_id")
+            .eq("user_id", user.id);
+
+          const unreadCount = (assignedDocDetails || []).filter(
+            (doc) => !accessedDocIds.has(doc.document_id)
+          ).length;
+
           tasks.push({
-            id: "docs-review",
-            title: `Review ${docsAssigned} Document${docsAssigned > 1 ? "s" : ""}`,
-            status: "scheduled",
-            type: "document",
-          });
-        }
-
-        // Check for unread documents (documents assigned but not accessed)
-        const { data: accessLogs } = await supabase
-          .from("activity_logs")
-          .select("metadata")
-          .eq("user_id", user.id)
-          .eq("action", "document_access");
-
-        const accessedDocIds = new Set(
-          (accessLogs || [])
-            .map((log) => (log.metadata as Record<string, unknown>)?.document_id)
-            .filter(Boolean)
-        );
-
-        const { data: assignedDocDetails } = await supabase
-          .from("user_document_access")
-          .select("document_id")
-          .eq("user_id", user.id);
-
-        const unreadCount = (assignedDocDetails || []).filter(
-          (doc) => !accessedDocIds.has(doc.document_id)
-        ).length;
-
-        if (unreadCount > 0) {
-          tasks.push({
-            id: "unread-docs",
-            title: `${unreadCount} New Document${unreadCount > 1 ? "s" : ""} to Review`,
-            status: "pending",
+            id: unreadCount > 0 ? "unread-docs" : "docs-review",
+            title: unreadCount > 0
+              ? `Open ${unreadCount} new file${unreadCount === 1 ? "" : "s"}`
+              : `View ${docsAssigned} assigned file${docsAssigned === 1 ? "" : "s"}`,
+            status: unreadCount > 0 ? "pending" : "scheduled",
             type: "document",
           });
         }

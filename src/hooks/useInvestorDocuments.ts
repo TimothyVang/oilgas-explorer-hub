@@ -100,7 +100,7 @@ export const useInvestorDocuments = () => {
             .select("nda_signed, nda_signed_at")
             .eq("user_id", user.id)
             .maybeSingle(),
-          "Deal Room access check timed out.",
+          "File access check timed out.",
           LOAD_TIMEOUT_MS,
         );
 
@@ -117,13 +117,13 @@ export const useInvestorDocuments = () => {
               .from("user_document_access")
               .select("document_id")
               .eq("user_id", user.id),
-            "Assigned asset check timed out.",
+            "Assigned file check timed out.",
             LOAD_TIMEOUT_MS,
           );
 
           if (accessError) {
             console.error("Error fetching document access:", accessError);
-            throw new Error("Unable to load your assigned assets.");
+            throw new Error("Unable to load your assigned files.");
           } else if (accessData && accessData.length > 0) {
             const documentIds = accessData.map((a) => a.document_id);
             const { data: docsData, error: docsError } = await withTimeout(
@@ -134,13 +134,13 @@ export const useInvestorDocuments = () => {
                 .order("category", { ascending: true })
                 .order("sort_order", { ascending: true })
                 .order("created_at", { ascending: false }),
-              "Asset metadata load timed out.",
+              "File details load timed out.",
               LOAD_TIMEOUT_MS,
             );
 
             if (docsError) {
               console.error("Error fetching documents:", docsError);
-              throw new Error("Unable to load your assigned assets.");
+              throw new Error("Unable to load your assigned files.");
             } else {
               if (isMounted) setDocuments((docsData || []) as InvestorDocument[]);
             }
@@ -154,7 +154,7 @@ export const useInvestorDocuments = () => {
         console.error("Error fetching investor documents data:", error);
         if (isMounted) {
           setDocuments([]);
-          setLoadError("We couldn't load your Deal Room access. Retry, or contact BAH if this continues.");
+          setLoadError("We couldn't load your files. Retry, or contact BAH if this continues.");
         }
       } finally {
         if (isMounted) setLoading(false);
@@ -186,12 +186,12 @@ export const useInvestorDocuments = () => {
         supabase.functions.invoke<SignedUrlResponse>("create-asset-access-url", {
           body: { document_id: doc.id },
         }),
-        "Secure asset request timed out.",
+        "Secure file request timed out.",
         ACCESS_TIMEOUT_MS,
       );
 
       if (error || !data?.signed_url) {
-        throw new Error(data?.error || error?.message || "Unable to open secure asset.");
+        throw new Error(data?.error || error?.message || "Unable to open secure file.");
       }
 
       return data.signed_url;
@@ -199,7 +199,7 @@ export const useInvestorDocuments = () => {
       console.error("Error requesting signed asset URL:", error);
       toast({
         title: "Access failed",
-        description: error instanceof Error ? error.message : "Unable to open secure asset.",
+        description: error instanceof Error ? error.message : "Unable to open secure file.",
         variant: "destructive",
       });
       return null;
