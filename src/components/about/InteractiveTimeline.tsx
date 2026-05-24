@@ -12,26 +12,26 @@ interface Milestone {
 const milestones: Milestone[] = [
     {
         year: "01",
-        title: "Review the Asset",
+        title: "Originate the Asset",
         description: "BAH starts with the oil and gas asset, available records, field context, and technical questions.",
         side: "left"
     },
     {
         year: "02",
-        title: "Check the Records",
-        description: "Technical, mapping, operating, cost, and field evidence are reviewed against the project plan.",
+        title: "Build the Record",
+        description: "Technical, mapping, operating, cost, and field evidence are organized against the project plan.",
         side: "right"
     },
     {
         year: "03",
-        title: "Review the Work Plan",
+        title: "Develop the Work Plan",
         description: "Engineering, geology, operating context, timing, and field constraints shape the redevelopment plan.",
         side: "left"
     },
     {
         year: "04",
         title: "Coordinate Execution",
-        description: "BAH connects the technical review, cost support, field conditions, and operating sequence before work advances.",
+        description: "BAH connects technical support, cost control, field conditions, and operating sequence before work advances.",
         side: "right"
     }
 ];
@@ -60,7 +60,7 @@ export const InteractiveTimeline = () => {
                     >
                         <span className="kinetic-label mb-4 block text-sm text-primary">Project Flow</span>
                         <h2 className="kinetic-heading text-6xl text-white md:text-8xl">
-                            Field Review Path
+                            Development Path
                         </h2>
                     </motion.div>
                 </div>

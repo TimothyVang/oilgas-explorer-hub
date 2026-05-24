@@ -247,7 +247,7 @@ const StartHerePanel = ({
           cta: "View Files",
         }
       : {
-          label: "Ready for review",
+          label: "Ready to view",
           title: `${assignedDocuments} file${assignedDocuments === 1 ? "" : "s"} ready`,
           body: "Open your assigned files and start with the first item.",
           cta: "View Files",
