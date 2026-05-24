@@ -5,7 +5,7 @@ const team = [
     id: "01",
     initials: "ENG",
     name: "Engineering & Geology",
-    body: "Senior petroleum engineering and geology: well-record review, reservoir behavior, reserves context, EOR, and production optimization.",
+    body: "Senior petroleum engineering and geology: well-record analysis, reservoir behavior, reserves context, EOR, and production optimization.",
     icon: Gauge,
   },
   {
@@ -27,7 +27,7 @@ const Team = () => {
             <h2 className="kinetic-heading break-words text-[clamp(3rem,13vw,9rem)] sm:text-[clamp(3.5rem,8vw,9rem)]">Built to operate, structured for alignment.</h2>
           </div>
           <p className="font-body text-lg font-semibold leading-tight md:text-xl">
-            BAH Oil LLC holds the minerals; Trinity Sands Holdings LLC serves as operator of record. The structure is manager-managed, with disciplined capital deployment and alignment between the operating team and its partners.
+            BAH Oil LLC holds the minerals; Trinity Sands Holdings LLC serves as operator of record. The structure connects ownership, operations, field coordination, and technical oversight so development decisions stay aligned from subsurface to surface.
           </p>
         </div>
 

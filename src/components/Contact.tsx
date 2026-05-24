@@ -57,9 +57,9 @@ const Contact = () => {
 
         <div className="mt-16 grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
           <div className="border-2 border-secondary bg-white p-6">
-            <h3 className="kinetic-heading text-5xl">Two Paths</h3>
+            <h3 className="kinetic-heading text-5xl">Monitored Inbox</h3>
             <p className="mt-3 font-body text-sm font-semibold leading-relaxed text-secondary/70">
-              Use the form for general contact. Use Investor Login only for credentialed access to the secure portal.
+              The form opens a prefilled email to BAH. No private materials are sent automatically.
             </p>
             <div className="mt-8 space-y-5">
               {[
@@ -74,7 +74,14 @@ const Contact = () => {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="border-2 border-secondary bg-secondary p-6 text-white md:p-8">
+          <form onSubmit={handleSubmit} className="border-2 border-secondary bg-secondary p-6 text-white shadow-[8px_8px_0_#C09B4C] md:p-8">
+            <div className="mb-6 border-b-2 border-primary/70 pb-5">
+              <p className="kinetic-label text-xs text-primary">General inquiry</p>
+              <h3 className="kinetic-heading mt-2 text-4xl text-white">Start the conversation.</h3>
+              <p className="mt-2 text-sm font-semibold leading-relaxed text-white/60">
+                Include who you are, your firm, and the reason for reaching out.
+              </p>
+            </div>
             <div className="grid gap-5">
               <Field label="Name">
                 <input
@@ -108,9 +115,12 @@ const Contact = () => {
                 disabled={isSubmitting}
                 className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full border-2 border-primary bg-primary px-8 font-mono text-sm font-bold uppercase tracking-[-0.02em] text-secondary transition-transform hover:scale-105 hover:bg-white disabled:opacity-60 disabled:hover:scale-100"
               >
-                {isSubmitting ? "Sending" : "Submit Inquiry"}
+                {isSubmitting ? "Opening Email" : "Open Email Draft"}
                 {!isSubmitting && <Send className="h-4 w-4" />}
               </button>
+              <p className="text-center text-xs font-semibold leading-relaxed text-white/45">
+                For portal access, use Investor Login only if BAH has already provided credentials.
+              </p>
             </div>
           </form>
         </div>
