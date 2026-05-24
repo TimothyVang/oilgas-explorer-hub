@@ -6,6 +6,7 @@ const ALLOWED_ORIGINS = [
   'https://bah-oil.com',
   'https://bahoilgas.lovable.app',
   // Development
+  'http://localhost:8080',
   'http://localhost:5173',
   'http://localhost:3000',
 ];
