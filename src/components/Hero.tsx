@@ -14,14 +14,15 @@ const Hero = () => {
   return (
     <section id="home" className="relative isolate min-h-screen overflow-hidden bg-[#F8F6F0] px-4 pb-16 pt-28 text-secondary md:px-8 md:pb-20 md:pt-32">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(18,53,85,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(18,53,85,0.08)_1px,transparent_1px)] bg-[size:56px_56px]" />
-      <div className="pointer-events-none absolute -right-32 top-24 h-[360px] w-[360px] rounded-full bg-primary/25 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-24 h-40 w-40 rounded-full bg-primary/25 blur-3xl md:h-[360px] md:w-[360px]" />
       <div className="pointer-events-none absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-primary/10 to-transparent" />
 
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-9rem)] max-w-7xl items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
+      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-9rem)] max-w-7xl min-w-0 items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="min-w-0"
         >
           <div className="mb-6 inline-flex flex-wrap items-center gap-2 border-2 border-secondary bg-white px-3 py-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] shadow-[5px_5px_0_#C09B4C]">
             <span>BAH Oil LLC</span>
@@ -29,7 +30,7 @@ const Hero = () => {
             <span>Oil and gas opportunity review</span>
           </div>
 
-          <h1 className="kinetic-heading max-w-4xl text-[clamp(4rem,8vw,7.25rem)]">
+          <h1 className="kinetic-heading max-w-4xl break-words text-[clamp(3rem,14vw,7.25rem)] sm:text-[clamp(4rem,8vw,7.25rem)]">
             Disciplined Oil & Gas Review
           </h1>
 
@@ -65,7 +66,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full border-2 border-secondary bg-white p-5 shadow-[10px_10px_0_#C09B4C] md:p-6 lg:max-w-[500px] lg:justify-self-end"
+          className="relative min-w-0 border-2 border-secondary bg-white p-5 shadow-[6px_6px_0_#C09B4C] md:p-6 md:shadow-[10px_10px_0_#C09B4C] lg:max-w-[500px] lg:justify-self-end"
         >
           <div className="mb-5 flex items-start justify-between gap-4 border-b-2 border-secondary pb-5">
             <div>

@@ -23,21 +23,21 @@ const services = [
 
 const Services = () => {
   return (
-    <section id="services" className="bg-secondary px-4 py-20 text-white md:px-8 md:py-28">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 grid gap-5 md:grid-cols-[0.85fr_1.15fr] md:items-end">
-          <div>
+    <section id="services" className="overflow-hidden bg-secondary px-4 py-20 text-white md:px-8 md:py-28">
+      <div className="mx-auto max-w-7xl min-w-0">
+        <div className="mb-10 grid min-w-0 gap-5 md:grid-cols-[0.85fr_1.15fr] md:items-end">
+          <div className="min-w-0">
             <p className="kinetic-label text-sm text-primary">BAH focus</p>
-            <h2 className="kinetic-heading mt-3 text-[clamp(3.75rem,8vw,8rem)] text-white">
+            <h2 className="kinetic-heading mt-3 break-words text-[clamp(3rem,13vw,8rem)] text-white sm:text-[clamp(3.75rem,8vw,8rem)]">
               Serious Oilfield Perspective
             </h2>
           </div>
-          <p className="max-w-2xl font-body text-lg font-semibold leading-snug text-white/70 md:justify-self-end md:text-xl">
+          <p className="min-w-0 max-w-2xl font-body text-lg font-semibold leading-snug text-white/70 md:justify-self-end md:text-xl">
             The front page should tell investors who BAH is before asking them to log in. Access details now sit where they are most useful: the investor login screen.
           </p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid min-w-0 gap-4 md:grid-cols-3">
           {services.map((service) => (
             <article
               key={service.id}

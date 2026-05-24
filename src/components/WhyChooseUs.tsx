@@ -14,8 +14,8 @@ const WhyChooseUs = () => {
     },
     {
       icon: LockKeyhole,
-      title: "NDA-Gated Materials",
-      description: "Confidential opportunity files remain private until NDA requirements are complete.",
+      title: "Private Materials",
+      description: "Confidential opportunity files stay inside controlled investor access workflows.",
     },
     {
       icon: ShieldCheck,

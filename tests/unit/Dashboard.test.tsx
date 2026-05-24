@@ -48,10 +48,10 @@ const mockStats = {
   assignedDocuments: 3,
   recentActivity: [
     { id: '1', action: 'document_viewed', created_at: new Date().toISOString() },
-    { id: '2', action: 'nda_signed', created_at: new Date().toISOString() },
+    { id: '2', action: 'deal_room_opened', created_at: new Date().toISOString() },
   ],
   pendingTasks: [
-    { id: '1', title: 'Sign NDA', type: 'nda', status: 'critical' },
+    { id: '1', title: 'Investor Access Pending', type: 'document', status: 'critical' },
     { id: '2', title: 'Review Documents', type: 'document', status: 'pending' },
   ],
 };
@@ -148,9 +148,9 @@ describe('Dashboard Page', () => {
   });
 
   describe('Stats Cards', () => {
-    it('renders NDA status stat', () => {
+    it('renders access status stat', () => {
       renderDashboard();
-      expect(screen.getByText('NDA Status')).toBeInTheDocument();
+      expect(screen.getByText('Access Status')).toBeInTheDocument();
       expect(screen.getByText('Pending')).toBeInTheDocument();
     });
 
@@ -183,7 +183,7 @@ describe('Dashboard Page', () => {
     it('renders activity items', () => {
       renderDashboard();
       expect(screen.getByText('Document Viewed')).toBeInTheDocument();
-      expect(screen.getByText('Nda Signed')).toBeInTheDocument();
+      expect(screen.getByText('Deal Room Opened')).toBeInTheDocument();
     });
   });
 
@@ -195,7 +195,7 @@ describe('Dashboard Page', () => {
 
     it('renders pending tasks', () => {
       renderDashboard();
-      expect(screen.getByText('Sign NDA')).toBeInTheDocument();
+      expect(screen.getByText('Investor Access Pending')).toBeInTheDocument();
       expect(screen.getByText('Review Documents')).toBeInTheDocument();
     });
 
@@ -278,7 +278,7 @@ describe('StatCard Component', () => {
   it('renders label and value', () => {
     renderDashboard();
     // StatCards are rendered in the dashboard
-    expect(screen.getByText('NDA Status')).toBeInTheDocument();
+    expect(screen.getByText('Access Status')).toBeInTheDocument();
     expect(screen.getByText('Assets')).toBeInTheDocument();
     expect(screen.getByText('Activity')).toBeInTheDocument();
     expect(screen.getByText('Access')).toBeInTheDocument();

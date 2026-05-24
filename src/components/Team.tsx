@@ -24,7 +24,7 @@ const Team = () => {
     <section id="team" className="border-t-2 border-secondary bg-primary text-secondary">
       <div className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28">
         <div className="mb-12 grid gap-4 md:grid-cols-[0.9fr_1.1fr] md:items-end">
-          <h2 className="kinetic-heading text-[clamp(3.5rem,8vw,9rem)]">Public-Facing Team</h2>
+          <h2 className="kinetic-heading break-words text-[clamp(3rem,13vw,9rem)] sm:text-[clamp(3.5rem,8vw,9rem)]">Public-Facing Team</h2>
           <p className="font-body text-lg font-semibold leading-tight md:text-xl">
             Current BAH Oil LLC contacts supporting investor access, technical review, and operational coordination.
           </p>

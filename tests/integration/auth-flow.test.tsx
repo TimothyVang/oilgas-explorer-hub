@@ -216,7 +216,7 @@ describe("Auth Flow Integration Tests", () => {
         screen.getByText("Invitation-only access to confidential materials")
       ).toBeInTheDocument();
       expect(
-        screen.getByText(/use the temporary demo credentials now/i)
+        screen.getByText(/temporary demo credentials/i)
       ).toBeInTheDocument();
       expect(screen.getByLabelText(/username or email/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();

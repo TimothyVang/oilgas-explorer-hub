@@ -140,9 +140,17 @@ describe("Validation Schemas", () => {
       expect(result.success).toBe(true);
     });
 
-    it("rejects invalid email in login", () => {
+    it("accepts demo username credentials", () => {
       const result = loginSchema.safeParse({
-        email: "invalid-email@",
+        email: "investor",
+        password: "password123",
+      });
+      expect(result.success).toBe(true);
+    });
+
+    it("rejects invalid login identifier", () => {
+      const result = loginSchema.safeParse({
+        email: "x",
         password: "password123",
       });
       expect(result.success).toBe(false);

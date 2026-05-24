@@ -11,12 +11,12 @@ const InvestorPortalPreview = () => {
   return (
     <section className="border-y-2 border-secondary bg-[#F8F6F0] text-secondary">
       <div className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28">
-        <div className="mb-12 grid gap-6 md:grid-cols-[0.95fr_1.05fr] md:items-end">
-          <div>
+        <div className="mb-12 grid min-w-0 gap-6 md:grid-cols-[0.95fr_1.05fr] md:items-end">
+          <div className="min-w-0">
             <p className="kinetic-label mb-3 text-sm text-primary">The BAH difference</p>
-            <h2 className="kinetic-heading text-[clamp(3.5rem,8vw,8rem)]">Measured, Private, Technical</h2>
+            <h2 className="kinetic-heading break-words text-[clamp(3rem,13vw,8rem)] sm:text-[clamp(3.5rem,8vw,8rem)]">Measured, Private, Technical</h2>
           </div>
-          <p className="max-w-2xl font-body text-lg font-semibold leading-tight md:text-xl">
+          <p className="min-w-0 max-w-2xl font-body text-lg font-semibold leading-tight md:text-xl">
             BAH should feel credible before the investor reaches a login form: oil and gas language, technical restraint, and a clear respect for confidential deal materials.
           </p>
         </div>

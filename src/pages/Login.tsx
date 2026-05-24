@@ -12,13 +12,12 @@ import { FormError, useFormErrors } from "@/components/ui/form-error";
 import { getUserMessage } from "@/lib/errorMessages";
 import { TwoFactorVerify } from "@/components/auth/TwoFactorVerify";
 import { siteConfig } from "@/constants/siteConfig";
-import { DEMO_INVESTOR_PASSWORD, DEMO_INVESTOR_USERNAME } from "@/lib/demoInvestorPortal";
 
 const loginInstructions = [
-  ["01", "Tomorrow demo", `Use username ${DEMO_INVESTOR_USERNAME} and password ${DEMO_INVESTOR_PASSWORD} for the investor walkthrough.`],
-  ["02", "Supabase later", "BAH can swap the temporary demo login back to Supabase-provisioned investor accounts after hosting is connected."],
-  ["03", "Deal Room ready", "The demo account opens the staged private categories immediately: overview, pitch, financials, mapping, operations, videos, and management."],
-  ["04", "Files staged", "The cards reflect the source zip and content map. Direct file delivery can be connected to private Supabase storage next."],
+  ["01", "Already approved?", "Sign in with the credentials connected to your BAH investor account."],
+  ["02", "Need access?", "Email BAH with your name, firm, and reason for requesting investor review access."],
+  ["03", "NDA not complete?", "The portal keeps confidential materials locked until NDA requirements are satisfied."],
+  ["04", "Missing materials?", "Approved accounts show only the files BAH has assigned for that investor."],
 ];
 
 const Login = () => {
@@ -57,7 +56,7 @@ const Login = () => {
       const result = await signIn(email, password);
       if (result.error) {
         if (result.error.message.includes("Invalid login credentials")) {
-          toast.error("Invalid email or password. Please try again.");
+          toast.error("Invalid username/email or password. Please try again.");
         } else if (result.error.message.includes("Email not confirmed")) {
           toast.error("Please verify your email before signing in. Check your inbox for the verification link.");
         } else {
@@ -110,7 +109,7 @@ const Login = () => {
             <p className="kinetic-label text-xs text-primary">Investor access instructions</p>
             <h2 className="kinetic-heading mt-3 text-5xl text-white md:text-6xl">Private Portal Access</h2>
             <p className="mt-4 text-sm font-semibold leading-relaxed text-white/65 md:text-base">
-              This is the right place for tomorrow's investor walkthrough. Public pages introduce BAH; this private screen opens the staged Deal Room with a temporary username and password.
+              Public pages introduce BAH. This private screen explains how approved investors sign in, complete NDA requirements, and review assigned materials.
             </p>
 
             <div className="mt-6 space-y-3">
@@ -163,17 +162,9 @@ const Login = () => {
                 </div>
 
                 <div className="mb-6 rounded-none border border-primary/40 bg-primary/10 p-4">
-                    <p className="text-sm text-white/70">
-                    Use the temporary demo credentials now. Supabase-backed investor accounts can replace this login after deployment.
+                  <p className="text-sm text-white/70">
+                    Use the username or email address associated with your BAH investor account. Credentials are provided directly by BAH after review.
                   </p>
-                  <div className="mt-3 grid gap-2 font-mono text-xs uppercase text-primary sm:grid-cols-2">
-                    <div className="border border-primary/30 bg-secondary/70 p-3">
-                      Username: <span className="text-white">{DEMO_INVESTOR_USERNAME}</span>
-                    </div>
-                    <div className="border border-primary/30 bg-secondary/70 p-3">
-                      Password: <span className="text-white">{DEMO_INVESTOR_PASSWORD}</span>
-                    </div>
-                  </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -249,7 +240,7 @@ const Login = () => {
 
                 <div className="mt-6 border-t-2 border-primary/50 pt-6 text-center">
                   <p className="text-sm text-white/50">
-                    Demo credentials are temporary and should be removed when Supabase accounts are connected.
+                    Need credentials? Contact BAH Oil LLC to request investor access.
                   </p>
                 </div>
               </div>

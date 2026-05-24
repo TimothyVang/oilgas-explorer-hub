@@ -10,8 +10,8 @@ const About = () => {
     },
     {
       icon: LockKeyhole,
-      title: "NDA-Gated",
-      description: "Private files remain locked until NDA requirements are complete.",
+      title: "Private Portal",
+      description: "Private files remain inside the controlled investor portal workflow.",
     },
     {
       icon: ShieldCheck,
@@ -42,8 +42,8 @@ const About = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-primary/50 to-transparent" />
             </div>
             <div className="absolute -bottom-6 -right-6 glass-effect rounded-2xl p-6 max-w-xs border border-border shadow-card">
-              <p className="text-4xl font-bold text-accent mb-1">NDA</p>
-              <p className="text-muted-foreground">Required for private materials</p>
+              <p className="text-4xl font-bold text-accent mb-1">Private</p>
+              <p className="text-muted-foreground">Controlled investor materials</p>
             </div>
           </div>
 
@@ -53,8 +53,8 @@ const About = () => {
               Private Investor Access for Oil and Gas Review
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              BAH Oil LLC uses a secure portal to coordinate approved investor access, NDA review,
-              and assigned opportunity materials.
+              BAH Oil LLC uses a secure portal to coordinate approved investor access and
+              assigned opportunity materials.
             </p>
             <p className="text-lg text-muted-foreground mb-8">
               Public pages explain the access process. Detailed technical, financial, mapping, and
