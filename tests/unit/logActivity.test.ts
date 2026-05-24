@@ -31,12 +31,12 @@ describe("logActivity utility function", () => {
   it("should log activity when user is authenticated", async () => {
     const mockInsert = vi.fn().mockResolvedValue({ error: null });
     vi.mocked(supabase.auth.getUser).mockResolvedValue({
-      data: { user: mockUser as any },
+      data: { user: mockUser as never },
       error: null,
     });
     vi.mocked(supabase.from).mockReturnValue({
       insert: mockInsert,
-    } as any);
+    } as never);
 
     await logActivity("sign_in");
 
@@ -52,12 +52,12 @@ describe("logActivity utility function", () => {
   it("should include metadata when provided", async () => {
     const mockInsert = vi.fn().mockResolvedValue({ error: null });
     vi.mocked(supabase.auth.getUser).mockResolvedValue({
-      data: { user: mockUser as any },
+      data: { user: mockUser as never },
       error: null,
     });
     vi.mocked(supabase.from).mockReturnValue({
       insert: mockInsert,
-    } as any);
+    } as never);
 
     const metadata = {
       document_id: "doc-123",
@@ -92,12 +92,12 @@ describe("logActivity utility function", () => {
     const mockError = { message: "Insert failed", code: "23505" };
     const mockInsert = vi.fn().mockResolvedValue({ error: mockError });
     vi.mocked(supabase.auth.getUser).mockResolvedValue({
-      data: { user: mockUser as any },
+      data: { user: mockUser as never },
       error: null,
     });
     vi.mocked(supabase.from).mockReturnValue({
       insert: mockInsert,
-    } as any);
+    } as never);
 
     // Should not throw
     await expect(logActivity("profile_update")).resolves.not.toThrow();
@@ -138,12 +138,12 @@ describe("logActivity utility function", () => {
     it.each(validActions)("should accept valid action type: %s", async (action) => {
       const mockInsert = vi.fn().mockResolvedValue({ error: null });
       vi.mocked(supabase.auth.getUser).mockResolvedValue({
-        data: { user: mockUser as any },
+        data: { user: mockUser as never },
         error: null,
       });
       vi.mocked(supabase.from).mockReturnValue({
         insert: mockInsert,
-      } as any);
+      } as never);
 
       await logActivity(action);
 
@@ -157,17 +157,17 @@ describe("logActivity utility function", () => {
     beforeEach(() => {
       const mockInsert = vi.fn().mockResolvedValue({ error: null });
       vi.mocked(supabase.auth.getUser).mockResolvedValue({
-        data: { user: mockUser as any },
+        data: { user: mockUser as never },
         error: null,
       });
       vi.mocked(supabase.from).mockReturnValue({
         insert: mockInsert,
-      } as any);
+      } as never);
     });
 
     it("should handle string metadata values", async () => {
       const mockInsert = vi.fn().mockResolvedValue({ error: null });
-      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as any);
+      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as never);
 
       await logActivity("document_access", { file_name: "report.pdf" });
 
@@ -180,7 +180,7 @@ describe("logActivity utility function", () => {
 
     it("should handle number metadata values", async () => {
       const mockInsert = vi.fn().mockResolvedValue({ error: null });
-      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as any);
+      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as never);
 
       await logActivity("document_access", { file_size: 1024 });
 
@@ -193,7 +193,7 @@ describe("logActivity utility function", () => {
 
     it("should handle boolean metadata values", async () => {
       const mockInsert = vi.fn().mockResolvedValue({ error: null });
-      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as any);
+      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as never);
 
       await logActivity("profile_update", { email_changed: true });
 
@@ -206,7 +206,7 @@ describe("logActivity utility function", () => {
 
     it("should handle null metadata values", async () => {
       const mockInsert = vi.fn().mockResolvedValue({ error: null });
-      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as any);
+      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as never);
 
       await logActivity("profile_update", { previous_value: null });
 
@@ -219,7 +219,7 @@ describe("logActivity utility function", () => {
 
     it("should handle empty metadata object", async () => {
       const mockInsert = vi.fn().mockResolvedValue({ error: null });
-      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as any);
+      vi.mocked(supabase.from).mockReturnValue({ insert: mockInsert } as never);
 
       await logActivity("sign_in", {});
 

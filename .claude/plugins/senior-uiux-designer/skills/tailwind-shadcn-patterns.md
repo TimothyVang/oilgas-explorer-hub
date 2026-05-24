@@ -1,8 +1,8 @@
 # Tailwind and shadcn/ui Patterns Skill
 
-This skill should be used when analyzing components against the BAH Energy website design system. Apply when validating design token usage, checking component variant consistency, and ensuring adherence to project-specific Tailwind and shadcn/ui patterns.
+This skill should be used when analyzing components against the BAH Oil LLC website design system. Apply when validating design token usage, checking component variant consistency, and ensuring adherence to project-specific Tailwind and shadcn/ui patterns.
 
-## BAH Energy Design System
+## BAH Oil LLC Design System
 
 ### Color Palette (HSL-based with CSS Variables)
 
@@ -220,7 +220,7 @@ src/components/
 └── ...
 ```
 
-### Common Patterns in BAH Energy Codebase
+### Common Patterns in BAH Oil LLC Codebase
 
 **1. Holographic/Glass Effects**
 ```tsx
@@ -281,4 +281,4 @@ src/components/
 - [ ] Glass effects use `backdrop-blur` with semi-transparent backgrounds
 - [ ] Consistent spacing with Tailwind scale (gap-4, gap-6, gap-8)
 
-Use this skill to ensure components match the BAH Energy design system and follow established shadcn/ui patterns.
+Use this skill to ensure components match the BAH Oil LLC design system and follow established shadcn/ui patterns.

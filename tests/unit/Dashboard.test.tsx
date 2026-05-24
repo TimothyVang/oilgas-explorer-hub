@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import type { HTMLAttributes, ReactNode } from 'react';
 import Dashboard from '@/pages/Dashboard';
 import { AuthProvider } from '@/contexts/AuthContext';
 
@@ -47,10 +48,10 @@ const mockStats = {
   assignedDocuments: 3,
   recentActivity: [
     { id: '1', action: 'document_viewed', created_at: new Date().toISOString() },
-    { id: '2', action: 'nda_signed', created_at: new Date().toISOString() },
+    { id: '2', action: 'deal_room_opened', created_at: new Date().toISOString() },
   ],
   pendingTasks: [
-    { id: '1', title: 'Sign NDA', type: 'nda', status: 'critical' },
+    { id: '1', title: 'Investor Access Pending', type: 'document', status: 'critical' },
     { id: '2', title: 'Review Documents', type: 'document', status: 'pending' },
   ],
 };
@@ -65,13 +66,21 @@ vi.mock('@/hooks/useInvestorDashboard', () => ({
 }));
 
 // Mock framer-motion to avoid animation issues in tests
+type MotionElementProps = HTMLAttributes<HTMLElement> & {
+  children?: ReactNode;
+  initial?: unknown;
+  animate?: unknown;
+  exit?: unknown;
+  transition?: unknown;
+};
+
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    aside: ({ children, ...props }: any) => <aside {...props}>{children}</aside>,
-    header: ({ children, ...props }: any) => <header {...props}>{children}</header>,
+    div: ({ children, initial: _initial, animate: _animate, exit: _exit, transition: _transition, ...props }: MotionElementProps) => <div {...props}>{children}</div>,
+    aside: ({ children, initial: _initial, animate: _animate, exit: _exit, transition: _transition, ...props }: MotionElementProps) => <aside {...props}>{children}</aside>,
+    header: ({ children, initial: _initial, animate: _animate, exit: _exit, transition: _transition, ...props }: MotionElementProps) => <header {...props}>{children}</header>,
   },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));
 
 const renderDashboard = () => {
@@ -120,7 +129,7 @@ describe('Dashboard Page', () => {
   describe('Navigation', () => {
     it('renders sidebar with navigation items', () => {
       renderDashboard();
-      // Check for Overview and Documents navigation items
+      // Check for Overview and Deal Room navigation items
       expect(screen.getAllByRole('button').length).toBeGreaterThan(0);
     });
 
@@ -139,15 +148,15 @@ describe('Dashboard Page', () => {
   });
 
   describe('Stats Cards', () => {
-    it('renders NDA status stat', () => {
+    it('renders access status stat', () => {
       renderDashboard();
-      expect(screen.getByText('NDA Status')).toBeInTheDocument();
+      expect(screen.getByText('Access Status')).toBeInTheDocument();
       expect(screen.getByText('Pending')).toBeInTheDocument();
     });
 
-    it('renders documents count stat', () => {
+    it('renders asset count stat', () => {
       renderDashboard();
-      expect(screen.getByText('Documents')).toBeInTheDocument();
+      expect(screen.getByText('Assets')).toBeInTheDocument();
       expect(screen.getByText('3')).toBeInTheDocument();
     });
 
@@ -174,7 +183,7 @@ describe('Dashboard Page', () => {
     it('renders activity items', () => {
       renderDashboard();
       expect(screen.getByText('Document Viewed')).toBeInTheDocument();
-      expect(screen.getByText('Nda Signed')).toBeInTheDocument();
+      expect(screen.getByText('Deal Room Opened')).toBeInTheDocument();
     });
   });
 
@@ -186,24 +195,24 @@ describe('Dashboard Page', () => {
 
     it('renders pending tasks', () => {
       renderDashboard();
-      expect(screen.getByText('Sign NDA')).toBeInTheDocument();
+      expect(screen.getByText('Investor Access Pending')).toBeInTheDocument();
       expect(screen.getByText('Review Documents')).toBeInTheDocument();
     });
 
-    it('renders View Documents button', () => {
+    it('renders Open Deal Room button', () => {
       renderDashboard();
-      // There are multiple "View Documents" buttons, so use getAllByRole
-      const viewDocsButtons = screen.getAllByRole('button', { name: /view documents/i });
-      expect(viewDocsButtons.length).toBeGreaterThanOrEqual(1);
+      // There are multiple "Open Deal Room" buttons, so use getAllByRole
+      const dealRoomButtons = screen.getAllByRole('button', { name: /open deal room/i });
+      expect(dealRoomButtons.length).toBeGreaterThanOrEqual(1);
     });
   });
 
   describe('Quick Actions', () => {
-    it('renders View Documents action', () => {
+    it('renders Open Deal Room action', () => {
       renderDashboard();
       // Multiple buttons with this text exist
-      const viewDocsButtons = screen.getAllByText('View Documents');
-      expect(viewDocsButtons.length).toBeGreaterThanOrEqual(1);
+      const dealRoomButtons = screen.getAllByText('Open Deal Room');
+      expect(dealRoomButtons.length).toBeGreaterThanOrEqual(1);
     });
 
     it('renders Edit Profile action', () => {
@@ -269,8 +278,8 @@ describe('StatCard Component', () => {
   it('renders label and value', () => {
     renderDashboard();
     // StatCards are rendered in the dashboard
-    expect(screen.getByText('NDA Status')).toBeInTheDocument();
-    expect(screen.getByText('Documents')).toBeInTheDocument();
+    expect(screen.getByText('Access Status')).toBeInTheDocument();
+    expect(screen.getByText('Assets')).toBeInTheDocument();
     expect(screen.getByText('Activity')).toBeInTheDocument();
     expect(screen.getByText('Access')).toBeInTheDocument();
   });

@@ -11,27 +11,27 @@ interface Milestone {
 
 const milestones: Milestone[] = [
     {
-        year: "1995",
-        title: "The Genesis",
-        description: "BAH Energy originates in the Permian Basin with a single, ambitious rig and a vision to modernize extraction.",
+        year: "01",
+        title: "Review the Asset",
+        description: "BAH starts with the oil and gas asset, available records, field context, and technical questions.",
         side: "left"
     },
     {
-        year: "2005",
-        title: "Strategic Expansion",
-        description: "Acquisition of major assets in North Dakota marks the beginning of our nationwide footprint, tripling production capacity.",
+        year: "02",
+        title: "Build the File",
+        description: "Technical, financial, mapping, operating, and media materials are organized for private review.",
         side: "right"
     },
     {
-        year: "2015",
-        title: "The AI Revolution",
-        description: "Implementation of proprietary geological neural networks redefines efficiency, predicting reserves with 94% accuracy.",
+        year: "03",
+        title: "Approve Investor Access",
+        description: "BAH controls which investors receive access and which files are assigned to each account.",
         side: "left"
     },
     {
-        year: "2024",
-        title: "Carbon Neutral Protocol",
-        description: "Launching industry-leading carbon capture initiatives across all facilities, setting a new standard for sustainable energy.",
+        year: "04",
+        title: "Support the Review",
+        description: "Approved investors use the portal to review the materials BAH has prepared and released.",
         side: "right"
     }
 ];
@@ -48,9 +48,7 @@ export const InteractiveTimeline = () => {
     const scaleY = useTransform(scrollYProgress, [0, 1], isMobile ? [1, 1] : [0, 1]);
 
     return (
-        <section ref={containerRef} className="py-32 relative overflow-hidden">
-            {/* Background Texture for Context */}
-            <div className="absolute inset-0 bg-midnight opacity-50" />
+        <section ref={containerRef} className="relative overflow-hidden border-y-2 border-primary bg-secondary py-32 text-white">
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="text-center mb-24">
@@ -60,19 +58,18 @@ export const InteractiveTimeline = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <span className="text-primary font-mono text-sm uppercase tracking-[0.2em] mb-4 block">Our Journey</span>
-                        <h2 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter">
-                            Timeline of <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Evolution</span>
+                        <span className="kinetic-label mb-4 block text-sm text-primary">Access Flow</span>
+                        <h2 className="kinetic-heading text-6xl text-white md:text-8xl">
+                            Investor Review Path
                         </h2>
                     </motion.div>
                 </div>
 
                 <div className="relative max-w-5xl mx-auto">
-                    {/* Central Glowing Line */}
-                    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-white/5 -translate-x-1/2" />
+                    <div className="absolute bottom-0 left-4 top-0 w-1 -translate-x-1/2 bg-white/20 md:left-1/2" />
                     <motion.div
                         style={{ scaleY, originY: 0 }}
-                        className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-blue-400 to-primary -translate-x-1/2 shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+                        className="absolute bottom-0 left-4 top-0 w-1 -translate-x-1/2 bg-primary md:left-1/2"
                     />
 
                     <div className="space-y-24">
@@ -100,22 +97,21 @@ const TimelineItem = ({ item, index }: { item: Milestone, index: number }) => {
             {/* Content Card */}
             <div className={`flex-1 w-full ${isEven ? 'md:text-right md:pr-12' : 'md:text-left md:pl-12'} pl-12 md:pl-0`}>
                 <div className="group relative">
-                    <div className="absolute -inset-4 bg-gradient-to-r from-primary/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity blur-xl" />
-                    <h3 className="text-6xl md:text-8xl font-black text-white/5 absolute -top-10 md:-top-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500 select-none pointer-events-none w-full">
+                    <h3 className="kinetic-heading pointer-events-none absolute -top-10 w-full select-none text-6xl text-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:-top-16 md:text-8xl">
                         {item.year}
                     </h3>
 
                     <div className="relative z-10">
-                        <span className="text-primary font-bold text-xl mb-2 block">{item.year}</span>
-                        <h4 className="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-primary transition-colors">{item.title}</h4>
-                        <p className="text-gray-400 leading-relaxed text-lg">{item.description}</p>
+                        <span className="kinetic-label mb-2 block text-sm text-primary">{item.year}</span>
+                        <h4 className="kinetic-heading mb-4 text-3xl text-white transition-transform group-hover:translate-x-4 md:text-5xl">{item.title}</h4>
+                        <p className="text-lg leading-relaxed text-white/65">{item.description}</p>
                     </div>
                 </div>
             </div>
 
             {/* Central Node - ping animation disabled on mobile */}
-            <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-midnight border-2 border-primary rounded-full z-20">
-                <div className="absolute inset-0 bg-primary rounded-full md:animate-ping opacity-20" />
+            <div className="absolute left-4 z-20 h-4 w-4 -translate-x-1/2 border-2 border-primary bg-secondary md:left-1/2">
+                <div className="absolute inset-0 bg-primary opacity-30" />
             </div>
 
             {/* Spacer for opposite side */}

@@ -390,17 +390,10 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-midnight relative overflow-hidden">
-      
-      {/* Background - matches homepage Hero */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,20,40,1)_0%,rgba(2,4,16,1)_100%)]" />
-      
-      {/* Single centered glow orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
-      
-      {/* Bold background typography */}
+    <div className="relative min-h-screen overflow-hidden bg-secondary text-white">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(192,155,76,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.12)_1px,transparent_1px)] bg-[size:56px_56px]" />
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <span className="text-[15vw] font-black tracking-tighter bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent opacity-[0.03]">
+        <span className="kinetic-heading text-[18vw] text-primary opacity-[0.06]">
           ADMIN
         </span>
       </div>
@@ -410,7 +403,7 @@ const AdminDashboard = () => {
         <div className="flex items-center justify-between mb-8">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+            className="kinetic-label inline-flex items-center gap-2 text-primary transition-transform hover:translate-x-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
@@ -419,30 +412,29 @@ const AdminDashboard = () => {
             variant="outline"
             onClick={fetchData}
             disabled={loadingData}
-            className="border-white/20 text-white hover:bg-white/10"
+            className="border-primary text-primary hover:bg-primary hover:text-secondary"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loadingData ? "animate-spin" : ""}`} />
             Refresh
           </Button>
         </div>
 
-        {/* Admin Card - Clean glassmorphism */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 max-w-6xl mx-auto">
+        <div className="mx-auto max-w-6xl border-2 border-primary bg-[#08263F] p-8">
           <div className="flex items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
+              <div className="flex h-12 w-12 items-center justify-center border-2 border-primary bg-primary text-secondary">
+                <Shield className="h-6 w-6" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="kinetic-heading text-5xl text-white">
                   Admin Dashboard
                 </h1>
-                <p className="text-white/60 text-sm">
-                  Manage users, documents, and activity
+                <p className="kinetic-label text-xs text-primary">
+                  Manage users, assets, and activity
                 </p>
               </div>
             </div>
-            <Button variant="outline" asChild className="bg-white/5 border-white/10 text-white hover:bg-white/10">
+            <Button variant="outline" asChild className="border-primary text-primary hover:bg-primary hover:text-secondary">
               <Link to="/admin/reports">
                 <BarChart3 className="w-4 h-4 mr-2" />
                 Reports
@@ -453,43 +445,43 @@ const AdminDashboard = () => {
           {/* Stats - simplified to match homepage */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             <div className="text-center py-4">
-              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
+              <p className="kinetic-heading text-5xl text-primary">
                 {profiles.length}
               </p>
-              <p className="text-sm text-white/50 mt-1">Total Users</p>
+              <p className="kinetic-label mt-1 text-xs text-white/60">Total Users</p>
             </div>
             <div className="text-center py-4">
-              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
+              <p className="kinetic-heading text-5xl text-primary">
                 {userRoles.filter((r) => r.role === "admin").length}
               </p>
-              <p className="text-sm text-white/50 mt-1">Admins</p>
+              <p className="kinetic-label mt-1 text-xs text-white/60">Admins</p>
             </div>
             <div className="text-center py-4">
-              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
+              <p className="kinetic-heading text-5xl text-primary">
                 {userRoles.filter((r) => r.role === "moderator").length}
               </p>
-              <p className="text-sm text-white/50 mt-1">Moderators</p>
+              <p className="kinetic-label mt-1 text-xs text-white/60">Moderators</p>
             </div>
             <div className="text-center py-4">
-              <p className="text-3xl font-bold bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
+              <p className="kinetic-heading text-5xl text-primary">
                 {ndaSignedCount}
               </p>
-              <p className="text-sm text-white/50 mt-1">NDAs Signed</p>
+              <p className="kinetic-label mt-1 text-xs text-white/60">NDAs Signed</p>
             </div>
           </div>
 
           {/* Tabs - minimal styling */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="mb-6 bg-white/5 border border-white/10 p-1">
-              <TabsTrigger value="users" className="gap-2 text-white/60 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+            <TabsList className="mb-6 rounded-none border-2 border-primary bg-secondary p-1">
+              <TabsTrigger value="users" className="gap-2 rounded-none font-mono text-xs uppercase text-white/60 data-[state=active]:bg-primary data-[state=active]:text-secondary">
                 <Users className="w-4 h-4" />
                 Users
               </TabsTrigger>
-              <TabsTrigger value="documents" className="gap-2 text-white/60 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+              <TabsTrigger value="documents" className="gap-2 rounded-none font-mono text-xs uppercase text-white/60 data-[state=active]:bg-primary data-[state=active]:text-secondary">
                 <FileText className="w-4 h-4" />
-                Documents
+                Assets
               </TabsTrigger>
-              <TabsTrigger value="activity" className="gap-2 text-white/60 data-[state=active]:bg-white/10 data-[state=active]:text-white">
+              <TabsTrigger value="activity" className="gap-2 rounded-none font-mono text-xs uppercase text-white/60 data-[state=active]:bg-primary data-[state=active]:text-secondary">
                 <Activity className="w-4 h-4" />
                 Activity
               </TabsTrigger>
@@ -521,30 +513,30 @@ const AdminDashboard = () => {
                 <TableSkeleton rows={5} />
               ) : (
                 <>
-                  <div className="rounded-xl border border-white/10 overflow-hidden bg-white/5 overflow-x-auto">
+                  <div className="overflow-hidden overflow-x-auto border-2 border-primary bg-secondary">
                     <Table className="min-w-[800px]">
                       <TableHeader>
-                        <TableRow className="border-white/10 hover:bg-white/5">
-                          <TableHead className="w-12 text-gray-300">
+                        <TableRow className="border-primary hover:bg-white/[0.05]">
+                          <TableHead className="w-12 font-mono uppercase text-primary">
                             <Checkbox
                               checked={isAllSelected}
                               onCheckedChange={toggleSelectAll}
                               aria-label="Select all"
                             />
                           </TableHead>
-                          <TableHead className="text-gray-300">User</TableHead>
-                          <TableHead className="text-gray-300">Company</TableHead>
-                          <TableHead className="text-gray-300">Role</TableHead>
-                          <TableHead className="text-gray-300">NDA</TableHead>
-                          <TableHead className="text-gray-300">Joined</TableHead>
-                          <TableHead className="text-right text-gray-300">Actions</TableHead>
+                          <TableHead className="font-mono uppercase text-primary">User</TableHead>
+                          <TableHead className="font-mono uppercase text-primary">Company</TableHead>
+                          <TableHead className="font-mono uppercase text-primary">Role</TableHead>
+                          <TableHead className="font-mono uppercase text-primary">NDA</TableHead>
+                          <TableHead className="font-mono uppercase text-primary">Joined</TableHead>
+                          <TableHead className="text-right font-mono uppercase text-primary">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {paginatedProfiles.map((profile) => {
                           const role = getUserRole(profile.user_id);
                           return (
-                            <TableRow key={profile.id} className="border-white/10 hover:bg-white/5">
+                            <TableRow key={profile.id} className="border-white/20 hover:bg-white/[0.05]">
                               <TableCell>
                                 <Checkbox
                                   checked={selectedUserIds.has(profile.user_id)}
@@ -556,23 +548,23 @@ const AdminDashboard = () => {
                                 <div className="flex items-center gap-3">
                                   <button
                                     onClick={() => handleViewUserDetail(profile)}
-                                    className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                                    className="flex items-center gap-3 transition-transform hover:translate-x-2"
                                   >
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-white font-medium">
+                                    <div className="flex h-10 w-10 items-center justify-center border-2 border-primary bg-primary font-mono font-bold text-secondary">
                                       {profile.full_name?.[0]?.toUpperCase() || profile.email?.[0]?.toUpperCase() || "U"}
                                     </div>
                                     <div>
-                                      <p className="font-medium text-white">
+                                      <p className="font-mono text-sm font-bold uppercase text-white">
                                         {profile.full_name || "No name"}
                                       </p>
-                                      <p className="text-sm text-gray-400">
+                                      <p className="text-xs text-white/50">
                                         {profile.email}
                                       </p>
                                     </div>
                                   </button>
                                 </div>
                               </TableCell>
-                              <TableCell className="text-gray-300">
+                              <TableCell className="text-white/70">
                                 {profile.company_name || "-"}
                               </TableCell>
                               <TableCell>
@@ -582,16 +574,16 @@ const AdminDashboard = () => {
                               </TableCell>
                               <TableCell>
                                 {profile.nda_signed ? (
-                                  <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
+                                  <Badge className="rounded-full border-primary bg-primary font-mono text-secondary">
                                     Signed
                                   </Badge>
                                 ) : (
-                                  <Badge variant="outline" className="border-amber-500/30 text-amber-400">
+                                  <Badge variant="outline" className="rounded-full border-primary font-mono text-primary">
                                     Pending
                                   </Badge>
                                 )}
                               </TableCell>
-                              <TableCell className="text-gray-400">
+                              <TableCell className="font-mono text-xs text-white/50">
                                 {new Date(profile.created_at).toLocaleDateString()}
                               </TableCell>
                               <TableCell className="text-right">
@@ -600,7 +592,7 @@ const AdminDashboard = () => {
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => handleViewUserDetail(profile)}
-                                    className="text-gray-400 hover:text-white hover:bg-white/10"
+                                    className="border-primary text-primary hover:bg-primary hover:text-secondary"
                                   >
                                     <Eye className="w-4 h-4" />
                                   </Button>
@@ -623,7 +615,7 @@ const AdminDashboard = () => {
                   {/* Pagination */}
                   {totalPages > 1 && (
                     <div className="flex items-center justify-between mt-4">
-                      <p className="text-sm text-gray-400">
+                      <p className="font-mono text-sm text-white/50">
                         Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProfiles.length)} of {filteredProfiles.length} users
                       </p>
                       <div className="flex items-center gap-2">
@@ -632,11 +624,11 @@ const AdminDashboard = () => {
                           size="sm"
                           onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                           disabled={currentPage === 1}
-                          className="border-white/20 text-white hover:bg-white/10"
+                            className="border-primary text-primary hover:bg-primary hover:text-secondary"
                         >
                           <ChevronLeft className="w-4 h-4" />
                         </Button>
-                        <span className="text-sm text-gray-400">
+                        <span className="font-mono text-sm text-white/50">
                           Page {currentPage} of {totalPages}
                         </span>
                         <Button
@@ -644,7 +636,7 @@ const AdminDashboard = () => {
                           size="sm"
                           onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                           disabled={currentPage === totalPages}
-                          className="border-white/20 text-white hover:bg-white/10"
+                            className="border-primary text-primary hover:bg-primary hover:text-secondary"
                         >
                           <ChevronRight className="w-4 h-4" />
                         </Button>
@@ -655,7 +647,7 @@ const AdminDashboard = () => {
               )}
             </TabsContent>
 
-            {/* Documents Tab */}
+            {/* Assets Tab */}
             <TabsContent value="documents">
               <DocumentsManager />
             </TabsContent>

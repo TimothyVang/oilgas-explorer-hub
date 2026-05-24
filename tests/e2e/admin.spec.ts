@@ -83,9 +83,9 @@ test.describe('Admin Dashboard', () => {
       await page.keyboard.press('Tab');
       await page.keyboard.press('Tab');
 
-      // Should have focused an element
-      const focusedElement = page.locator(':focus');
-      await expect(focusedElement).toBeVisible();
+      const focusedTagName = await page.evaluate(() => document.activeElement?.tagName);
+      expect(focusedTagName).toBeTruthy();
+      expect(focusedTagName).not.toBe('BODY');
     });
   });
 

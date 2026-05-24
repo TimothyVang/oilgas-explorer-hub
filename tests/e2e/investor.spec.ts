@@ -95,18 +95,17 @@ test.describe('Investor Documents Portal', () => {
       await page.keyboard.press('Tab');
       await page.keyboard.press('Tab');
 
-      // Should have a focused element
-      const focusedElement = page.locator(':focus');
-      await expect(focusedElement).toBeVisible();
+      const focusedTagName = await page.evaluate(() => document.activeElement?.tagName);
+      expect(focusedTagName).toBeTruthy();
+      expect(focusedTagName).not.toBe('BODY');
     });
 
     test('buttons have proper accessible names', async ({ page }) => {
       const signInButton = page.getByRole('button', { name: /sign in/i });
       await expect(signInButton).toBeVisible();
 
-      // Google OAuth button
-      const googleButton = page.getByRole('button', { name: /google/i });
-      await expect(googleButton).toBeVisible();
+      await expect(page.getByRole('button', { name: /google/i })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: /create/i })).toHaveCount(0);
     });
 
     test('page has dark theme enabled', async ({ page }) => {

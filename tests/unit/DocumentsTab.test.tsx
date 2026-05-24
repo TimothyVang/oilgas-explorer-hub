@@ -11,17 +11,22 @@ vi.mock("framer-motion", () => ({
 
 const mockHandleSignNda = vi.fn();
 const mockHandleDocumentAccess = vi.fn();
+const mockRetryLoad = vi.fn();
 
 vi.mock("@/hooks/useInvestorDocuments", () => ({
   useInvestorDocuments: vi.fn(() => ({
     user: { id: "user-1", email: "test@example.com" },
     ndaStatus: null,
-    documents: [],
-    loading: false,
-    handleSignNda: mockHandleSignNda,
-    handleDocumentAccess: mockHandleDocumentAccess,
-    DOCUSIGN_NDA_URL: "https://demo.docusign.net",
-  })),
+        documents: [],
+        loading: false,
+        loadError: null,
+        accessLoadingId: null,
+        retryLoad: mockRetryLoad,
+        handleSignNda: mockHandleSignNda,
+        handleDocumentAccess: mockHandleDocumentAccess,
+        getDocumentAccessUrl: vi.fn(),
+        DOCUSIGN_NDA_URL: "https://demo.docusign.net",
+      })),
 }));
 
 import { DocumentsTab } from "@/components/dashboard/DocumentsTab";
@@ -39,8 +44,12 @@ describe("DocumentsTab", () => {
         ndaStatus: null,
         documents: [],
         loading: true,
+        loadError: null,
+        accessLoadingId: null,
+        retryLoad: mockRetryLoad,
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
+        getDocumentAccessUrl: vi.fn(),
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
@@ -49,35 +58,43 @@ describe("DocumentsTab", () => {
     });
   });
 
-  describe("NDA Required State", () => {
-    it("should render NDA required view when NDA not signed", () => {
+  describe("Access Pending State", () => {
+    it("should render generic access pending view when access is not active", () => {
       vi.mocked(useInvestorDocuments).mockReturnValue({
         user: { id: "user-1", email: "test@example.com" },
         ndaStatus: { nda_signed: false, nda_signed_at: null },
         documents: [],
         loading: false,
+        loadError: null,
+        accessLoadingId: null,
+        retryLoad: mockRetryLoad,
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
+        getDocumentAccessUrl: vi.fn(),
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      expect(screen.getByText(/Restricted Access Level/i)).toBeInTheDocument();
+      expect(screen.getByText(/Deal Room Access Pending/i)).toBeInTheDocument();
     });
 
-    it("should call handleSignNda when NDA button is clicked", async () => {
+    it("should call retryLoad when refresh access is clicked", async () => {
       vi.mocked(useInvestorDocuments).mockReturnValue({
         user: { id: "user-1", email: "test@example.com" },
         ndaStatus: { nda_signed: false, nda_signed_at: null },
         documents: [],
         loading: false,
+        loadError: null,
+        accessLoadingId: null,
+        retryLoad: mockRetryLoad,
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
+        getDocumentAccessUrl: vi.fn(),
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      const ndaButton = screen.getByRole("button", { name: /Initiate NDA Protocol/i });
-      fireEvent.click(ndaButton);
-      expect(mockHandleSignNda).toHaveBeenCalledTimes(1);
+      const refreshButton = screen.getByRole("button", { name: /Refresh Access/i });
+      fireEvent.click(refreshButton);
+      expect(mockRetryLoad).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -86,14 +103,32 @@ describe("DocumentsTab", () => {
       vi.mocked(useInvestorDocuments).mockReturnValue({
         user: { id: "user-1", email: "test@example.com" },
         ndaStatus: { nda_signed: true, nda_signed_at: "2024-01-01T00:00:00Z" },
-        documents: [],
+        documents: [{
+          id: "doc-1",
+          title: "Deal Snapshot",
+          description: "Start here",
+          created_at: "2024-01-01",
+          category: "pitch",
+          asset_type: "document",
+          file_size: 1024,
+          mime_type: "application/pdf",
+          original_filename: "snapshot.pdf",
+          thumbnail_path: null,
+          sort_order: 0,
+          is_featured: true,
+        }],
         loading: false,
+        loadError: null,
+        accessLoadingId: null,
+        retryLoad: mockRetryLoad,
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
+        getDocumentAccessUrl: vi.fn(),
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      expect(screen.getByText(/Clearance Level: UNLOCKED/i)).toBeInTheDocument();
+      expect(screen.getByText(/Deal Room Unlocked/i)).toBeInTheDocument();
+      expect(screen.getByText(/Deal Snapshot/i)).toBeInTheDocument();
     });
 
     it("should show empty state when no documents assigned", () => {
@@ -102,12 +137,16 @@ describe("DocumentsTab", () => {
         ndaStatus: { nda_signed: true, nda_signed_at: "2024-01-01" },
         documents: [],
         loading: false,
+        loadError: null,
+        accessLoadingId: null,
+        retryLoad: mockRetryLoad,
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
+        getDocumentAccessUrl: vi.fn(),
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);
-      expect(screen.getByText(/No documents assigned yet/i)).toBeInTheDocument();
+      expect(screen.getByText(/No assets assigned yet/i)).toBeInTheDocument();
     });
   });
 });

@@ -35,19 +35,19 @@ const getWelcomeTemplate = (name: string) => `
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px;">
     <div style="text-align: center; margin-bottom: 32px;">
-      <h1 style="color: #1a365d; margin: 0; font-size: 28px;">BAH Oil and Gas</h1>
-      <p style="color: #64748b; margin-top: 8px;">Welcome to our Client Portal</p>
+      <h1 style="color: #1a365d; margin: 0; font-size: 28px;">BAH Oil LLC</h1>
+      <p style="color: #64748b; margin-top: 8px;">Welcome to the Investor Access Portal</p>
     </div>
     
     <div style="background-color: #f8fafc; border-radius: 8px; padding: 24px; margin-bottom: 24px;">
       <h2 style="color: #1e293b; margin: 0 0 16px 0; font-size: 20px;">Welcome, ${name}!</h2>
       <p style="color: #475569; margin: 0; line-height: 1.6;">
-        Thank you for creating an account with BAH Oil and Gas. You now have access to our exclusive client portal where you can:
+        BAH Oil LLC has approved your account for the investor access portal. You can now:
       </p>
       <ul style="color: #475569; margin: 16px 0; padding-left: 20px; line-height: 1.8;">
         <li>View your profile and account settings</li>
-        <li>Access investor documents (after NDA signing)</li>
-        <li>Stay updated on your investments</li>
+        <li>Review assigned investor materials after NDA requirements are satisfied</li>
+        <li>Track account status and assigned materials</li>
       </ul>
     </div>
     
@@ -60,7 +60,7 @@ const getWelcomeTemplate = (name: string) => `
     
     <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center;">
       <p style="color: #94a3b8; font-size: 14px; margin: 0;">
-        © ${new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
+        © ${new Date().getFullYear()} BAH Oil LLC. All rights reserved.
       </p>
     </div>
   </div>
@@ -78,7 +78,7 @@ const getNdaCompleteTemplate = (name: string) => `
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px;">
     <div style="text-align: center; margin-bottom: 32px;">
-      <h1 style="color: #1a365d; margin: 0; font-size: 28px;">BAH Oil and Gas</h1>
+      <h1 style="color: #1a365d; margin: 0; font-size: 28px;">BAH Oil LLC</h1>
       <p style="color: #64748b; margin-top: 8px;">NDA Confirmation</p>
     </div>
     
@@ -90,14 +90,14 @@ const getNdaCompleteTemplate = (name: string) => `
         <h2 style="color: #065f46; margin: 0; font-size: 20px;">NDA Signed Successfully</h2>
       </div>
       <p style="color: #047857; margin: 0; line-height: 1.6;">
-        Dear ${name}, your Non-Disclosure Agreement has been received and processed. You now have full access to our investor documents.
+        Dear ${name}, your Non-Disclosure Agreement has been received and processed. You can now review the investor materials assigned to your account.
       </p>
     </div>
     
     <div style="margin-bottom: 24px;">
       <h3 style="color: #1e293b; margin: 0 0 12px 0;">What's Next?</h3>
       <p style="color: #475569; margin: 0; line-height: 1.6;">
-        You can now access all confidential investor documents through your portal. These materials include financial reports, project updates, and investment opportunities.
+        Please sign in to review the confidential materials BAH has assigned to your account. These may include technical files, financial support, maps, operating records, and field media.
       </p>
     </div>
     
@@ -110,7 +110,7 @@ const getNdaCompleteTemplate = (name: string) => `
     
     <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center;">
       <p style="color: #94a3b8; font-size: 14px; margin: 0;">
-        © ${new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
+        © ${new Date().getFullYear()} BAH Oil LLC. All rights reserved.
       </p>
       <p style="color: #94a3b8; font-size: 12px; margin-top: 8px;">
         This email contains confidential information. Please do not forward.
@@ -131,7 +131,7 @@ const getNdaResetTemplate = (name: string) => `
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f5;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px;">
     <div style="text-align: center; margin-bottom: 32px;">
-      <h1 style="color: #1a365d; margin: 0; font-size: 28px;">BAH Oil and Gas</h1>
+      <h1 style="color: #1a365d; margin: 0; font-size: 28px;">BAH Oil LLC</h1>
       <p style="color: #64748b; margin-top: 8px;">NDA Status Update</p>
     </div>
     
@@ -143,14 +143,14 @@ const getNdaResetTemplate = (name: string) => `
         <h2 style="color: #92400e; margin: 0; font-size: 20px;">NDA Reset Required</h2>
       </div>
       <p style="color: #a16207; margin: 0; line-height: 1.6;">
-        Dear ${name}, your Non-Disclosure Agreement status has been reset by an administrator. To regain access to investor documents, you will need to sign a new NDA.
+        Dear ${name}, your Non-Disclosure Agreement status has been reset by an administrator. To regain access to assigned investor materials, you will need to sign a new NDA.
       </p>
     </div>
     
     <div style="margin-bottom: 24px;">
       <h3 style="color: #1e293b; margin: 0 0 12px 0;">What's Next?</h3>
       <p style="color: #475569; margin: 0; line-height: 1.6;">
-        Please visit the Investor Documents page in your portal to sign a new NDA. Once signed, your access to confidential documents will be restored.
+        Please visit the Investor Documents page in your portal to sign a new NDA. Once signed, access to assigned confidential materials can be restored.
       </p>
     </div>
     
@@ -163,7 +163,7 @@ const getNdaResetTemplate = (name: string) => `
     
     <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center;">
       <p style="color: #94a3b8; font-size: 14px; margin: 0;">
-        © ${new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
+        © ${new Date().getFullYear()} BAH Oil LLC. All rights reserved.
       </p>
       <p style="color: #94a3b8; font-size: 12px; margin-top: 8px;">
         If you have questions, please contact your account representative.
@@ -252,7 +252,7 @@ const handler = async (req: Request): Promise<Response> => {
     let html: string;
     // Sanitize name to prevent XSS - only allow alphanumeric, spaces, and basic punctuation
     const rawName = data?.name || "Valued Client";
-    const name = rawName.replace(/[<>\"'&]/g, '').substring(0, 100);
+    const name = rawName.replace(/[<>"'&]/g, '').substring(0, 100);
 
     switch (template) {
       case "welcome":
@@ -269,7 +269,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailResponse = await resend.emails.send({
-      from: Deno.env.get("EMAIL_FROM") || "BAH Oil and Gas <onboarding@resend.dev>",
+      from: Deno.env.get("EMAIL_FROM") || "BAH Oil LLC <onboarding@resend.dev>",
       to: [to],
       subject,
       html,

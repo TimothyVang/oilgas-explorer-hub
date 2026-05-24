@@ -104,9 +104,9 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
 
   if (isLoading) {
     return (
-      <div className={cn("flex items-center gap-3 p-4 rounded-lg bg-white/5 border border-white/10", className)}>
-        <Loader2 className="w-5 h-5 animate-spin text-white/60" />
-        <span className="text-white/60 text-sm">Loading notification preferences...</span>
+      <div className={cn("flex items-center gap-3 border-2 border-primary p-4", className)}>
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+        <span className="kinetic-label text-sm text-primary">Loading notification preferences...</span>
       </div>
     );
   }
@@ -116,8 +116,8 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
       {/* Header with Quick Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Bell className="w-5 h-5 text-white/60" />
-          <span className="text-white/80 text-sm">Email Notifications</span>
+          <Bell className="h-5 w-5 text-primary" />
+          <span className="font-mono text-sm font-bold uppercase text-white">Email Notifications</span>
         </div>
         <div className="flex gap-2">
           <Button
@@ -125,7 +125,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
             size="sm"
             onClick={handleEnableAll}
             disabled={isSaving}
-            className="text-white/60 hover:text-white hover:bg-white/5 text-xs"
+            className="text-xs text-primary hover:bg-primary hover:text-secondary"
           >
             Enable All
           </Button>
@@ -134,7 +134,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
             size="sm"
             onClick={handleMinimal}
             disabled={isSaving}
-            className="text-white/60 hover:text-white hover:bg-white/5 text-xs"
+            className="text-xs text-primary hover:bg-primary hover:text-secondary"
           >
             Minimal
           </Button>
@@ -143,7 +143,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
             size="sm"
             onClick={handleReset}
             disabled={isSaving}
-            className="text-white/60 hover:text-white hover:bg-white/5 text-xs"
+            className="text-xs text-primary hover:bg-primary hover:text-secondary"
           >
             Reset
           </Button>
@@ -161,7 +161,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
             {/* Category Header */}
             <div className="flex items-center gap-2">
               <CategoryIcon className="w-4 h-4 text-primary/70" />
-              <h4 className="text-white/90 text-sm font-medium">{categoryInfo.label}</h4>
+              <h4 className="font-mono text-sm font-bold uppercase text-white">{categoryInfo.label}</h4>
             </div>
 
             {/* Preference Items */}
@@ -174,15 +174,15 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                   <div
                     key={key}
                     className={cn(
-                      "flex items-center justify-between p-3 rounded-lg border transition-colors",
+                      "flex items-center justify-between border-2 p-3 transition-colors",
                       isEnabled
-                        ? "bg-white/5 border-white/10"
-                        : "bg-transparent border-white/5"
+                        ? "border-primary bg-white/[0.04]"
+                        : "border-white/20 bg-transparent"
                     )}
                   >
                     <div className="flex-1 min-w-0 mr-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-white/90 text-sm">{label}</span>
+                          <span className="font-mono text-sm uppercase text-white">{label}</span>
                         {required && (
                           <span className="text-xs text-amber-400/80 bg-amber-500/10 px-1.5 py-0.5 rounded">
                             Required

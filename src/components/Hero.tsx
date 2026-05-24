@@ -1,80 +1,104 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import heroImage from "@/assets/hero-oil-rigs.jpg";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { siteConfig } from "@/constants/siteConfig";
+
+const bahStrengths = [
+  ["Projects", "BAH coordinates private upstream opportunities from initial review through approved investor materials."],
+  ["Technical", "Engineering and geology input supports redevelopment planning, reserves context, and field review."],
+  ["Access", "Qualified investors review maps, records, financial support, and field media through approved accounts."],
+];
+
+const trustPoints = ["Houston, Texas", "Petroleum engineering", "Geology", "Operations", "Investor materials"];
 
 const Hero = () => {
-  const { scrollY } = useScroll();
-  
-  // Parallax transforms
-  const orbY = useTransform(scrollY, [0, 500], [0, 150]);
-  const textY = useTransform(scrollY, [0, 500], [0, -50]);
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.3]);
-  const taglineY = useTransform(scrollY, [0, 500], [0, 30]);
-
   return (
-    <section id="home" className="relative h-screen w-full overflow-hidden bg-midnight flex items-center justify-center">
+    <section id="home" className="relative isolate min-h-screen overflow-hidden bg-[#F8F6F0] px-4 pb-16 pt-28 text-secondary md:px-8 md:pb-20 md:pt-32">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(18,53,85,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(18,53,85,0.08)_1px,transparent_1px)] bg-[size:56px_56px]" />
+      <div className="pointer-events-none absolute right-0 top-24 h-40 w-40 rounded-full bg-primary/25 blur-3xl md:h-[360px] md:w-[360px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-primary/10 to-transparent" />
 
-      {/* Abstract Background - Dark & Moody */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-midnight to-midnight" />
-      </div>
-
-      {/* THE RADICAL HERO TEXT */}
-      <motion.div 
-        style={{ opacity: heroOpacity }}
-        className="relative z-10 w-full px-4 md:px-20"
-      >
+      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-9rem)] max-w-7xl min-w-0 items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="min-w-0"
         >
-          <motion.h1 
-            style={{ y: textY }}
-            className="text-[12vw] leading-[0.85] font-black uppercase text-center tracking-tighter text-white relative z-20"
-          >
-            Energy <br />
-            <span className="relative">
-              Evolved
-              {/* CSS gradient animation overlay */}
-              <div className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient opacity-50 mix-blend-overlay">
-                Evolved
-              </div>
+          <div className="mb-6 inline-flex flex-wrap items-center gap-2 border-2 border-secondary bg-white px-3 py-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] shadow-[5px_5px_0_#C09B4C]">
+            <span>BAH Oil LLC</span>
+            <span className="h-2 w-2 bg-primary" />
+            <span>Houston-based upstream oil and gas</span>
+          </div>
+
+          <h1 className="kinetic-heading max-w-4xl text-[clamp(3.1rem,13vw,7.25rem)] leading-[0.82] sm:text-[clamp(4rem,8vw,7.25rem)]">
+            <span className="block">Private</span>
+            <span className="block">Upstream</span>
+            <span className="block">Review</span>
+          </h1>
+
+          <p className="mt-6 max-w-2xl font-body text-lg font-semibold leading-snug text-secondary/80 md:text-2xl">
+            BAH Oil LLC is a Houston-based oil and gas company focused on private upstream opportunities. BAH coordinates technical review, redevelopment planning, operating support, and investor materials for approved investors.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={`mailto:${siteConfig.contact.email}?subject=Investor%20Portal%20Access%20Request`}
+              className="inline-flex min-h-[58px] items-center justify-center rounded-full border-2 border-secondary bg-secondary px-8 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-white transition-transform hover:scale-105 hover:bg-[#08263F]"
+            >
+              Contact BAH
+            </a>
+            <Link
+              to="/login"
+              className="inline-flex min-h-[58px] items-center justify-center rounded-full border-2 border-secondary bg-white px-8 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-secondary transition-transform hover:scale-105 hover:bg-primary"
+            >
+              Investor Login
+            </Link>
+          </div>
+
+          <div className="mt-7 flex flex-wrap gap-2">
+            {trustPoints.map((point) => (
+              <span key={point} className="inline-flex min-h-[28px] items-center border-2 border-secondary bg-primary px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-secondary">
+                {point}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.aside
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="relative min-w-0 border-2 border-secondary bg-white p-5 shadow-[6px_6px_0_#C09B4C] md:p-6 md:shadow-[10px_10px_0_#C09B4C] lg:max-w-[500px] lg:justify-self-end"
+        >
+          <div className="mb-5 flex items-start justify-between gap-4 border-b-2 border-secondary pb-5">
+            <div>
+              <p className="kinetic-label text-xs text-primary">What BAH Handles</p>
+              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">Technical Files, Field Work, Investor Materials</h2>
+            </div>
+            <span className="rounded-full border-2 border-secondary bg-secondary px-3 py-1 font-mono text-xs font-bold uppercase text-white">
+              BAH
             </span>
-          </motion.h1>
+          </div>
 
-          {/* Floating 3D Orb with Parallax */}
-          <motion.div 
-            style={{ y: orbY }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] bg-primary/20 rounded-full blur-[100px] -z-10 animate-pulse-glow pointer-events-none" 
-          />
-        </motion.div>
+          <div className="space-y-3">
+            {bahStrengths.map(([title, body]) => (
+              <article key={title} className="grid gap-3 border-2 border-secondary bg-[#F8F6F0] p-3 sm:grid-cols-[48px_1fr]">
+                <div className="flex h-11 w-11 items-center justify-center bg-primary font-mono text-sm font-bold text-secondary">
+                  {title.slice(0, 1)}
+                </div>
+                <div>
+                  <h3 className="kinetic-heading text-2xl md:text-3xl">{title}</h3>
+                  <p className="mt-1.5 text-xs font-semibold leading-relaxed text-secondary/70 md:text-sm">{body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
 
-        <motion.div 
-          style={{ y: taglineY }}
-          className="mt-12 flex justify-between items-end w-full max-w-7xl mx-auto border-t border-white/10 pt-8"
-        >
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-gray-400 max-w-md text-lg font-light leading-relaxed"
-          >
-            Redefining exploration with AI-driven precision and sustainable infrastructure. Welcome to the new era of BAH Energy.
-          </motion.p>
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="hidden md:flex flex-col items-center gap-2 text-white/50 hover:text-white transition-colors"
-            onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            <div className="w-[1px] h-12 bg-current" />
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
-          </motion.button>
-        </motion.div>
-      </motion.div>
-
+          <div className="mt-4 border-2 border-primary bg-primary p-3 font-body text-sm font-bold leading-snug text-secondary">
+            Public pages stay high-level. Approved investors can review detailed financial, mapping, operating, and field materials inside the portal.
+          </div>
+        </motion.aside>
+      </div>
     </section>
   );
 };

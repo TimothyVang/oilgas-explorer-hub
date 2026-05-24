@@ -8,11 +8,11 @@ interface PageLoadingSkeletonProps {
  * Full page loading skeleton for initial page loads
  */
 export const PageLoadingSkeleton = ({ message }: PageLoadingSkeletonProps = {}) => (
-  <div className="min-h-screen bg-midnight flex items-center justify-center">
+  <div className="flex min-h-screen items-center justify-center bg-secondary">
     <div className="flex flex-col items-center gap-4">
-      <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+      <div className="h-12 w-12 animate-kinetic-spin rounded-full border-4 border-primary border-t-white" />
       {message ? (
-        <span className="text-white/60 text-sm">{message}</span>
+        <span className="kinetic-label text-sm text-primary">{message}</span>
       ) : (
         <Skeleton className="h-4 w-24 bg-white/10" />
       )}

@@ -64,11 +64,11 @@ export function TwoFactorVerify({ onSuccess, onBack, className }: TwoFactorVerif
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="w-14 h-14 mx-auto bg-primary/20 rounded-xl flex items-center justify-center mb-4">
-          <Shield className="w-7 h-7 text-primary" />
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center border-2 border-primary bg-primary text-secondary">
+          <Shield className="h-7 w-7" />
         </div>
-        <h2 className="text-xl font-bold text-white">Two-Factor Authentication</h2>
-        <p className="text-white/60 text-sm">
+        <h2 className="kinetic-heading text-4xl text-white">Two-Factor Authentication</h2>
+        <p className="kinetic-label text-xs text-primary">
           Enter the 6-digit code from your authenticator app
         </p>
       </div>
@@ -87,7 +87,7 @@ export function TwoFactorVerify({ onSuccess, onBack, className }: TwoFactorVerif
               <InputOTPSlot
                 key={index}
                 index={index}
-                className="w-12 h-14 text-xl bg-white/5 border-white/20 text-white"
+                className="h-14 w-12 border-2 border-primary bg-secondary text-xl text-white"
               />
             ))}
           </InputOTPGroup>
@@ -101,7 +101,7 @@ export function TwoFactorVerify({ onSuccess, onBack, className }: TwoFactorVerif
 
       {/* Verify Button */}
       <Button
-        className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90"
+        className="h-11 w-full border-primary bg-primary text-secondary hover:bg-white"
         onClick={handleVerify}
         disabled={code.length !== 6 || isVerifying}
       >
@@ -115,25 +115,11 @@ export function TwoFactorVerify({ onSuccess, onBack, className }: TwoFactorVerif
         )}
       </Button>
 
-      {/* Backup Code Option */}
-      <div className="text-center">
-        <button
-          type="button"
-          className="text-white/50 text-sm hover:text-white transition-colors"
-          onClick={() => {
-            // TODO: Implement backup code flow
-            toast.info("Backup code verification coming soon");
-          }}
-        >
-          Use a backup code instead
-        </button>
-      </div>
-
       {/* Back Button */}
       {onBack && (
         <Button
           variant="ghost"
-          className="w-full text-white/60 hover:text-white hover:bg-white/5"
+          className="w-full text-primary hover:bg-primary hover:text-secondary"
           onClick={onBack}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

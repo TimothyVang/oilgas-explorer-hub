@@ -1,26 +1,26 @@
-import { Leaf, Gauge, HardHat, TrendingUp } from "lucide-react";
+import { FileCheck, Gauge, LockKeyhole, ShieldCheck } from "lucide-react";
 
 const WhyChooseUs = () => {
   const features = [
     {
-      icon: HardHat,
-      title: "Safety First Culture",
-      description: "Zero-incident safety record with industry-leading protocols and continuous training programs to protect our workforce and communities.",
+      icon: FileCheck,
+      title: "Reviewed Access",
+      description: "BAH reviews account requests before releasing confidential investor materials.",
     },
     {
       icon: Gauge,
-      title: "Cutting-Edge Technology",
-      description: "Leveraging advanced AI, IoT sensors, and automation to maximize efficiency, reduce costs, and minimize environmental impact.",
+      title: "Technical Review Path",
+      description: "Approved investors can move through assigned technical, financial, mapping, operations, media, and management materials.",
     },
     {
-      icon: TrendingUp,
-      title: "Proven Track Record",
-      description: "45+ years of consistent performance, reliability, and growth in the energy sector with major global partnerships.",
+      icon: LockKeyhole,
+      title: "Private Materials",
+      description: "Confidential opportunity files stay inside controlled investor access workflows.",
     },
     {
-      icon: Leaf,
-      title: "Sustainability Commitment",
-      description: "Leading the transition to cleaner energy while maintaining operational excellence in traditional energy production.",
+      icon: ShieldCheck,
+      title: "Assigned Access Only",
+      description: "Each account sees only the materials BAH has approved and assigned for review.",
     },
   ];
 
@@ -29,10 +29,10 @@ const WhyChooseUs = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Why Choose BAH Oil and Gas
+            Why BAH Controls the Portal
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Partner with an industry leader committed to excellence, innovation, and sustainability
+            BAH organizes private upstream materials around technical work, operating context, cost support, and approved investor access.
           </p>
         </div>
 

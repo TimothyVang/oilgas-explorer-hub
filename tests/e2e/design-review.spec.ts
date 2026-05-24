@@ -23,23 +23,13 @@ test.describe('Design Review Screenshots', () => {
     await page.screenshot({ path: 'screenshots/review-login.png', fullPage: true });
   });
 
-  test('capture signup form', async ({ page }) => {
+  test('capture invite-only login restrictions', async ({ page }) => {
     await page.goto('http://localhost:8080/login');
     await page.waitForLoadState('networkidle');
 
-    // Click to switch to signup
-    const signupTab = page.getByRole('button', { name: /sign up/i }).or(
-      page.getByText(/create an account/i)
-    ).or(
-      page.getByText(/don't have an account/i)
-    );
-
-    if (await signupTab.isVisible()) {
-      await signupTab.click();
-      await page.waitForTimeout(500);
-    }
-
-    await page.screenshot({ path: 'screenshots/review-signup.png', fullPage: true });
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /sign up|create account/i })).not.toBeVisible();
+    await page.screenshot({ path: 'screenshots/review-invite-login.png', fullPage: true });
   });
 
   test('capture about page', async ({ page }) => {

@@ -56,60 +56,60 @@ import { format, subDays, startOfMonth, endOfMonth, eachDayOfInterval, eachMonth
 const userGrowthConfig: ChartConfig = {
   users: {
     label: "New Users",
-    color: "hsl(215, 100%, 50%)",
+    color: "hsl(41, 48%, 53%)",
   },
   cumulative: {
     label: "Total Users",
-    color: "hsl(142, 76%, 36%)",
+    color: "hsl(0, 0%, 100%)",
   },
 };
 
 const activityConfig: ChartConfig = {
   login: {
     label: "Logins",
-    color: "hsl(215, 100%, 50%)",
+    color: "hsl(41, 48%, 53%)",
   },
   document_download: {
     label: "Downloads",
-    color: "hsl(142, 76%, 36%)",
+    color: "hsl(209, 65%, 20%)",
   },
   nda_signed: {
     label: "NDAs Signed",
-    color: "hsl(280, 65%, 60%)",
+    color: "hsl(0, 0%, 100%)",
   },
   profile_updated: {
     label: "Profile Updates",
-    color: "hsl(38, 92%, 50%)",
+    color: "hsl(41, 52%, 62%)",
   },
 };
 
 const documentAccessConfig: ChartConfig = {
   assigned: {
     label: "Documents Assigned",
-    color: "hsl(215, 100%, 50%)",
+    color: "hsl(41, 48%, 53%)",
   },
   downloaded: {
     label: "Documents Downloaded",
-    color: "hsl(142, 76%, 36%)",
+    color: "hsl(0, 0%, 100%)",
   },
 };
 
 const roleDistributionConfig: ChartConfig = {
   admin: {
     label: "Admins",
-    color: "hsl(0, 72%, 51%)",
+    color: "hsl(41, 48%, 53%)",
   },
   moderator: {
     label: "Moderators",
-    color: "hsl(38, 92%, 50%)",
+    color: "hsl(209, 65%, 20%)",
   },
   user: {
     label: "Users",
-    color: "hsl(215, 100%, 50%)",
+    color: "hsl(0, 0%, 100%)",
   },
   none: {
     label: "No Role",
-    color: "hsl(215, 15%, 50%)",
+    color: "hsl(41, 38%, 80%)",
   },
 };
 
@@ -144,7 +144,7 @@ interface StatCard {
   trend?: "up" | "down" | "neutral";
 }
 
-const COLORS = ["hsl(0, 72%, 51%)", "hsl(38, 92%, 50%)", "hsl(215, 100%, 50%)", "hsl(215, 15%, 50%)"];
+const COLORS = ["hsl(41, 48%, 53%)", "hsl(209, 65%, 20%)", "hsl(0, 0%, 100%)", "hsl(41, 38%, 80%)"];
 
 const ReportingDashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -346,24 +346,24 @@ const ReportingDashboard = () => {
     {
       title: "Total Users",
       value: stats.totalUsers,
-      icon: <Users className="h-5 w-5 text-blue-500" />,
+      icon: <Users className="h-5 w-5 text-primary" />,
     },
     {
       title: "New Users",
       value: stats.newUsersThisPeriod,
       changeLabel: `Last ${timeRange} days`,
-      icon: <UserPlus className="h-5 w-5 text-green-500" />,
+      icon: <UserPlus className="h-5 w-5 text-primary" />,
       trend: stats.newUsersThisPeriod > 0 ? "up" : "neutral",
     },
     {
       title: "Documents",
       value: stats.totalDocuments,
-      icon: <FileText className="h-5 w-5 text-purple-500" />,
+      icon: <FileText className="h-5 w-5 text-primary" />,
     },
     {
       title: "NDAs Signed",
       value: stats.ndaSignedCount,
-      icon: <FileCheck className="h-5 w-5 text-amber-500" />,
+      icon: <FileCheck className="h-5 w-5 text-primary" />,
     },
   ], [stats, timeRange]);
 
@@ -376,9 +376,10 @@ const ReportingDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-secondary text-white">
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(192,155,76,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.12)_1px,transparent_1px)] bg-[size:56px_56px]" />
       {/* Header */}
-      <header className="border-b border-border/40 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+      <header className="sticky top-0 z-10 border-b-2 border-primary bg-[#08263F]">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -389,11 +390,11 @@ const ReportingDashboard = () => {
                 </Link>
               </Button>
               <div>
-                <h1 className="text-2xl font-bold flex items-center gap-2">
+                <h1 className="kinetic-heading flex items-center gap-2 text-4xl text-white">
                   <TrendingUp className="h-6 w-6 text-primary" />
                   Reports & Analytics
                 </h1>
-                <p className="text-muted-foreground text-sm">
+                <p className="kinetic-label text-xs text-primary">
                   Monitor platform metrics and trends
                 </p>
               </div>
@@ -423,25 +424,25 @@ const ReportingDashboard = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6 space-y-6">
+      <main className="relative z-10 container mx-auto space-y-6 px-4 py-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {statCards.map((stat) => (
-            <Card key={stat.title} className="bg-card/50">
+            <Card key={stat.title} className="rounded-none border-2 border-primary bg-[#08263F] text-white">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">{stat.title}</p>
-                    <p className="text-3xl font-bold">{stat.value}</p>
+                    <p className="kinetic-label text-xs text-primary">{stat.title}</p>
+                    <p className="kinetic-heading text-5xl text-white">{stat.value}</p>
                     {stat.changeLabel && (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                       <p className="mt-1 flex items-center gap-1 font-mono text-xs text-white/60">
                         {stat.trend === "up" && <TrendingUp className="h-3 w-3 text-green-500" />}
                         {stat.trend === "down" && <TrendingDown className="h-3 w-3 text-red-500" />}
                         {stat.changeLabel}
                       </p>
                     )}
                   </div>
-                  <div className="p-3 rounded-full bg-muted/50">
+                  <div className="border-2 border-primary bg-primary p-3 text-secondary">
                     {stat.icon}
                   </div>
                 </div>
@@ -452,17 +453,17 @@ const ReportingDashboard = () => {
 
         {/* Charts */}
         <Tabs defaultValue="growth" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
-            <TabsTrigger value="growth">User Growth</TabsTrigger>
-            <TabsTrigger value="activity">Activity</TabsTrigger>
-            <TabsTrigger value="roles">Roles</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 rounded-none border-2 border-primary bg-[#08263F] lg:w-auto lg:inline-grid">
+            <TabsTrigger value="growth" className="rounded-none font-mono text-xs uppercase text-white/60 data-[state=active]:bg-primary data-[state=active]:text-secondary">User Growth</TabsTrigger>
+            <TabsTrigger value="activity" className="rounded-none font-mono text-xs uppercase text-white/60 data-[state=active]:bg-primary data-[state=active]:text-secondary">Activity</TabsTrigger>
+            <TabsTrigger value="roles" className="rounded-none font-mono text-xs uppercase text-white/60 data-[state=active]:bg-primary data-[state=active]:text-secondary">Roles</TabsTrigger>
           </TabsList>
 
           <TabsContent value="growth" className="space-y-4">
-            <Card>
+            <Card className="border-primary bg-[#08263F] text-white">
               <CardHeader>
                 <CardTitle>User Growth Over Time</CardTitle>
-                <CardDescription>
+                <CardDescription className="text-primary">
                   New user registrations and cumulative total over the last {timeRange} days
                 </CardDescription>
               </CardHeader>
@@ -508,10 +509,10 @@ const ReportingDashboard = () => {
           </TabsContent>
 
           <TabsContent value="activity" className="space-y-4">
-            <Card>
+            <Card className="border-primary bg-[#08263F] text-white">
               <CardHeader>
                 <CardTitle>Platform Activity</CardTitle>
-                <CardDescription>
+                <CardDescription className="text-primary">
                   Daily activity breakdown over the last {timeRange} days
                 </CardDescription>
               </CardHeader>
@@ -564,10 +565,10 @@ const ReportingDashboard = () => {
 
           <TabsContent value="roles" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <Card>
+              <Card className="border-primary bg-[#08263F] text-white">
                 <CardHeader>
                   <CardTitle>Role Distribution</CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-primary">
                     User roles across the platform
                   </CardDescription>
                 </CardHeader>
@@ -599,10 +600,10 @@ const ReportingDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-primary bg-[#08263F] text-white">
                 <CardHeader>
                   <CardTitle>Role Summary</CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-primary">
                     Breakdown by role type
                   </CardDescription>
                 </CardHeader>
@@ -615,11 +616,11 @@ const ReportingDashboard = () => {
                             className="h-4 w-4 rounded-full"
                             style={{ backgroundColor: role.fill }}
                           />
-                          <span className="font-medium capitalize">{role.role}</span>
+                          <span className="font-mono text-sm font-bold uppercase">{role.role}</span>
                         </div>
                         <div className="flex items-center gap-4">
-                          <span className="text-2xl font-bold">{role.count}</span>
-                          <span className="text-sm text-muted-foreground">
+                          <span className="kinetic-heading text-3xl text-primary">{role.count}</span>
+                          <span className="font-mono text-sm text-white/60">
                             {stats.totalUsers > 0
                               ? `${((role.count / stats.totalUsers) * 100).toFixed(1)}%`
                               : "0%"}
@@ -635,10 +636,10 @@ const ReportingDashboard = () => {
         </Tabs>
 
         {/* Quick Actions */}
-        <Card>
+        <Card className="border-primary bg-[#08263F] text-white">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Navigate to related sections</CardDescription>
+            <CardDescription className="text-primary">Navigate to related sections</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">

@@ -40,30 +40,170 @@ export type Database = {
       }
       investor_documents: {
         Row: {
+          asset_type: string
+          category: string
           created_at: string
           description: string | null
-          file_url: string
+          file_size: number | null
+          file_url: string | null
           id: string
+          is_featured: boolean
+          is_public_teaser: boolean
+          mime_type: string | null
+          original_filename: string | null
+          sort_order: number
+          storage_path: string | null
+          thumbnail_path: string | null
           title: string
           updated_at: string
+          uploaded_by: string | null
         }
         Insert: {
+          asset_type?: string
+          category?: string
           created_at?: string
           description?: string | null
-          file_url: string
+          file_size?: number | null
+          file_url?: string | null
           id?: string
+          is_featured?: boolean
+          is_public_teaser?: boolean
+          mime_type?: string | null
+          original_filename?: string | null
+          sort_order?: number
+          storage_path?: string | null
+          thumbnail_path?: string | null
           title: string
           updated_at?: string
+          uploaded_by?: string | null
         }
         Update: {
+          asset_type?: string
+          category?: string
           created_at?: string
           description?: string | null
-          file_url?: string
+          file_size?: number | null
+          file_url?: string | null
           id?: string
+          is_featured?: boolean
+          is_public_teaser?: boolean
+          mime_type?: string | null
+          original_filename?: string | null
+          sort_order?: number
+          storage_path?: string | null
+          thumbnail_path?: string | null
           title?: string
           updated_at?: string
+          uploaded_by?: string | null
         }
         Relationships: []
+      }
+      document_access_logs: {
+        Row: {
+          action: string
+          created_at: string
+          denial_reason: string | null
+          document_id: string | null
+          document_version_id: string | null
+          granted: boolean
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string
+          created_at?: string
+          denial_reason?: string | null
+          document_id?: string | null
+          document_version_id?: string | null
+          granted?: boolean
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          denial_reason?: string | null
+          document_id?: string | null
+          document_version_id?: string | null
+          granted?: boolean
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_access_logs_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "investor_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_access_logs_document_version_id_fkey"
+            columns: ["document_version_id"]
+            isOneToOne: false
+            referencedRelation: "document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_versions: {
+        Row: {
+          change_notes: string | null
+          created_at: string
+          document_id: string
+          file_size: number | null
+          file_url: string | null
+          id: string
+          mime_type: string | null
+          original_filename: string | null
+          storage_path: string | null
+          thumbnail_path: string | null
+          uploaded_by: string | null
+          version_number: number
+        }
+        Insert: {
+          change_notes?: string | null
+          created_at?: string
+          document_id: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          mime_type?: string | null
+          original_filename?: string | null
+          storage_path?: string | null
+          thumbnail_path?: string | null
+          uploaded_by?: string | null
+          version_number?: number
+        }
+        Update: {
+          change_notes?: string | null
+          created_at?: string
+          document_id?: string
+          file_size?: number | null
+          file_url?: string | null
+          id?: string
+          mime_type?: string | null
+          original_filename?: string | null
+          storage_path?: string | null
+          thumbnail_path?: string | null
+          uploaded_by?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_versions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "investor_documents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { demoInvestorDocuments, isDemoInvestorUser } from "@/lib/demoInvestorPortal";
 
 interface DashboardStats {
   totalDocuments: number;
@@ -51,6 +52,47 @@ export const useInvestorDashboard = () => {
         return;
       }
 
+      if (isDemoInvestorUser(user)) {
+        if (isMounted) {
+          setStats({
+            totalDocuments: demoInvestorDocuments.length,
+            assignedDocuments: demoInvestorDocuments.length,
+            ndaSigned: true,
+            ndaSignedAt: "2026-05-24T00:00:00Z",
+            recentActivity: [
+              {
+                id: "demo-login",
+                action: "demo_access_opened",
+                created_at: new Date().toISOString(),
+                metadata: { mode: "demo" },
+              },
+              {
+                id: "demo-assets",
+                action: "deal_room_assets_available",
+                created_at: "2026-05-24T00:00:00Z",
+                metadata: { count: demoInvestorDocuments.length },
+              },
+            ],
+            pendingTasks: [
+              {
+                id: "review-featured",
+                title: "Review Featured Deck",
+                status: "scheduled",
+                type: "document",
+              },
+              {
+                id: "review-videos",
+                title: "Preview Field Videos",
+                status: "pending",
+                type: "document",
+              },
+            ],
+          });
+          setLoading(false);
+        }
+        return;
+      }
+
       try {
         // Fetch user's profile for NDA status
         const { data: profile } = await supabase
@@ -85,20 +127,20 @@ export const useInvestorDashboard = () => {
         // Build dynamic tasks based on real status
         const tasks: TaskItem[] = [];
 
-        // NDA task
+        // Access task
         if (!profile?.nda_signed) {
           tasks.push({
-            id: "nda",
-            title: "Sign Investor NDA",
+            id: "access-pending",
+            title: "Investor Access Pending",
             status: "critical",
             type: "nda",
           });
         } else {
           tasks.push({
-            id: "nda",
-            title: "NDA Signed",
+            id: "access-active",
+            title: "Investor Access Active",
             status: "done",
-            type: "nda",
+            type: "document",
           });
         }
 

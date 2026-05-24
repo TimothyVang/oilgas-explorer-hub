@@ -21,7 +21,7 @@ test.describe("Global Search", () => {
     
     // Wait for dialog and check for Pages group
     await expect(page.locator('[role="dialog"]')).toBeVisible();
-    await expect(page.getByText("Pages")).toBeVisible();
+    await expect(page.getByText("Pages", { exact: true })).toBeVisible();
   });
 
   test("search dialog shows Sections group", async ({ page }) => {
@@ -124,7 +124,7 @@ test.describe("Global Search", () => {
     await searchInput.fill("Login");
     
     // Should show login option for guests
-    await expect(page.getByRole("option", { name: /investor portal login/i })).toBeVisible();
+    await expect(page.getByRole("option", { name: /investor login/i })).toBeVisible();
   });
 
   test("does not show Dashboard for unauthenticated users", async ({ page }) => {

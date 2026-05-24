@@ -8,18 +8,17 @@
 
 export const siteConfig = {
   company: {
-    name: "BAH Energy",
-    legalName: "BAH Energy Corporation",
-    description: "Redefining exploration with AI-driven precision and sustainable infrastructure.",
+    name: "BAH Oil LLC",
+    legalName: "BAH Oil LLC",
+    description: "Houston-based oil and gas project review, technical support, operations coordination, and private investor materials.",
   },
 
   contact: {
-    // TODO: Replace with your actual business phone number
-    phone: "+1 (713) 000-0000", // Houston area code
-    phoneDisplay: "+1 (713) 000-0000",
-    email: "contact@bahenergy.com",
-    supportEmail: "support@bahenergy.com",
-    salesEmail: "sales@bahenergy.com",
+    phone: "",
+    phoneDisplay: "Available to approved investors",
+    email: "info@bahoil.com",
+    supportEmail: "info@bahoil.com",
+    salesEmail: "info@bahoil.com",
   },
 
   location: {

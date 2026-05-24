@@ -19,6 +19,7 @@ import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import ReportingDashboard from "./pages/ReportingDashboard";
 import InvestorDocuments from "./pages/InvestorDocuments";
+import DemoAssetPreview from "./pages/DemoAssetPreview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -63,6 +64,11 @@ const App = () => (
               <Route path="/investor-documents" element={
                 <ProtectedRoute>
                   <InvestorDocuments />
+                </ProtectedRoute>
+              } />
+              <Route path="/demo-asset/:assetId" element={
+                <ProtectedRoute>
+                  <DemoAssetPreview />
                 </ProtectedRoute>
               } />
 

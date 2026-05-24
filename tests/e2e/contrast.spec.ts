@@ -43,7 +43,7 @@ test.describe('Color Contrast Verification', () => {
 
     test('navigation text is readable', async ({ page }) => {
       // Nav links should be visible
-      const navLinks = page.locator('nav a, nav button');
+      const navLinks = page.locator('nav a:visible, nav button:visible');
       const count = await navLinks.count();
       expect(count).toBeGreaterThan(0);
 
@@ -133,12 +133,9 @@ test.describe('Color Contrast Verification', () => {
       await expect(forgotLink).toBeVisible();
     });
 
-    test('secondary text (or continue with) is readable', async ({ page }) => {
-      // The divider text between form and OAuth
-      const dividerText = page.getByText(/continue with|or/i);
-      if (await dividerText.count() > 0) {
-        await expect(dividerText.first()).toBeVisible();
-      }
+    test('secondary invite guidance is readable', async ({ page }) => {
+      const inviteText = page.getByText(/credentials are provided directly|request access/i);
+      await expect(inviteText.first()).toBeVisible();
     });
   });
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { isDemoInvestorUser } from "@/lib/demoInvestorPortal";
 
 export const useAdminRole = () => {
   const { user } = useAuth();
@@ -10,6 +11,12 @@ export const useAdminRole = () => {
   useEffect(() => {
     const checkAdminRole = async () => {
       if (!user) {
+        setIsAdmin(false);
+        setLoading(false);
+        return;
+      }
+
+      if (isDemoInvestorUser(user)) {
         setIsAdmin(false);
         setLoading(false);
         return;

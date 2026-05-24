@@ -8,8 +8,7 @@ test.describe("Smoke Tests", () => {
     await page.goto("/");
 
     // Check for the main heading or hero section
-    // The actual site is BAH Energy
-    await expect(page).toHaveTitle(/BAH Energy|Energy Solutions/i);
+    await expect(page).toHaveTitle(/BAH Oil LLC|Private Investor Access Portal/i);
 
     // Verify key navigation elements are present
     await expect(page.getByRole("navigation")).toBeVisible();

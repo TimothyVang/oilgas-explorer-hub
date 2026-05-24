@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Shield, ShieldCheck, ShieldOff, Loader2, Copy, Check, AlertTriangle, Download } from "lucide-react";
+import { Shield, ShieldCheck, ShieldOff, Loader2, Copy, Check, AlertTriangle } from "lucide-react";
 import { useMFA } from "@/hooks/useMFA";
 import { toast } from "sonner";
 import QRCode from "qrcode";
@@ -19,7 +19,6 @@ export function TwoFactorSetup({ className }: TwoFactorSetupProps) {
     enrollTOTP,
     verifyTOTP,
     unenrollTOTP,
-    generateBackupCodes,
     hasMFAEnabled,
     getVerifiedFactor,
     clearError,
@@ -28,16 +27,14 @@ export function TwoFactorSetup({ className }: TwoFactorSetupProps) {
 
   const [isEnrollDialogOpen, setIsEnrollDialogOpen] = useState(false);
   const [isDisableDialogOpen, setIsDisableDialogOpen] = useState(false);
-  const [setupStep, setSetupStep] = useState<"qr" | "verify" | "backup" | "complete">("qr");
+  const [setupStep, setSetupStep] = useState<"qr" | "verify" | "complete">("qr");
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [secret, setSecret] = useState<string | null>(null);
   const [factorId, setFactorId] = useState<string | null>(null);
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDisabling, setIsDisabling] = useState(false);
-  const [backupCodes, setBackupCodes] = useState<string[]>([]);
   const [copiedSecret, setCopiedSecret] = useState(false);
-  const [copiedBackupCodes, setCopiedBackupCodes] = useState(false);
   const [disableCode, setDisableCode] = useState("");
 
   const mfaEnabled = hasMFAEnabled();
@@ -50,10 +47,17 @@ export function TwoFactorSetup({ className }: TwoFactorSetupProps) {
     setSecret(null);
     setFactorId(null);
     setVerificationCode("");
-    setBackupCodes([]);
     setCopiedSecret(false);
-    setCopiedBackupCodes(false);
     clearError();
+  };
+
+  const completeEnrollment = () => {
+    setSetupStep("complete");
+    setTimeout(() => {
+      setIsEnrollDialogOpen(false);
+      resetEnrollState();
+      fetchMFAStatus();
+    }, 2000);
   };
 
   const resetDisableState = () => {
@@ -96,25 +100,12 @@ export function TwoFactorSetup({ className }: TwoFactorSetupProps) {
     setIsVerifying(false);
 
     if (success) {
-      // Generate backup codes
-      const codes = generateBackupCodes();
-      setBackupCodes(codes);
-      setSetupStep("backup");
+      completeEnrollment();
       toast.success("Two-factor authentication verified!");
     } else {
       toast.error("Invalid verification code. Please try again.");
       setVerificationCode("");
     }
-  };
-
-  // Complete setup
-  const handleComplete = () => {
-    setSetupStep("complete");
-    setTimeout(() => {
-      setIsEnrollDialogOpen(false);
-      resetEnrollState();
-      fetchMFAStatus();
-    }, 2000);
   };
 
   // Disable 2FA
@@ -141,37 +132,11 @@ export function TwoFactorSetup({ className }: TwoFactorSetupProps) {
   };
 
   // Copy to clipboard
-  const copyToClipboard = (text: string, type: "secret" | "backup") => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    if (type === "secret") {
-      setCopiedSecret(true);
-      setTimeout(() => setCopiedSecret(false), 2000);
-    } else {
-      setCopiedBackupCodes(true);
-      setTimeout(() => setCopiedBackupCodes(false), 2000);
-    }
+    setCopiedSecret(true);
+    setTimeout(() => setCopiedSecret(false), 2000);
     toast.success("Copied to clipboard!");
-  };
-
-  // Download backup codes
-  const downloadBackupCodes = () => {
-    const content = `BAH Energy - Two-Factor Authentication Backup Codes
-Generated: ${new Date().toISOString()}
-
-Store these codes in a safe place. Each code can only be used once.
-
-${backupCodes.map((code, i) => `${i + 1}. ${code}`).join("\n")}
-
-If you lose access to your authenticator app, you can use one of these codes to sign in.
-`;
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "bah-energy-backup-codes.txt";
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success("Backup codes downloaded");
   };
 
   // Initialize enrollment when dialog opens
@@ -183,25 +148,25 @@ If you lose access to your authenticator app, you can use one of these codes to 
 
   if (isLoading) {
     return (
-      <div className={`flex items-center gap-3 p-4 rounded-lg bg-white/5 border border-white/10 ${className}`}>
-        <Loader2 className="w-5 h-5 animate-spin text-white/60" />
-        <span className="text-white/60 text-sm">Loading security settings...</span>
+      <div className={`flex items-center gap-3 border-2 border-primary p-4 ${className}`}>
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+        <span className="kinetic-label text-sm text-primary">Loading security settings...</span>
       </div>
     );
   }
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <div className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/10">
+      <div className="flex items-center justify-between border-2 border-primary p-4">
         <div className="flex items-center gap-3">
           {mfaEnabled ? (
-            <ShieldCheck className="w-6 h-6 text-emerald-400" />
+            <ShieldCheck className="h-6 w-6 text-primary" />
           ) : (
-            <Shield className="w-6 h-6 text-white/60" />
+            <Shield className="h-6 w-6 text-primary" />
           )}
           <div>
-            <h3 className="text-white font-medium">Two-Factor Authentication</h3>
-            <p className="text-white/60 text-sm">
+            <h3 className="font-mono text-sm font-bold uppercase text-white">Two-Factor Authentication</h3>
+            <p className="text-sm text-white/60">
               {mfaEnabled
                 ? "Your account is protected with 2FA"
                 : "Add an extra layer of security to your account"}
@@ -298,7 +263,6 @@ If you lose access to your authenticator app, you can use one of these codes to 
                 <DialogDescription className="text-white/60">
                   {setupStep === "qr" && "Scan the QR code with your authenticator app"}
                   {setupStep === "verify" && "Enter the 6-digit code from your app"}
-                  {setupStep === "backup" && "Save your backup codes"}
                   {setupStep === "complete" && "You're all set!"}
                 </DialogDescription>
               </DialogHeader>
@@ -326,7 +290,7 @@ If you lose access to your authenticator app, you can use one of these codes to 
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => copyToClipboard(secret || "", "secret")}
+                              onClick={() => copyToClipboard(secret || "")}
                               className="shrink-0"
                             >
                               {copiedSecret ? (
@@ -405,61 +369,7 @@ If you lose access to your authenticator app, you can use one of these codes to 
                   </div>
                 )}
 
-                {/* Step 3: Backup Codes */}
-                {setupStep === "backup" && (
-                  <div className="space-y-6">
-                    <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                      <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                        <div className="text-sm">
-                          <p className="text-amber-200 font-medium mb-1">
-                            Save these backup codes
-                          </p>
-                          <p className="text-amber-200/70">
-                            Store them securely. You'll need one if you lose access to your authenticator app.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 p-4 bg-white/5 rounded-lg border border-white/10">
-                      {backupCodes.map((code, index) => (
-                        <code key={index} className="text-white/90 font-mono text-sm py-1">
-                          {code}
-                        </code>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        className="flex-1 border-white/20 text-white hover:bg-white/10"
-                        onClick={() => copyToClipboard(backupCodes.join("\n"), "backup")}
-                      >
-                        {copiedBackupCodes ? (
-                          <Check className="w-4 h-4 mr-2 text-emerald-400" />
-                        ) : (
-                          <Copy className="w-4 h-4 mr-2" />
-                        )}
-                        Copy
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="flex-1 border-white/20 text-white hover:bg-white/10"
-                        onClick={downloadBackupCodes}
-                      >
-                        <Download className="w-4 h-4 mr-2" />
-                        Download
-                      </Button>
-                    </div>
-
-                    <Button className="w-full" onClick={handleComplete}>
-                      I've Saved My Codes
-                    </Button>
-                  </div>
-                )}
-
-                {/* Step 4: Complete */}
+                {/* Step 3: Complete */}
                 {setupStep === "complete" && (
                   <div className="text-center space-y-4 py-4">
                     <div className="w-16 h-16 mx-auto bg-emerald-500/20 rounded-full flex items-center justify-center">

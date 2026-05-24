@@ -86,92 +86,18 @@ test.describe('Form Validation - Login Form', () => {
   });
 });
 
-test.describe('Form Validation - Signup Form', () => {
+test.describe('Form Validation - Invite-only Restrictions', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-    // Switch to signup mode
-    await page.getByRole('button', { name: /create one/i }).click();
   });
 
-  test('signup form has all required fields', async ({ page }) => {
-    // Wait for form to appear
-    await page.waitForTimeout(300);
-
-    // Full Name field
-    await expect(page.getByRole('textbox', { name: /name|full name/i })).toBeVisible();
-
-    // Email field
+  test('does not expose signup-only fields or buttons', async ({ page }) => {
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
     await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
-
-    // Password field
-    await expect(page.getByRole('textbox', { name: /password/i })).toBeVisible();
-
-    // Signup button
-    await expect(page.getByRole('button', { name: /sign up|create account/i })).toBeVisible();
-  });
-
-  test('name field accepts input', async ({ page }) => {
-    await page.waitForTimeout(300);
-    const nameInput = page.getByRole('textbox', { name: /name|full name/i });
-    await nameInput.fill('John Doe');
-
-    await expect(nameInput).toHaveValue('John Doe');
-  });
-
-  test('form prevents submission without name', async ({ page }) => {
-    await page.waitForTimeout(300);
-
-    // Fill email and password but not name
-    await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByRole('textbox', { name: /password/i }).fill('password123');
-
-    await page.getByRole('button', { name: /sign up|create account/i }).click();
-
-    // Should stay on login page
-    await page.waitForTimeout(1000);
-    await expect(page).toHaveURL(/\/login/);
-  });
-
-  test('email validation on signup', async ({ page }) => {
-    await page.waitForTimeout(300);
-
-    await page.getByRole('textbox', { name: /name|full name/i }).fill('Test User');
-    await page.getByRole('textbox', { name: /email/i }).fill('invalid-email');
-    await page.getByRole('textbox', { name: /password/i }).fill('password123');
-
-    await page.getByRole('button', { name: /sign up|create account/i }).click();
-
-    // Should stay on login page due to validation
-    await page.waitForTimeout(1000);
-    await expect(page).toHaveURL(/\/login/);
-  });
-
-  test('password length requirement', async ({ page }) => {
-    await page.waitForTimeout(300);
-
-    await page.getByRole('textbox', { name: /name|full name/i }).fill('Test User');
-    await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
-    await page.getByRole('textbox', { name: /password/i }).fill('short');
-
-    await page.getByRole('button', { name: /sign up|create account/i }).click();
-
-    // Should stay on login page due to short password
-    await page.waitForTimeout(1000);
-    await expect(page).toHaveURL(/\/login/);
-  });
-
-  test('can toggle back to login', async ({ page }) => {
-    await page.waitForTimeout(300);
-
-    // Should have a way to go back to login
-    const loginButton = page.getByRole('button', { name: /sign in|log in/i });
-    await expect(loginButton).toBeVisible();
-
-    await loginButton.click();
-    await page.waitForTimeout(300);
-
-    // Should show login form elements
-    await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
+    await expect(page.getByLabel(/password/i)).toBeVisible();
+    await expect(page.getByLabel(/full name/i)).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /sign up|create account/i })).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /create one/i })).not.toBeVisible();
   });
 });
 
@@ -335,13 +261,13 @@ test.describe('Form Responsive Design', () => {
     }
   });
 
-  test('signup form works on tablet', async ({ page }) => {
+  test('invite-only login remains restricted on tablet', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto('/login');
-    await page.getByRole('button', { name: /create one/i }).click();
-    await page.waitForTimeout(300);
 
-    await expect(page.getByRole('textbox', { name: /name|full name/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
+    await expect(page.getByLabel(/full name/i)).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /create account|sign up/i })).not.toBeVisible();
   });
 });
 
@@ -394,25 +320,16 @@ test.describe('Form Edge Cases', () => {
     await expect(emailInput).toHaveValue('pasted@example.com');
   });
 
-  test('form clears when switching modes', async ({ page }) => {
+  test('form has no signup mode to switch into', async ({ page }) => {
     await page.goto('/login');
 
     // Fill login form
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com');
 
-    // Switch to signup
-    await page.getByRole('button', { name: /create one/i }).click();
-    await page.waitForTimeout(300);
-
-    // Switch back to login
-    await page.getByRole('button', { name: /sign in|log in/i }).click();
-    await page.waitForTimeout(300);
-
-    // Check if form maintained or cleared state
     const emailInput = page.getByRole('textbox', { name: /email/i });
-    const value = await emailInput.inputValue();
-    // Either cleared or maintained - both are acceptable behaviors
-    expect(value !== undefined).toBeTruthy();
+    await expect(emailInput).toHaveValue('test@example.com');
+    await expect(page.getByRole('button', { name: /create one/i })).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /create account|sign up/i })).not.toBeVisible();
   });
 
   test('page refresh preserves form state or clears it', async ({ page }) => {

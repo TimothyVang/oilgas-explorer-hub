@@ -1,65 +1,39 @@
-import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { siteConfig } from "@/constants/siteConfig";
 import bahLogo from "@/assets/bah-logo-rounded.png";
 
 const Footer = () => {
-  const footerRef = useRef<HTMLElement>(null);
-  
-  // Parallax for watermark
-  const { scrollYProgress } = useScroll({
-    target: footerRef,
-    offset: ["start end", "end end"]
-  });
-  const watermarkY = useTransform(scrollYProgress, [0, 1], ["30%", "-5%"]);
-  const watermarkOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.1, 0.1]);
-
   return (
-    <footer ref={footerRef} className="relative bg-black py-20 overflow-hidden">
-      {/* Massive Watermark with Parallax */}
-      <motion.div 
-        style={{ y: watermarkY, opacity: watermarkOpacity }}
-        className="absolute bottom-0 left-0 w-full text-center pointer-events-none select-none"
-      >
-        <h1 className="text-[25vw] font-black leading-none text-white tracking-tighter translate-y-[20%]">BAH</h1>
-      </motion.div>
+    <footer className="border-t-2 border-secondary bg-primary text-secondary">
+      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
+        <div className="grid gap-8 md:grid-cols-[1fr_2fr] md:items-center">
+          <Link to="/" className="flex items-center gap-3 transition-transform hover:translate-x-4" aria-label="BAH Oil LLC home">
+            <img src={bahLogo} alt="BAH Oil LLC" className="h-14 w-14 rounded-full border-2 border-secondary bg-white object-cover" />
+            <span className="kinetic-heading text-3xl">BAH Oil LLC</span>
+          </Link>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
-          <div className="lg:col-span-2">
-            <img src={bahLogo} alt="BAH Oil LLC" className="h-20 w-auto object-contain mb-6" />
-            <p className="text-gray-400 text-lg mb-6 max-w-md">
-              Delivering excellence in oil and gas operations with a commitment to sustainable energy solutions.
-            </p>
-            <a href="#contact" className="inline-block px-8 py-3 rounded-full border border-primary/40 bg-primary/10 text-primary font-bold hover:bg-primary hover:text-secondary transition-all">
-              Start a Project
-            </a>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-6">Explore</h4>
-            <ul className="space-y-4">
-              <li><Link to="/about" className="text-gray-300 hover:text-white text-lg transition-colors">About</Link></li>
-              <li><Link to="/#services" className="text-gray-300 hover:text-white text-lg transition-colors">Services</Link></li>
-              <li><Link to="/login" className="text-gray-300 hover:text-white text-lg transition-colors">Investor Login</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-6">Contact</h4>
-            <p className="text-gray-300 text-lg mb-4">
-              1200 Energy Corridor<br />
-              Houston, TX 77079
-            </p>
-            <a href={`mailto:${siteConfig.contact.email}`} className="text-gray-300 text-lg hover:text-primary transition-colors">
-              {siteConfig.contact.email}
-            </a>
+          <div className="flex flex-wrap gap-4 md:justify-end">
+            {[
+              ["About", "/about"],
+              ["What BAH Does", "/#services"],
+              ["Team", "/#team"],
+              ["Investor Login", "/login"],
+              [siteConfig.contact.email, `mailto:${siteConfig.contact.email}`],
+            ].map(([label, href]) => (
+              <a key={label} href={href} className="inline-flex min-h-[40px] items-center px-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] underline decoration-2 underline-offset-4 transition-transform hover:translate-x-2">
+                {label}
+              </a>
+            ))}
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
+        <div className="mt-8 flex flex-col gap-3 border-t-2 border-secondary pt-5 font-mono text-xs font-bold uppercase tracking-[-0.02em] md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} BAH Oil LLC. All rights reserved.</p>
+          <div className="flex gap-4">
+            {siteConfig.social.linkedin && <a href={siteConfig.social.linkedin} className="inline-flex min-h-[40px] items-center px-2 hover:underline">LinkedIn</a>}
+            <a href={`mailto:${siteConfig.contact.email}`} className="inline-flex min-h-[40px] items-center px-2 hover:underline">Email</a>
+            <Link to="/login" className="inline-flex min-h-[40px] items-center px-2 hover:underline">Portal</Link>
+          </div>
         </div>
       </div>
     </footer>

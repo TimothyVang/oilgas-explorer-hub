@@ -14,7 +14,7 @@ describe("cn utility function", () => {
   });
 
   it("should filter out falsy values", () => {
-    const result = cn("base", false && "hidden", undefined, null, "visible");
+    const result = cn("base", false, undefined, null, "visible");
     expect(result).toBe("base visible");
   });
 
