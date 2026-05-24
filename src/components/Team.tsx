@@ -1,29 +1,19 @@
-import { BriefcaseBusiness, Gauge, HardHat } from "lucide-react";
+import { Gauge, HardHat } from "lucide-react";
 
 const team = [
   {
     id: "01",
-    initials: "BAH",
-    name: "BAH Oil LLC",
-    role: "Mineral Owner & Project Developer",
-    body: "Originates, owns, and de-risks South Texas conventional opportunities before project-specific materials are released privately.",
-    icon: BriefcaseBusiness,
+    initials: "ENG",
+    name: "Engineering & Geology",
+    body: "Senior petroleum engineering and geology: well-record review, reservoir behavior, reserves context, EOR, and production optimization.",
+    icon: Gauge,
   },
   {
     id: "02",
-    initials: "TSH",
-    name: "Trinity Sands Holdings",
-    role: "Operator of Record",
-    body: "Connects the development plan to field operations, vendor sequence, mechanical work, and execution accountability.",
-    icon: HardHat,
-  },
-  {
-    id: "03",
     initials: "OPS",
-    name: "Technical & Field Oversight",
-    role: "Engineering, Geology, Operations, and Execution",
-    body: "Senior petroleum engineering and geology support works alongside operations and execution discipline for each project.",
-    icon: Gauge,
+    name: "Operations & Execution",
+    body: "Field coordination, scheduling, cost discipline, and execution planning that keeps project work sequenced and on plan.",
+    icon: HardHat,
   },
 ];
 
@@ -32,13 +22,22 @@ const Team = () => {
     <section id="governance" className="border-t-2 border-secondary bg-primary text-secondary">
       <div className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28">
         <div className="mb-12 grid gap-4 md:grid-cols-[0.9fr_1.1fr] md:items-end">
-          <h2 className="kinetic-heading break-words text-[clamp(3rem,13vw,9rem)] sm:text-[clamp(3.5rem,8vw,9rem)]">Governance</h2>
+          <div>
+            <p className="kinetic-label mb-3 text-sm">STRUCTURE</p>
+            <h2 className="kinetic-heading break-words text-[clamp(3rem,13vw,9rem)] sm:text-[clamp(3.5rem,8vw,9rem)]">Built to operate, structured for alignment.</h2>
+          </div>
           <p className="font-body text-lg font-semibold leading-tight md:text-xl">
-            BAH presents accountability by role: mineral ownership, operator-of-record execution, and senior technical and field oversight.
+            BAH Oil LLC holds the minerals; Trinity Sands Holdings LLC serves as operator of record. The structure is manager-managed, with disciplined capital deployment and alignment between the operating team and its partners.
           </p>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-3">
+        <div className="mb-8 border-2 border-secondary bg-white p-5">
+          <p className="font-body text-lg font-semibold leading-tight md:text-xl">
+            Team information is presented by function, not individual biography, to keep the public site focused on governance and execution capability.
+          </p>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
           {team.map((member) => (
             <article key={member.id} className="group grid min-h-[360px] min-w-0 border-2 border-secondary bg-primary transition-colors duration-300 hover:bg-secondary hover:text-white">
               <div className="flex min-w-0 flex-col justify-between border-b-2 border-secondary p-5 group-hover:border-primary">
@@ -53,9 +52,6 @@ const Team = () => {
                   <h3 className="kinetic-heading break-words text-4xl transition-transform duration-300 group-hover:translate-x-2 sm:text-5xl lg:text-6xl">
                     {member.name}
                   </h3>
-                  <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-secondary/80 group-hover:text-primary">
-                    {member.role}
-                  </p>
                 </div>
                 <p className="mt-8 font-body text-base font-semibold leading-relaxed text-secondary/75 group-hover:text-white/75">
                   {member.body}
