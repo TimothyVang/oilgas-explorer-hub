@@ -20,7 +20,7 @@ const Footer = () => {
               ["Investor Login", "/login"],
               [siteConfig.contact.email, `mailto:${siteConfig.contact.email}`],
             ].map(([label, href]) => (
-              <a key={label} href={href} className="inline-flex min-h-[40px] items-center px-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] underline decoration-2 underline-offset-4 transition-transform hover:translate-x-2">
+              <a key={label} href={href} className="inline-flex min-h-[44px] items-center px-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] underline decoration-2 underline-offset-4 transition-transform hover:translate-x-2">
                 {label}
               </a>
             ))}
@@ -30,9 +30,9 @@ const Footer = () => {
         <div className="mt-8 flex flex-col gap-3 border-t-2 border-secondary pt-5 font-mono text-xs font-bold uppercase tracking-[-0.02em] md:flex-row md:items-center md:justify-between">
           <p>&copy; {new Date().getFullYear()} BAH Oil LLC. All rights reserved.</p>
           <div className="flex gap-4">
-            {siteConfig.social.linkedin && <a href={siteConfig.social.linkedin} className="inline-flex min-h-[40px] items-center px-2 hover:underline">LinkedIn</a>}
-            <a href={`mailto:${siteConfig.contact.email}`} className="inline-flex min-h-[40px] items-center px-2 hover:underline">Email</a>
-            <Link to="/login" className="inline-flex min-h-[40px] items-center px-2 hover:underline">Login</Link>
+            {siteConfig.social.linkedin && <a href={siteConfig.social.linkedin} className="inline-flex min-h-[44px] items-center px-2 hover:underline">LinkedIn</a>}
+            <a href={`mailto:${siteConfig.contact.email}`} className="inline-flex min-h-[44px] items-center px-2 hover:underline">Email</a>
+            <Link to="/login" className="inline-flex min-h-[44px] items-center px-2 hover:underline">Login</Link>
           </div>
         </div>
       </div>

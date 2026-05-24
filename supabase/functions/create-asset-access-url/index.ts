@@ -2,13 +2,14 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getCorsHeaders, handleCorsOptions } from "../_shared/cors.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const SIGNED_URL_TTL_SECONDS = 5 * 60;
+const SIGNED_URL_TTL_SECONDS = 30 * 60;
 
 type AccessRequest = {
   document_id?: string;
   documentId?: string;
   version_id?: string;
   versionId?: string;
+  mode?: "preview" | "download_original";
 };
 
 Deno.serve(async (req) => {
@@ -56,6 +57,7 @@ Deno.serve(async (req) => {
 
   const documentId = payload.document_id ?? payload.documentId;
   const versionId = payload.version_id ?? payload.versionId;
+  const mode = payload.mode === "download_original" ? "download_original" : "preview";
 
   if (!documentId || !UUID_RE.test(documentId)) {
     await logAccess(req, supabaseAdmin, userId, null, null, false, "invalid_document_id");
@@ -119,7 +121,7 @@ Deno.serve(async (req) => {
   if (versionId) {
     const { data: version, error: versionError } = await supabaseAdmin
       .from("document_versions")
-      .select("id, document_id, storage_path, original_filename")
+      .select("id, document_id, storage_path, original_filename, mime_type")
       .eq("id", versionId)
       .eq("document_id", documentId)
       .maybeSingle();
@@ -138,9 +140,13 @@ Deno.serve(async (req) => {
     return json({ error: "Asset is missing private storage path" }, 409, corsHeaders);
   }
 
+  const signedUrlOptions = mode === "download_original"
+    ? { download: downloadName }
+    : undefined;
+
   const { data: signed, error: signError } = await supabaseAdmin.storage
     .from("investor-documents")
-    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, { download: downloadName });
+    .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS, signedUrlOptions);
 
   if (signError || !signed?.signedUrl) {
     await logAccess(req, supabaseAdmin, userId, documentId, versionId ?? null, false, "signed_url_failed");
@@ -151,6 +157,7 @@ Deno.serve(async (req) => {
 
   return json({
     signed_url: signed.signedUrl,
+    mode,
     expires_in: SIGNED_URL_TTL_SECONDS,
     expires_at: new Date(Date.now() + SIGNED_URL_TTL_SECONDS * 1000).toISOString(),
   }, 200, corsHeaders);

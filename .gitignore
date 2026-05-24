@@ -43,6 +43,7 @@ __pycache__/
 coverage/
 test-results/
 playwright-report/
+qa/evidence/
 
 # Build artifacts
 .cache

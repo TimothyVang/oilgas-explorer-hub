@@ -4,6 +4,8 @@
 const ALLOWED_ORIGINS = [
   // Production domains
   'https://bah-oil.com',
+  'https://bah-oil-gas.com',
+  'https://www.bah-oil-gas.com',
   'https://bahoilgas.lovable.app',
   // Development
   'http://localhost:8080',
@@ -22,6 +24,7 @@ export function getCorsHeaders(req: Request): Record<string, string> {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-docusign-signature-1",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Credentials": "true",
+    "Vary": "Origin",
   };
 }
 

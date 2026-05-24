@@ -1,13 +1,19 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useInvestorDocuments, type DealRoomCategory, type InvestorDocument } from "@/hooks/useInvestorDocuments";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HolographicCard } from "@/components/HolographicCard";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   AlertCircle,
   BookOpen,
-  Download,
   FileText,
   Image as ImageIcon,
   Map,
@@ -21,13 +27,19 @@ import { motion } from "framer-motion";
 import { DocumentCardsSkeleton } from "@/components/loading/PageLoadingSkeleton";
 
 const categories: Array<{ id: DealRoomCategory; label: string; description: string }> = [
-  { id: "overview", label: "Overview", description: "Start here: thesis, sequence, and review path." },
+  { id: "overview", label: "Start Here", description: "Orientation, thesis, and first-review materials." },
   { id: "pitch", label: "Pitch", description: "Teasers, snapshots, and investment decks." },
-  { id: "financials", label: "Financials", description: "Private economics, budget support, and capital schedule." },
-  { id: "mapping", label: "Mapping", description: "Subsurface and technical mapping support." },
-  { id: "operations", label: "Operations", description: "Operational context and supporting records." },
-  { id: "field_videos", label: "Videos", description: "Private compressed field and operations clips." },
-  { id: "management", label: "Management", description: "Technical leadership and management credentials." },
+  { id: "financials", label: "Financials", description: "Economics, budgets, and model support." },
+  { id: "mapping", label: "Maps", description: "Lease, field, and technical mapping support." },
+  { id: "operations", label: "Operations", description: "Operating notes, site context, and supporting records." },
+  { id: "field_videos", label: "Field Videos", description: "Private field and operations clips." },
+  { id: "management", label: "Team", description: "Management and technical leadership credentials." },
+];
+
+const reviewSteps = [
+  { step: "1", title: "Start with the featured item", body: "This is the clearest first file for your review." },
+  { step: "2", title: "Use sections to filter", body: "Only sections with assigned files are shown." },
+  { step: "3", title: "Open files securely", body: "Each button creates a private link when you need it." },
 ];
 
 const assetTypeLabels = {
@@ -45,8 +57,9 @@ export const DocumentsTab = () => {
     loadError,
     accessLoadingId,
     retryLoad,
-    handleDocumentAccess,
+    getDocumentAccessUrl,
   } = useInvestorDocuments();
+  const [previewAsset, setPreviewAsset] = useState<{ doc: InvestorDocument; url: string } | null>(null);
 
   const featuredAsset = useMemo(
     () => documents.find((doc) => doc.is_featured) || documents[0],
@@ -59,6 +72,18 @@ export const DocumentsTab = () => {
       return acc;
     }, {} as Record<DealRoomCategory, InvestorDocument[]>);
   }, [documents]);
+
+  const handleAssetAccess = async (doc: InvestorDocument) => {
+    const signedUrl = await getDocumentAccessUrl(doc);
+    if (!signedUrl) return;
+
+    setPreviewAsset({ doc, url: signedUrl });
+  };
+
+  const visibleCategories = useMemo(
+    () => categories.filter((category) => docsByCategory[category.id]?.length),
+    [docsByCategory],
+  );
 
   if (loading) {
     return (
@@ -132,6 +157,31 @@ export const DocumentsTab = () => {
 
   return (
     <div className="space-y-6">
+      <Dialog open={Boolean(previewAsset)} onOpenChange={(open) => !open && setPreviewAsset(null)}>
+        <DialogContent className="max-h-[92vh] max-w-5xl overflow-y-auto rounded-none border-2 border-primary bg-[#08263F] p-0 text-white sm:rounded-none">
+          {previewAsset && (
+            <div className="grid gap-0 lg:grid-cols-[1.35fr_0.65fr]">
+              <AssetPreviewFrame doc={previewAsset.doc} url={previewAsset.url} />
+
+              <DialogHeader className="border-l-0 border-primary p-6 text-left lg:border-l-2">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-primary">Secure browser preview</p>
+                <DialogTitle className="kinetic-heading text-4xl leading-none text-white md:text-5xl">
+                  {previewAsset.doc.title}
+                </DialogTitle>
+                <DialogDescription className="text-sm leading-relaxed text-white/65">
+                  {previewAsset.doc.description || "Confidential BAH investor file prepared for private deal-room review."}
+                </DialogDescription>
+                <div className="border-t-2 border-primary/40 pt-4 font-mono text-xs uppercase text-white/45">
+                  <p>{formatFileSize(previewAsset.doc.file_size)}</p>
+                  <p>{previewAsset.doc.original_filename || "Private investor file"}</p>
+                  <p>Preview links expire automatically. Reopen the file if the preview times out.</p>
+                </div>
+              </DialogHeader>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <HolographicCard className="border-primary bg-[#08263F] p-4" delay={0.1}>
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
@@ -146,7 +196,7 @@ export const DocumentsTab = () => {
             </div>
           </div>
           <Badge className="w-fit rounded-none border-primary bg-secondary px-3 py-1 font-mono text-xs uppercase text-primary">
-            {documents.length} Assigned Asset{documents.length === 1 ? "" : "s"}
+            {documents.length} File{documents.length === 1 ? "" : "s"} Assigned
           </Badge>
         </div>
       </HolographicCard>
@@ -159,6 +209,16 @@ export const DocumentsTab = () => {
         </div>
       ) : (
         <>
+          <div className="grid gap-3 md:grid-cols-3">
+            {reviewSteps.map((item) => (
+              <div key={item.step} className="border-2 border-primary/50 bg-[#08263F] p-4">
+                <p className="mb-2 font-mono text-xs font-bold uppercase text-primary">Step {item.step}</p>
+                <h3 className="font-mono text-sm font-bold uppercase text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/55">{item.body}</p>
+              </div>
+            ))}
+          </div>
+
           {featuredAsset && (
             <HolographicCard className="border-primary bg-[#08263F] p-6" delay={0.15}>
               <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
@@ -170,24 +230,26 @@ export const DocumentsTab = () => {
                   </p>
                 </div>
                 <Button
-                  onClick={() => handleDocumentAccess(featuredAsset)}
+                  onClick={() => handleAssetAccess(featuredAsset)}
                   disabled={accessLoadingId === featuredAsset.id}
                   className="rounded-none border-2 border-primary bg-primary px-6 font-mono text-xs font-bold uppercase text-secondary hover:bg-white"
                 >
                   {accessLoadingId === featuredAsset.id ? "Opening..." : getAssetActionLabel(featuredAsset)}
-                  <Download className="ml-2 h-4 w-4" />
+                  {featuredAsset.asset_type === "video" ? <PlayCircle className="ml-2 h-4 w-4" /> : <FileText className="ml-2 h-4 w-4" />}
                 </Button>
               </div>
             </HolographicCard>
           )}
 
-          <Tabs defaultValue="overview" className="space-y-5">
+          <Tabs defaultValue={visibleCategories[0]?.id || "overview"} className="space-y-5">
             <div className="space-y-2 md:space-y-0">
-              <p className="kinetic-label text-[10px] text-primary/70 md:hidden">Swipe to view all deal room sections</p>
+              {visibleCategories.length > 3 && (
+                <p className="kinetic-label text-[10px] text-primary/70 md:hidden">Swipe to view all assigned sections</p>
+              )}
               <div className="relative">
                 <div className="overflow-x-auto pb-2 pr-8 md:pr-0">
                   <TabsList className="h-auto min-w-max rounded-none border-2 border-primary bg-[#08263F] p-1">
-                    {categories.map((category) => (
+                    {visibleCategories.map((category) => (
                       <TabsTrigger
                         key={category.id}
                         value={category.id}
@@ -205,7 +267,7 @@ export const DocumentsTab = () => {
               </div>
             </div>
 
-            {categories.map((category) => (
+            {visibleCategories.map((category) => (
               <TabsContent key={category.id} value={category.id} className="space-y-4">
                 <div className="border-l-2 border-primary pl-4">
                   <h3 className="kinetic-heading text-3xl text-white">{category.label}</h3>
@@ -219,7 +281,7 @@ export const DocumentsTab = () => {
                         key={doc.id}
                         doc={doc}
                         loading={accessLoadingId === doc.id}
-                        onClick={() => handleDocumentAccess(doc)}
+                        onClick={() => handleAssetAccess(doc)}
                         delay={0.08 * index}
                       />
                     ))}
@@ -280,7 +342,7 @@ const DocumentCard = ({ doc, onClick, delay, loading }: { doc: InvestorDocument;
           </div>
           <span className="flex min-h-[34px] items-center border border-primary bg-primary px-3 font-mono text-[10px] font-bold uppercase text-secondary transition-colors duration-300 group-hover:bg-white">
             {loading ? "Opening" : getAssetActionLabel(doc)}
-            {doc.asset_type === "video" ? <PlayCircle className="ml-1 h-3 w-3" /> : <Download className="ml-1 h-3 w-3" />}
+            {doc.asset_type === "video" ? <PlayCircle className="ml-1 h-3 w-3" /> : <FileText className="ml-1 h-3 w-3" />}
           </span>
         </div>
       </div>
@@ -299,12 +361,43 @@ const getAssetIcon = (doc: InvestorDocument) => {
 };
 
 const getAssetActionLabel = (doc: InvestorDocument) => {
-  if (doc.asset_type === "video") return "Play Video";
-  if (doc.asset_type === "image") return "Open Image";
-  if (doc.mime_type?.includes("spreadsheet") || doc.original_filename?.match(/\.(xls|xlsx)$/i)) return "Download Workbook";
-  if (doc.original_filename?.match(/\.(ppt|pptx)$/i)) return "Open Deck";
-  if (doc.original_filename?.match(/\.(doc|docx)$/i)) return "Open Document";
-  return "Open PDF";
+  if (doc.asset_type === "video") return "Preview Video";
+  return "Preview";
+};
+
+const AssetPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string }) => {
+  if (doc.asset_type === "video" || doc.mime_type?.startsWith("video/")) {
+    return (
+      <div className="bg-black">
+        <video
+          src={url}
+          controls
+          controlsList="nodownload noremoteplayback"
+          disablePictureInPicture
+          playsInline
+          preload="metadata"
+          onContextMenu={(event) => event.preventDefault()}
+          className="aspect-video h-full max-h-[70vh] w-full bg-black object-contain"
+        >
+          Your browser does not support secure video playback.
+        </video>
+      </div>
+    );
+  }
+
+  if (doc.asset_type === "image" || doc.mime_type?.startsWith("image/")) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center bg-black p-3">
+        <img src={url} alt={doc.title} className="max-h-[70vh] w-full object-contain" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-[70vh] bg-white">
+      <iframe src={url} title={`${doc.title} preview`} className="h-full w-full border-0" />
+    </div>
+  );
 };
 
 const formatFileSize = (size: number | null) => {

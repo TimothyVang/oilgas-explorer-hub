@@ -98,7 +98,7 @@ const Login = () => {
       <div className="relative z-10 w-full max-w-6xl">
         <Link
           to="/"
-          className="kinetic-label mb-8 inline-flex items-center gap-2 text-primary transition-transform hover:translate-x-4"
+          className="kinetic-label mb-8 inline-flex min-h-[44px] items-center gap-2 text-primary transition-transform hover:translate-x-4"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
@@ -219,7 +219,7 @@ const Login = () => {
                   <div className="flex justify-end font-mono text-xs uppercase">
                     <Link
                       to="/forgot-password"
-                      className="text-primary transition-transform hover:translate-x-2"
+                      className="inline-flex min-h-[44px] items-center text-primary transition-transform hover:translate-x-2"
                     >
                       Forgot password?
                     </Link>
