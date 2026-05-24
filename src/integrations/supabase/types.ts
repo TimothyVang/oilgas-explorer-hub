@@ -45,6 +45,10 @@ export type Database = {
           created_at: string
           current_version: number
           description: string | null
+          download_file_size: number | null
+          download_filename: string | null
+          download_mime_type: string | null
+          download_storage_path: string | null
           file_size: number | null
           file_url: string | null
           id: string
@@ -65,6 +69,10 @@ export type Database = {
           created_at?: string
           current_version?: number
           description?: string | null
+          download_file_size?: number | null
+          download_filename?: string | null
+          download_mime_type?: string | null
+          download_storage_path?: string | null
           file_size?: number | null
           file_url?: string | null
           id?: string
@@ -85,6 +93,10 @@ export type Database = {
           created_at?: string
           current_version?: number
           description?: string | null
+          download_file_size?: number | null
+          download_filename?: string | null
+          download_mime_type?: string | null
+          download_storage_path?: string | null
           file_size?: number | null
           file_url?: string | null
           id?: string
@@ -160,6 +172,10 @@ export type Database = {
           change_notes: string | null
           created_at: string
           document_id: string
+          download_file_size: number | null
+          download_filename: string | null
+          download_mime_type: string | null
+          download_storage_path: string | null
           file_size: number | null
           file_url: string | null
           id: string
@@ -174,6 +190,10 @@ export type Database = {
           change_notes?: string | null
           created_at?: string
           document_id: string
+          download_file_size?: number | null
+          download_filename?: string | null
+          download_mime_type?: string | null
+          download_storage_path?: string | null
           file_size?: number | null
           file_url?: string | null
           id?: string
@@ -188,6 +208,10 @@ export type Database = {
           change_notes?: string | null
           created_at?: string
           document_id?: string
+          download_file_size?: number | null
+          download_filename?: string | null
+          download_mime_type?: string | null
+          download_storage_path?: string | null
           file_size?: number | null
           file_url?: string | null
           id?: string

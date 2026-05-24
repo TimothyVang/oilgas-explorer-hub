@@ -174,7 +174,7 @@ describe("useInvestorDocuments", () => {
 
     await result.current.handleDocumentAccess(testAsset);
 
-    expect(mockInvoke).toHaveBeenCalledWith("create-asset-access-url", { body: { document_id: testAsset.id } });
+    expect(mockInvoke).toHaveBeenCalledWith("create-asset-access-url", { body: { document_id: testAsset.id, mode: "preview" } });
     expect(mockOpen).toHaveBeenCalledWith("https://signed.example.com/doc.pdf", "_blank", "noopener,noreferrer");
     expect(mockLogActivity).toHaveBeenCalledWith("document_access", expect.objectContaining({
       document_id: testAsset.id,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useInvestorDocuments, type DealRoomCategory, type InvestorDocument } from "@/hooks/useInvestorDocuments";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,7 @@ import {
 import {
   AlertCircle,
   BookOpen,
+  Download,
   FileText,
   Image as ImageIcon,
   Map,
@@ -24,7 +25,11 @@ import {
   UserRound,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
+import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.mjs?url";
 import { DocumentCardsSkeleton } from "@/components/loading/PageLoadingSkeleton";
+
+pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
 const categories: Array<{ id: DealRoomCategory; label: string; description: string }> = [
   { id: "overview", label: "Start Here", description: "Begin with these files." },
@@ -52,8 +57,10 @@ export const DocumentsTab = () => {
     accessLoadingId,
     retryLoad,
     getDocumentAccessUrl,
+    getDocumentDownloadUrl,
   } = useInvestorDocuments();
   const [previewAsset, setPreviewAsset] = useState<{ doc: InvestorDocument; url: string } | null>(null);
+  const [downloadLoadingId, setDownloadLoadingId] = useState<string | null>(null);
 
   const featuredAsset = useMemo(
     () => documents.find((doc) => doc.is_featured) || documents[0],
@@ -72,6 +79,24 @@ export const DocumentsTab = () => {
     if (!signedUrl) return;
 
     setPreviewAsset({ doc, url: signedUrl });
+  };
+
+  const handleOriginalDownload = async (doc: InvestorDocument) => {
+    setDownloadLoadingId(doc.id);
+    try {
+      const signedUrl = await getDocumentDownloadUrl(doc);
+      if (!signedUrl) return;
+
+      const link = document.createElement("a");
+      link.href = signedUrl;
+      link.download = doc.original_filename || doc.title;
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } finally {
+      setDownloadLoadingId(null);
+    }
   };
 
   const visibleCategories = useMemo(
@@ -169,6 +194,21 @@ export const DocumentsTab = () => {
                   <p>{previewAsset.doc.original_filename || "Private investor file"}</p>
                   <p>Links expire. Reopen the file if needed.</p>
                 </div>
+                {hasSpreadsheetDownload(previewAsset.doc) && (
+                  <div className="border-t-2 border-primary/40 pt-4">
+                    <p className="mb-3 text-xs leading-relaxed text-white/55">
+                      Preview the PDF here, or save the Excel workbook to review formulas and sheets locally.
+                    </p>
+                    <Button
+                      onClick={() => handleOriginalDownload(previewAsset.doc)}
+                      disabled={downloadLoadingId === previewAsset.doc.id}
+                      className="w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase text-secondary hover:bg-white"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      {downloadLoadingId === previewAsset.doc.id ? "Preparing Excel..." : "Save Excel"}
+                    </Button>
+                  </div>
+                )}
               </DialogHeader>
             </div>
           )}
@@ -374,29 +414,34 @@ const AssetPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string })
   return <DocumentPreviewFrame doc={doc} url={url} />;
 };
 
+type PdfDocument = Awaited<ReturnType<typeof loadPdfDocument>>;
+type PdfPage = Awaited<ReturnType<PdfDocument["getPage"]>>;
+
+const loadPdfDocument = async (url: string, signal: AbortSignal) => {
+  const response = await fetch(url, { credentials: "omit", signal });
+  if (!response.ok) throw new Error(`Preview request failed with ${response.status}`);
+
+  const buffer = await response.arrayBuffer();
+  return pdfjs.getDocument({ data: new Uint8Array(buffer) }).promise;
+};
+
 const DocumentPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string }) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [pdfDocument, setPdfDocument] = useState<PdfDocument | null>(null);
   const [previewError, setPreviewError] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
-    let objectUrl: string | null = null;
     let cancelled = false;
 
-    setPreviewUrl(null);
+    setPdfDocument(null);
     setPreviewError(null);
 
     const loadPreview = async () => {
       try {
-        const response = await fetch(url, { credentials: "omit", signal: controller.signal });
-        if (!response.ok) throw new Error(`Preview request failed with ${response.status}`);
-
-        const sourceBlob = await response.blob();
-        const previewBlob = new Blob([sourceBlob], { type: getPreviewMimeType(doc, sourceBlob.type) });
-        objectUrl = URL.createObjectURL(previewBlob);
+        const loadedDocument = await loadPdfDocument(url, controller.signal);
 
         if (!cancelled) {
-          setPreviewUrl(objectUrl);
+          setPdfDocument(loadedDocument);
         }
       } catch (error) {
         if (!cancelled && !controller.signal.aborted) {
@@ -411,9 +456,8 @@ const DocumentPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string
     return () => {
       cancelled = true;
       controller.abort();
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [doc, url]);
+  }, [url]);
 
   if (previewError) {
     return (
@@ -432,7 +476,7 @@ const DocumentPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string
     );
   }
 
-  if (!previewUrl) {
+  if (!pdfDocument) {
     return (
       <div className="flex h-[70vh] items-center justify-center bg-white text-secondary">
         <div className="text-center font-mono text-xs font-bold uppercase tracking-[0.2em] text-secondary/55">
@@ -443,22 +487,72 @@ const DocumentPreviewFrame = ({ doc, url }: { doc: InvestorDocument; url: string
   }
 
   return (
-    <div className="h-[70vh] bg-white">
-      <iframe
-        src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=1`}
-        title={`${doc.title} preview`}
-        className="h-full w-full border-0"
-      />
+    <div className="h-[70vh] overflow-y-auto bg-white p-4" aria-label={`${doc.title} PDF preview`}>
+      <div className="mx-auto flex max-w-4xl flex-col gap-4">
+        {Array.from({ length: pdfDocument.numPages }, (_, index) => (
+          <PdfPreviewPage key={index + 1} pageNumber={index + 1} pdfDocument={pdfDocument} />
+        ))}
+      </div>
     </div>
   );
 };
 
-const getPreviewMimeType = (doc: InvestorDocument, blobType: string) => {
-  if (doc.asset_type === "document" || doc.mime_type === "application/pdf" || doc.original_filename?.match(/\.pdf$/i)) {
-    return "application/pdf";
-  }
+const PdfPreviewPage = ({ pageNumber, pdfDocument }: { pageNumber: number; pdfDocument: PdfDocument }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  return blobType || doc.mime_type || "application/octet-stream";
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let renderTask: { cancel?: () => void; promise: Promise<unknown> } | null = null;
+    let cancelled = false;
+
+    const renderPage = async () => {
+      const page: PdfPage = await pdfDocument.getPage(pageNumber);
+      if (cancelled) return;
+
+      const baseViewport = page.getViewport({ scale: 1 });
+      const targetWidth = Math.min(900, canvas.parentElement?.clientWidth || 720);
+      const scale = targetWidth / baseViewport.width;
+      const viewport = page.getViewport({ scale });
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+      canvas.style.width = "100%";
+      canvas.style.height = "auto";
+
+      renderTask = page.render({ canvasContext: context, viewport });
+      await renderTask.promise;
+    };
+
+    renderPage().catch((error) => {
+      if (!cancelled) console.error(`Error rendering PDF page ${pageNumber}:`, error);
+    });
+
+    return () => {
+      cancelled = true;
+      renderTask?.cancel?.();
+    };
+  }, [pageNumber, pdfDocument]);
+
+  return (
+    <div className="border border-secondary/10 bg-white shadow-sm">
+      <canvas ref={canvasRef} aria-label={`PDF page ${pageNumber}`} className="block w-full" />
+    </div>
+  );
+};
+
+const isSpreadsheetSource = (doc: InvestorDocument) => {
+  return Boolean(
+    doc.mime_type?.includes("spreadsheet") ||
+    doc.original_filename?.match(/\.(xls|xlsx)$/i),
+  );
+};
+
+const hasSpreadsheetDownload = (doc: InvestorDocument) => {
+  return isSpreadsheetSource(doc) && Boolean(doc.download_storage_path);
 };
 
 const formatFileSize = (size: number | null) => {
