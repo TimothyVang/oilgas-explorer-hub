@@ -182,6 +182,27 @@ describe("useInvestorDocuments", () => {
     }));
   });
 
+  it("requests a download URL for regular document files", async () => {
+    const { result } = renderHook(() => useInvestorDocuments());
+
+    await result.current.getDocumentDownloadUrl(testAsset);
+
+    expect(mockInvoke).toHaveBeenCalledWith("create-asset-access-url", { body: { document_id: testAsset.id, mode: "download" } });
+  });
+
+  it("requests the original file when alternate download storage exists", async () => {
+    const { result } = renderHook(() => useInvestorDocuments());
+    const spreadsheetAsset = {
+      ...testAsset,
+      original_filename: "budget.xlsx",
+      download_storage_path: "briefing-20260524/originals/budget.xlsx",
+    };
+
+    await result.current.getDocumentDownloadUrl(spreadsheetAsset);
+
+    expect(mockInvoke).toHaveBeenCalledWith("create-asset-access-url", { body: { document_id: testAsset.id, mode: "download_original" } });
+  });
+
   it("includes DocuSign URL in return value", async () => {
     const { result } = renderHook(() => useInvestorDocuments());
 

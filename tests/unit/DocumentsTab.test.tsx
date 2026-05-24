@@ -60,6 +60,7 @@ describe("DocumentsTab", () => {
       ok: true,
       arrayBuffer: () => Promise.resolve(new Uint8Array([37, 80, 68, 70]).buffer),
     });
+    mockGetDocumentDownloadUrl.mockResolvedValue("https://signed.example/download.pdf");
     mockPdfPageRender.mockReturnValue({ promise: Promise.resolve(), cancel: vi.fn() });
     mockPdfGetPage.mockResolvedValue({
       getViewport: ({ scale }: { scale: number }) => ({ width: 600 * scale, height: 800 * scale }),
@@ -297,6 +298,8 @@ describe("DocumentsTab", () => {
       await waitFor(() => expect(mockPdfGetPage).toHaveBeenCalledWith(1));
       expect(screen.getByLabelText(/Deal Snapshot PDF preview/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/PDF page 1/i)).toBeInTheDocument();
+      fireEvent.click(screen.getByRole("button", { name: /download pdf/i }));
+      await waitFor(() => expect(mockGetDocumentDownloadUrl).toHaveBeenCalledTimes(1));
     });
 
     it("should allow spreadsheet sources to save the original Excel file", async () => {
@@ -355,6 +358,7 @@ describe("DocumentsTab", () => {
         handleSignNda: mockHandleSignNda,
         handleDocumentAccess: mockHandleDocumentAccess,
         getDocumentAccessUrl: mockGetDocumentAccessUrl,
+        getDocumentDownloadUrl: mockGetDocumentDownloadUrl,
         DOCUSIGN_NDA_URL: "https://demo.docusign.net",
       });
       render(<DocumentsTab />);

@@ -9,7 +9,7 @@ type AccessRequest = {
   documentId?: string;
   version_id?: string;
   versionId?: string;
-  mode?: "preview" | "download_original";
+  mode?: "preview" | "download" | "download_original";
 };
 
 Deno.serve(async (req) => {
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
 
   const documentId = payload.document_id ?? payload.documentId;
   const versionId = payload.version_id ?? payload.versionId;
-  const mode = payload.mode === "download_original" ? "download_original" : "preview";
+  const mode = payload.mode === "download_original" ? "download_original" : payload.mode === "download" ? "download" : "preview";
 
   if (!documentId || !UUID_RE.test(documentId)) {
     await logAccess(req, supabaseAdmin, userId, null, null, false, "invalid_document_id");
@@ -147,12 +147,12 @@ Deno.serve(async (req) => {
 
   if (!storagePath) {
     await logAccess(req, supabaseAdmin, userId, documentId, versionId ?? null, false, "missing_storage_path");
-    return json({ error: mode === "download_original" ? "Original file download is not available" : "Asset is missing private storage path" }, 409, corsHeaders);
+    return json({ error: mode === "download_original" ? "Original file download is not available" : mode === "download" ? "File download is not available" : "Asset is missing private storage path" }, 409, corsHeaders);
   }
 
-  const signedUrlOptions = mode === "download_original"
-    ? { download: downloadName }
-    : undefined;
+  const signedUrlOptions = mode === "preview"
+    ? undefined
+    : { download: normalizeDownloadName(downloadName, storagePath, document.title as string | null) };
 
   const { data: signed, error: signError } = await supabaseAdmin.storage
     .from("investor-documents")
@@ -178,6 +178,24 @@ function json(body: Record<string, unknown>, status: number, corsHeaders: Record
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
+}
+
+function normalizeDownloadName(downloadName: string | boolean, storagePath: string, title: string | null) {
+  if (downloadName === true) return true;
+
+  const storageExtension = storagePath.match(/\.([a-z0-9]+)$/i)?.[0];
+  const downloadExtension = downloadName.match(/\.([a-z0-9]+)$/i)?.[0];
+
+  if (!storageExtension || !downloadExtension || storageExtension.toLowerCase() === downloadExtension.toLowerCase()) {
+    return downloadName;
+  }
+
+  const baseName = (title || "investor-file")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "investor-file";
+
+  return `${baseName}${storageExtension.toLowerCase()}`;
 }
 
 async function logAccess(

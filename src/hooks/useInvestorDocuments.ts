@@ -44,11 +44,11 @@ interface SignedUrlResponse {
   signed_url?: string;
   expires_at?: string;
   expires_in?: number;
-  mode?: "preview" | "download_original";
+  mode?: "preview" | "download" | "download_original";
   error?: string;
 }
 
-type AssetAccessMode = "preview" | "download_original";
+type AssetAccessMode = "preview" | "download" | "download_original";
 
 const DOCUSIGN_NDA_URL = import.meta.env.VITE_DOCUSIGN_NDA_URL ||
   "https://demo.docusign.net/Member/PowerFormSigning.aspx?PowerFormId=fe62249a-9ae4-4146-9473-730060811d53&env=demo&acct=31150f9e-848b-4280-bbd7-cc8dcbaecef2&v=2";
@@ -216,7 +216,7 @@ export const useInvestorDocuments = () => {
   };
 
   const getDocumentDownloadUrl = (doc: InvestorDocument): Promise<string | null> => {
-    return getDocumentAccessUrl(doc, "download_original");
+    return getDocumentAccessUrl(doc, doc.download_storage_path ? "download_original" : "download");
   };
 
   const handleDocumentAccess = async (doc: InvestorDocument) => {

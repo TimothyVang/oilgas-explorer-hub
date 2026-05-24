@@ -25,11 +25,23 @@ import {
   UserRound,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
-import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.mjs?url";
 import { DocumentCardsSkeleton } from "@/components/loading/PageLoadingSkeleton";
 
-pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+let pdfjsLoadPromise: Promise<typeof import("pdfjs-dist/legacy/build/pdf.mjs")> | null = null;
+
+const loadPdfJs = async () => {
+  if (!pdfjsLoadPromise) {
+    pdfjsLoadPromise = Promise.all([
+      import("pdfjs-dist/legacy/build/pdf.mjs"),
+      import("pdfjs-dist/legacy/build/pdf.worker.mjs?url"),
+    ]).then(([pdfjsModule, workerModule]) => {
+      pdfjsModule.GlobalWorkerOptions.workerSrc = workerModule.default;
+      return pdfjsModule;
+    });
+  }
+
+  return pdfjsLoadPromise;
+};
 
 const categories: Array<{ id: DealRoomCategory; label: string; description: string }> = [
   { id: "overview", label: "Start Here", description: "Begin with these files." },
@@ -89,7 +101,7 @@ export const DocumentsTab = () => {
 
       const link = document.createElement("a");
       link.href = signedUrl;
-      link.download = doc.original_filename || doc.title;
+      link.download = doc.download_filename || doc.original_filename || doc.title;
       link.rel = "noopener noreferrer";
       document.body.appendChild(link);
       link.click();
@@ -194,10 +206,10 @@ export const DocumentsTab = () => {
                   <p>{previewAsset.doc.original_filename || "Private investor file"}</p>
                   <p>Links expire. Reopen the file if needed.</p>
                 </div>
-                {hasSpreadsheetDownload(previewAsset.doc) && (
+                {isDownloadableAsset(previewAsset.doc) && (
                   <div className="border-t-2 border-primary/40 pt-4">
                     <p className="mb-3 text-xs leading-relaxed text-white/55">
-                      Preview the PDF here, or save the Excel workbook to review formulas and sheets locally.
+                      {getDownloadHelperText(previewAsset.doc)}
                     </p>
                     <Button
                       onClick={() => handleOriginalDownload(previewAsset.doc)}
@@ -205,7 +217,7 @@ export const DocumentsTab = () => {
                       className="w-full rounded-none border-2 border-primary bg-primary font-mono text-xs font-bold uppercase text-secondary hover:bg-white"
                     >
                       <Download className="mr-2 h-4 w-4" />
-                      {downloadLoadingId === previewAsset.doc.id ? "Preparing Excel..." : "Save Excel"}
+                      {downloadLoadingId === previewAsset.doc.id ? "Preparing File..." : getDownloadActionLabel(previewAsset.doc)}
                     </Button>
                   </div>
                 )}
@@ -422,6 +434,7 @@ const loadPdfDocument = async (url: string, signal: AbortSignal) => {
   if (!response.ok) throw new Error(`Preview request failed with ${response.status}`);
 
   const buffer = await response.arrayBuffer();
+  const pdfjs = await loadPdfJs();
   return pdfjs.getDocument({ data: new Uint8Array(buffer) }).promise;
 };
 
@@ -553,6 +566,25 @@ const isSpreadsheetSource = (doc: InvestorDocument) => {
 
 const hasSpreadsheetDownload = (doc: InvestorDocument) => {
   return isSpreadsheetSource(doc) && Boolean(doc.download_storage_path);
+};
+
+const isDownloadableAsset = (doc: InvestorDocument) => {
+  return doc.asset_type !== "video" && !doc.mime_type?.startsWith("video/");
+};
+
+const getDownloadActionLabel = (doc: InvestorDocument) => {
+  if (hasSpreadsheetDownload(doc)) return "Save Excel";
+  if (doc.asset_type === "image" || doc.mime_type?.startsWith("image/")) return "Download Image";
+  if (doc.mime_type?.includes("pdf") || doc.original_filename?.match(/\.pdf$/i)) return "Download PDF";
+  return "Download File";
+};
+
+const getDownloadHelperText = (doc: InvestorDocument) => {
+  if (hasSpreadsheetDownload(doc)) {
+    return "Preview the PDF here, or save the Excel workbook to review formulas and sheets locally.";
+  }
+
+  return "Read the preview here, or download the file for offline review.";
 };
 
 const formatFileSize = (size: number | null) => {
