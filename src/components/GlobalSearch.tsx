@@ -100,7 +100,7 @@ export function GlobalSearch() {
     {
       id: "login",
       name: "Investor Login",
-      description: "Sign in to access investor documents",
+      description: "Sign in to the investor portal",
       icon: LogIn,
       action: () => navigate("/login"),
       keywords: ["sign in", "authentication", "access"],
@@ -156,8 +156,8 @@ export function GlobalSearch() {
   const sectionItems: SearchItem[] = [
     {
       id: "services",
-      name: "What BAH Does",
-      description: "Services for oil and gas project review, operations, technical support, and investor materials",
+      name: "Field Review",
+      description: "Well records, maps, cost support, field context, and redevelopment planning",
       icon: Briefcase,
       action: () => scrollToSection("services"),
       keywords: ["services", "technical", "engineering", "geology", "operations"],
@@ -173,7 +173,7 @@ export function GlobalSearch() {
     {
       id: "contact",
       name: "Contact Us",
-      description: "Request investor portal access",
+      description: "Contact BAH Oil LLC",
       icon: Mail,
       action: () => scrollToSection("contact"),
       keywords: ["email", "phone", "support", "help"],

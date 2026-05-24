@@ -249,7 +249,7 @@ const StartHerePanel = ({
     : assignedDocuments === 0
       ? {
           label: "Awaiting assignment",
-          title: "NDA verified. BAH will assign assets next.",
+          title: "Access verified. BAH will assign assets next.",
           body: "You can enter the deal room now. Assigned pitch, financial, mapping, and video assets will appear as BAH releases them to your account.",
           cta: "Check Deal Room",
         }

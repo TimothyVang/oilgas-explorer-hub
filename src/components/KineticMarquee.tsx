@@ -1,4 +1,4 @@
-const trustItems = ["Houston, Texas", "Petroleum engineering", "Geology", "Operations", "Investor materials"];
+const trustItems = ["Houston, Texas", "Well records", "Field evidence", "Cost support", "Redevelopment work"];
 
 export const KineticMarquee = () => (
   <section aria-label="BAH Oil LLC strengths" className="bg-[#F8F6F0] px-4 py-8 md:px-8">

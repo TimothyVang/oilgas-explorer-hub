@@ -31,7 +31,7 @@ const Contact = () => {
     <section id="contact" className="border-y-2 border-secondary bg-primary text-secondary">
       <div className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28">
         <div className="text-center">
-          <p className="kinetic-label mb-4 text-sm">BAH Oil LLC / private investor communication</p>
+          <p className="kinetic-label mb-4 text-sm">BAH Oil LLC / Houston, Texas</p>
           <h2 className="kinetic-heading mx-auto max-w-6xl text-[clamp(3.75rem,10vw,9rem)]">Talk With BAH</h2>
           <a
             href={`mailto:${siteConfig.contact.email}`}

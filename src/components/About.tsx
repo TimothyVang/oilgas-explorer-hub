@@ -5,23 +5,23 @@ const About = () => {
   const highlights = [
     {
       icon: FileCheck,
-      title: "Opportunity Review",
-      description: "BAH reviews private upstream opportunities before investor materials are assigned.",
+      title: "Well Record Review",
+      description: "BAH reviews well history, operating records, maps, production context, and field evidence.",
     },
     {
       icon: LockKeyhole,
-      title: "Private Portal",
-      description: "Detailed files remain inside the controlled investor portal workflow.",
+      title: "Field Context",
+      description: "BAH compares records on paper with actual field conditions and operating constraints.",
     },
     {
       icon: ShieldCheck,
-      title: "Controlled Release",
-      description: "BAH controls which materials each approved account can review.",
+      title: "Cost Discipline",
+      description: "Cost support, timing, and execution sequence are reviewed before field work moves forward.",
     },
     {
       icon: Users,
-      title: "Investor Coordination",
-      description: "Approved investors review only the materials released to their account.",
+      title: "Direct Coordination",
+      description: "BAH coordinates technical, operating, and field context around each oil and gas project.",
     },
   ];
 
@@ -42,8 +42,8 @@ const About = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-primary/50 to-transparent" />
             </div>
             <div className="absolute -bottom-6 -right-6 glass-effect rounded-2xl p-6 max-w-xs border border-border shadow-card">
-              <p className="text-4xl font-bold text-accent mb-1">Private</p>
-              <p className="text-muted-foreground">Controlled investor materials</p>
+              <p className="text-4xl font-bold text-accent mb-1">Field</p>
+              <p className="text-muted-foreground">Records, maps, and operating context</p>
             </div>
           </div>
 
@@ -53,12 +53,12 @@ const About = () => {
               Houston-Based Oil and Gas Project Review
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              BAH Oil LLC coordinates private upstream opportunity review with petroleum
-              engineering, geology, operating context, and assigned investor materials.
+              BAH Oil LLC coordinates oil and gas field review with well records, maps,
+              petroleum engineering, geology, operating context, and redevelopment planning.
             </p>
             <p className="text-lg text-muted-foreground mb-8">
-              Public pages stay high-level. Detailed technical, financial, mapping, and media
-              files stay inside the portal for approved accounts.
+              The work centers on what can be checked: records, field conditions, technical
+              assumptions, cost support, and practical execution sequence.
             </p>
 
             {/* Highlights Grid */}

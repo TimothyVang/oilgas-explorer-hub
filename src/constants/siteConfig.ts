@@ -10,12 +10,12 @@ export const siteConfig = {
   company: {
     name: "BAH Oil LLC",
     legalName: "BAH Oil LLC",
-    description: "Houston-based oil and gas project review, technical support, operations coordination, and private investor materials.",
+    description: "Houston-based oil and gas field review using well records, maps, field evidence, cost support, and redevelopment planning.",
   },
 
   contact: {
     phone: "",
-    phoneDisplay: "Available to approved investors",
+    phoneDisplay: "Available on request",
     email: "info@bahoil.com",
     supportEmail: "info@bahoil.com",
     salesEmail: "info@bahoil.com",
