@@ -16,9 +16,9 @@ export const siteConfig = {
   contact: {
     phone: "",
     phoneDisplay: "Available on request",
-    email: "info@bahoil.com",
-    supportEmail: "info@bahoil.com",
-    salesEmail: "info@bahoil.com",
+    email: "info@bah-oil-gas.com",
+    supportEmail: "info@bah-oil-gas.com",
+    salesEmail: "info@bah-oil-gas.com",
   },
 
   location: {

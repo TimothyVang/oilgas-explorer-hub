@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { siteConfig } from "@/constants/siteConfig";
 
 const bahStrengths = [
-  ["Originate", "BAH identifies and controls conventional South Texas oil and gas opportunities before they are brought to capital relationships."],
-  ["De-risk", "Subsurface work, petroleum engineering, field evidence, and costed work plans shape each redevelopment decision."],
-  ["Execute", "BAH connects ownership, operator-grade cost control, vendor timing, and field execution through Trinity Sands Holdings."],
+  ["Find", "Defined South Texas opportunities are identified through records, maps, field context, and established conventional geology."],
+  ["De-risk", "Geoscience, petroleum engineering, and field evidence shape each development plan before field work advances."],
+  ["Develop", "Trinity Sands Holdings executes as operator of record, controlling sequence, timing, and cost."],
 ];
 
-const trustPoints = ["Zapata County", "South Texas trend", "Conventional wells", "Operator-grade costs", "Private investor access"];
+const trustPoints = ["Zapata County", "Conventional Vertical", "Known Horizons", "Operator of Record"];
 
 const Hero = () => {
   return (
@@ -27,17 +27,21 @@ const Hero = () => {
           <div className="mb-6 inline-flex flex-wrap items-center gap-2 border-2 border-secondary bg-white px-3 py-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] shadow-[5px_5px_0_#C09B4C]">
             <span>BAH Oil LLC</span>
             <span className="h-2 w-2 bg-primary" />
-            <span>South Texas operator and developer</span>
+            <span>South Texas conventional oil & gas</span>
           </div>
 
           <h1 className="kinetic-heading max-w-4xl text-[clamp(3.1rem,13vw,7.25rem)] leading-[0.82] sm:text-[clamp(4rem,8vw,7.25rem)]">
-            <span className="block">South Texas.</span>
-            <span className="block">Conventional.</span>
-            <span className="block">Operator.</span>
+            <span className="block">Find.</span>
+            <span className="block">De-risk.</span>
+            <span className="block">Develop.</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl font-body text-lg font-semibold leading-snug text-secondary/80 md:text-2xl">
-            BAH Oil LLC is a conventional oil and gas operator and developer focused on Zapata County redevelopment. We prospect, de-risk, and execute projects with engineering discipline and operator-grade cost control.
+          <p className="mt-6 max-w-2xl font-body text-xl font-bold leading-tight text-secondary md:text-3xl">
+            BAH Oil LLC - South Texas conventional oil & gas operator and developer.
+          </p>
+
+          <p className="mt-4 max-w-2xl font-body text-lg font-semibold leading-snug text-secondary/80 md:text-2xl">
+            We originate, de-risk, and develop conventional oil and gas projects in the Zapata County trend, combining geoscience, petroleum engineering, and disciplined field execution.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -73,7 +77,7 @@ const Hero = () => {
           <div className="mb-5 flex items-start justify-between gap-4 border-b-2 border-secondary pb-5">
             <div>
               <p className="kinetic-label text-xs text-primary">Principal-Led Development</p>
-              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">BAH Owns, De-risks, and Builds Conventional Projects</h2>
+              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">An Operating Company That Finds and Builds Projects</h2>
             </div>
             <span className="rounded-full border-2 border-secondary bg-secondary px-3 py-1 font-mono text-xs font-bold uppercase text-white">
               BAH
@@ -95,7 +99,7 @@ const Hero = () => {
           </div>
 
           <div className="mt-4 border-2 border-primary bg-primary p-3 font-body text-sm font-bold leading-snug text-secondary">
-            Public materials establish capability. Project-specific materials remain available only through approved investor login.
+            Public materials establish identity, competence, and credibility. Project-specific materials remain behind approved investor login.
           </div>
         </motion.aside>
       </div>

@@ -18,8 +18,10 @@ const Contact = () => {
 
     setIsSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success("Message sent successfully! We'll get back to you soon.");
+      const subject = encodeURIComponent("BAH Oil Website Inquiry");
+      const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`);
+      window.location.href = `mailto:${siteConfig.contact.email}?subject=${subject}&body=${body}`;
+      toast.success("Opening your email client to send this inquiry to BAH.");
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       toast.error(`Failed to send message. Please try again or email us directly at ${siteConfig.contact.email}`);
@@ -32,10 +34,10 @@ const Contact = () => {
     <section id="contact" className="border-y-2 border-secondary bg-primary text-secondary">
       <div className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28">
         <div className="text-center">
-          <p className="kinetic-label mb-4 text-sm">BAH Oil LLC / Houston, Texas</p>
-          <h2 className="kinetic-heading mx-auto max-w-6xl text-[clamp(3.75rem,10vw,9rem)]">Contact & Login</h2>
+          <p className="kinetic-label mb-4 text-sm">CONTACT</p>
+          <h2 className="kinetic-heading mx-auto max-w-6xl text-[clamp(3.75rem,10vw,9rem)]">Talk with BAH.</h2>
           <p className="mx-auto mt-4 max-w-3xl font-body text-lg font-semibold leading-tight text-secondary/75">
-            General contact starts the relationship. Investor login is reserved for known, credentialed relationships with assigned private materials.
+            For general inquiries, reach us below. Investors with an existing relationship can access the secure portal.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
@@ -55,7 +57,10 @@ const Contact = () => {
 
         <div className="mt-16 grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
           <div className="border-2 border-secondary bg-white p-6">
-            <h3 className="kinetic-heading text-5xl">Contact</h3>
+            <h3 className="kinetic-heading text-5xl">Two Paths</h3>
+            <p className="mt-3 font-body text-sm font-semibold leading-relaxed text-secondary/70">
+              Use the form for general contact. Use Investor Login only for credentialed access to the secure portal.
+            </p>
             <div className="mt-8 space-y-5">
               {[
                 { icon: Mail, text: siteConfig.contact.email },

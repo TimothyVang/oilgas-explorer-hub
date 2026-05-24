@@ -2,9 +2,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const values = [
-  ["01", "Defined Lane", "BAH focuses on shallow conventional vertical redevelopment opportunities in Zapata County and the South Texas trend."],
-  ["02", "Technical Discipline", "Subsurface work, petroleum engineering, reserves context, field verification, and costed work plans drive development decisions."],
-  ["03", "Operator Alignment", "BAH Oil LLC and Trinity Sands Holdings connect mineral ownership, operator-of-record execution, and disciplined capital deployment."],
+  ["01", "Find", "BAH focuses on shallow, conventional vertical oil and gas projects in the Zapata County region of South Texas."],
+  ["02", "De-risk", "Well records, logs, maps, offset data, engineering, and field verification define the development plan."],
+  ["03", "Develop", "BAH Oil LLC holds the minerals; Trinity Sands Holdings LLC serves as operator of record."],
 ];
 
 const AboutPage = () => {
@@ -20,7 +20,7 @@ const AboutPage = () => {
           </div>
           <div className="border-2 border-secondary bg-white p-6">
             <p className="font-body text-xl font-semibold leading-tight">
-              BAH Oil LLC originates, owns, de-risks, and develops conventional oil and gas projects in Zapata County with technical discipline and operator-grade cost control.
+              BAH Oil LLC originates, de-risks, and develops conventional oil and gas projects in the Zapata County trend, combining geoscience, petroleum engineering, and disciplined field execution.
             </p>
           </div>
         </div>
