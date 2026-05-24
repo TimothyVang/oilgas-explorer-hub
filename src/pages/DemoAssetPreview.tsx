@@ -65,7 +65,7 @@ const DemoAssetPreview = () => {
               <div className="mb-4 flex h-12 w-12 items-center justify-center border border-green-500/40 bg-green-500/10 text-green-300">
                 <ShieldCheck className="h-6 w-6" />
               </div>
-              <h2 className="font-mono text-lg font-bold uppercase text-white">Demo delivery shell</h2>
+              <h2 className="font-mono text-lg font-bold uppercase text-white">Secure preview available</h2>
               <p className="mt-3 text-sm leading-relaxed text-white/60">
                 This preview confirms the investor flow, categories, access state, and asset metadata. Final private file delivery uses approved account access.
               </p>

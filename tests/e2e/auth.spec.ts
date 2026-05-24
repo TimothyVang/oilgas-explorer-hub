@@ -27,7 +27,7 @@ test.describe("Authentication - Login Page", () => {
     await expect(page.getByRole("button", { name: /continue with google/i })).not.toBeVisible();
     await expect(page.getByRole("button", { name: /create one/i })).not.toBeVisible();
     await expect(page.getByRole("link", { name: /forgot password/i })).toBeVisible();
-    await expect(page.getByRole("checkbox")).toBeVisible(); // Remember me
+    await expect(page.getByRole("checkbox")).not.toBeVisible();
   });
 
   test("has back to home link", async ({ page }) => {
@@ -82,19 +82,6 @@ test.describe("Authentication - Login Page", () => {
     // The button text changes to "Please wait..." during loading
     const button = page.getByRole("button", { name: /please wait|sign in/i });
     await expect(button).toBeVisible();
-  });
-
-  test("remembers me checkbox is functional", async ({ page }) => {
-    const checkbox = page.getByRole("checkbox");
-    await expect(checkbox).not.toBeChecked();
-
-    // Click to check
-    await checkbox.click();
-    await expect(checkbox).toBeChecked();
-
-    // Click to uncheck
-    await checkbox.click();
-    await expect(checkbox).not.toBeChecked();
   });
 
   test("forgot password link navigates correctly", async ({ page }) => {
@@ -211,7 +198,7 @@ test.describe("Authentication - Accessibility", () => {
     const passwordInput = page.getByLabel(/^password$/i);
     await expect(passwordInput).toBeFocused();
 
-    // Tab to next element (could be remember me checkbox or submit button)
+    // Tab to next element in the login controls
     await page.keyboard.press("Tab");
 
     // Verify some element is focused (don't require :focus to be visible)
@@ -237,9 +224,9 @@ test.describe("Authentication - Visual", () => {
     // Check for brand element
     await expect(page.getByText("Approved Investor Login")).toBeVisible();
 
-    // Check for form container (card)
-    const formContainer = page.locator(".bg-white\\/5, [class*='glassmorphism'], [class*='card']").first();
-    await expect(formContainer).toBeVisible();
+    // Check for the two-panel investor access hierarchy
+    await expect(page.getByRole("heading", { name: /private portal access/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /approved investor login/i })).toBeVisible();
 
     // Check for invite-only guidance instead of public auth affordances
     await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();

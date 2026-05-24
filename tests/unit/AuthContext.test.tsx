@@ -24,9 +24,11 @@ const mockSignInWithPassword = vi.fn();
 const mockSignOut = vi.fn();
 const mockGetAuthenticatorAssuranceLevel = vi.fn();
 const mockListFactors = vi.fn();
+const mockRpc = vi.fn();
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
+    rpc: (...args: unknown[]) => mockRpc(...args),
     auth: {
       onAuthStateChange: (...args: unknown[]) => mockOnAuthStateChange(...args),
       getSession: () => mockGetSession(),
@@ -92,6 +94,7 @@ describe("AuthContext", () => {
       data: { totp: [] },
       error: null,
     });
+    mockRpc.mockResolvedValue({ data: null, error: null });
   });
 
   describe("useAuth hook", () => {
@@ -347,6 +350,34 @@ describe("AuthContext", () => {
       expect(mockSignInWithPassword).toHaveBeenCalledWith({
         email: "test@example.com",
         password: "password123",
+      });
+    });
+
+    it("resolves username before password sign in", async () => {
+      const user = userEvent.setup();
+      mockGetSession.mockResolvedValue({ data: { session: null } });
+      mockRpc.mockResolvedValue({ data: "coreycampbell@investor.bah.local", error: null });
+      mockSignInWithPassword.mockResolvedValue({ error: null });
+
+      const TestUsernameSignIn = () => {
+        const { signIn } = useAuth();
+        return <button onClick={() => signIn("coreycampbell", "pass")}>Sign In Username</button>;
+      };
+
+      render(
+        <TestWrapper>
+          <TestUsernameSignIn />
+        </TestWrapper>
+      );
+
+      await user.click(screen.getByText("Sign In Username"));
+
+      expect(mockRpc).toHaveBeenCalledWith("resolve_login_identifier", {
+        _identifier: "coreycampbell",
+      });
+      expect(mockSignInWithPassword).toHaveBeenCalledWith({
+        email: "coreycampbell@investor.bah.local",
+        password: "pass",
       });
     });
 

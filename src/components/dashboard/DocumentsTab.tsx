@@ -182,21 +182,27 @@ export const DocumentsTab = () => {
           )}
 
           <Tabs defaultValue="overview" className="space-y-5">
-            <div className="overflow-x-auto pb-2">
-              <TabsList className="h-auto min-w-max rounded-none border-2 border-primary bg-[#08263F] p-1">
-                {categories.map((category) => (
-                  <TabsTrigger
-                    key={category.id}
-                    value={category.id}
-                    className="rounded-none border border-transparent px-4 py-2 font-mono text-xs font-bold uppercase text-white/60 data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-secondary"
-                  >
-                    {category.label}
-                    <span className="ml-2 border border-current px-1.5 text-[10px] text-current">
-                      {docsByCategory[category.id]?.length || 0}
-                    </span>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+            <div className="space-y-2 md:space-y-0">
+              <p className="kinetic-label text-[10px] text-primary/70 md:hidden">Swipe to view all deal room sections</p>
+              <div className="relative">
+                <div className="overflow-x-auto pb-2 pr-8 md:pr-0">
+                  <TabsList className="h-auto min-w-max rounded-none border-2 border-primary bg-[#08263F] p-1">
+                    {categories.map((category) => (
+                      <TabsTrigger
+                        key={category.id}
+                        value={category.id}
+                        className="rounded-none border border-transparent px-4 py-2 font-mono text-xs font-bold uppercase text-white/60 data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-secondary"
+                      >
+                        {category.label}
+                        <span className="ml-2 border border-current px-1.5 text-[10px] text-current">
+                          {docsByCategory[category.id]?.length || 0}
+                        </span>
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-secondary to-transparent md:hidden" />
+              </div>
             </div>
 
             {categories.map((category) => (

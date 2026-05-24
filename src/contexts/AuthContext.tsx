@@ -24,6 +24,28 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const resolveLoginIdentifier = async (identifier: string) => {
+  const trimmedIdentifier = identifier.trim();
+
+  if (trimmedIdentifier.includes("@")) {
+    return trimmedIdentifier.toLowerCase();
+  }
+
+  try {
+    const { data, error } = await supabase.rpc("resolve_login_identifier", {
+      _identifier: trimmedIdentifier,
+    });
+
+    if (error || !data) {
+      return trimmedIdentifier;
+    }
+
+    return data;
+  } catch {
+    return trimmedIdentifier;
+  }
+};
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -74,7 +96,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -86,8 +108,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             email: session.user.email,
             role: session.user.user_metadata?.role || 'user',
           });
-          // Check MFA status after login
-          await checkMFAStatus();
+          setTimeout(() => {
+            void checkMFAStatus();
+          }, 0);
         } else {
           setSentryUser(null);
           setMfaRequired(false);
@@ -97,7 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -109,8 +132,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: session.user.email,
           role: session.user.user_metadata?.role || 'user',
         });
-        // Check MFA status on initial load
-        await checkMFAStatus();
+        setTimeout(() => {
+          void checkMFAStatus();
+        }, 0);
       }
     });
 
@@ -149,8 +173,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { error: null, mfaRequired: false };
     }
 
+    const loginEmail = await resolveLoginIdentifier(email);
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: loginEmail,
       password,
     });
 

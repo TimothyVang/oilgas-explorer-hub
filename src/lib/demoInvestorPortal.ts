@@ -178,7 +178,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-operations-sequence-01",
     title: "Primary Operations Sequence",
-    description: "Largest source video slot for operations context, site activity, and tangible field evidence after compression.",
+    description: "Primary operations video for site activity, operating context, and tangible field evidence.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "operations",
     asset_type: "video",
@@ -192,7 +192,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-operations-sequence-02",
     title: "Extended Operations Sequence",
-    description: "Long portrait operations clip reserved for private review after compression and chaptering.",
+    description: "Extended portrait operations footage prepared for private investor review.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "operations",
     asset_type: "video",
@@ -206,7 +206,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-operations-sequence-03",
     title: "Operations Sequence Cut",
-    description: "Medium-long source clip for operational authenticity and field context.",
+    description: "Mid-length operations clip providing field context and visible operating activity.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "operations",
     asset_type: "video",
@@ -219,8 +219,8 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   },
   {
     id: "demo-operations-sequence-04",
-    title: "Vertical Operations Source",
-    description: "Long vertical source file that should be transcoded before final portal delivery.",
+    title: "Vertical Operations Review",
+    description: "Vertical operations footage for reviewing field conditions and activity sequence.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "operations",
     asset_type: "video",
@@ -233,8 +233,8 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   },
   {
     id: "demo-operations-sequence-05",
-    title: "Landscape Operations Source",
-    description: "Long landscape source file that should be reviewed and transcoded before upload.",
+    title: "Landscape Operations Review",
+    description: "Landscape operations footage prepared for broad field-context review.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "operations",
     asset_type: "video",
@@ -248,7 +248,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-operations-image-01",
     title: "Operations Reference Image",
-    description: "Private source image slot for a portal card, thumbnail, or supporting field reference after conversion.",
+    description: "Private field reference image supporting the operations review materials.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "operations",
     asset_type: "image",
@@ -262,7 +262,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-01",
     title: "Featured Short Field Clip",
-    description: "Candidate featured portal clip after compression and sensitivity review.",
+    description: "Featured short field clip selected for quick operational context.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -276,7 +276,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-02",
     title: "High-Resolution Field Clip",
-    description: "High-resolution source clip that can become a private video card once compressed.",
+    description: "High-resolution field clip for reviewing equipment, access, and site activity.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -290,7 +290,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-03",
     title: "Compact Portrait Field Clip",
-    description: "Short portrait source clip for a concise private field preview.",
+    description: "Short portrait field clip for concise private review.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -304,7 +304,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-04",
     title: "Landscape Field Clip",
-    description: "Medium landscape source clip that should be transcoded from HEVC for broad browser support.",
+    description: "Medium landscape field clip prepared for broad browser playback.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -317,14 +317,14 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   },
   {
     id: "demo-field-video-05",
-    title: "Duplicate Export Check",
-    description: "Same-size source export kept visible in staging so the team can verify whether it duplicates another field clip.",
+    title: "Supplemental Field Angle",
+    description: "Supplemental field angle showing the same operating area from a separate vantage point.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
     file_size: 35162278,
     mime_type: MIME_MP4,
-    original_filename: "field-clip-05-duplicate-check.mp4",
+    original_filename: "field-clip-05.mp4",
     thumbnail_path: null,
     sort_order: 5,
     is_featured: false,
@@ -332,7 +332,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-06",
     title: "Medium Landscape Field Clip",
-    description: "Supporting field clip for the video category after HEVC transcode.",
+    description: "Supporting field clip for additional operating context.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -346,7 +346,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-07",
     title: "Short Landscape Field Clip",
-    description: "Compact landscape source clip reserved for private playback after transcode.",
+    description: "Compact landscape clip reserved for private field playback.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -374,7 +374,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-09",
     title: "Longer Compact Field Clip",
-    description: "Already compact vertical clip that may only need faststart/remux and a poster image.",
+    description: "Compact vertical clip for quick review of field conditions.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -388,7 +388,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-10",
     title: "Short Equipment Clip",
-    description: "Short landscape source clip with a matching duplicate-check export in the staging package.",
+    description: "Short landscape equipment clip supporting operational review.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -401,14 +401,14 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   },
   {
     id: "demo-field-video-11",
-    title: "Short Equipment Clip Duplicate Check",
-    description: "Same-size source export retained for staging review before the final upload list is deduplicated.",
+    title: "Supplemental Equipment Angle",
+    description: "Additional short equipment angle retained for private operating context.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
     file_size: 14789105,
     mime_type: MIME_MP4,
-    original_filename: "field-clip-11-duplicate-check.mp4",
+    original_filename: "field-clip-11.mp4",
     thumbnail_path: null,
     sort_order: 11,
     is_featured: false,
@@ -416,7 +416,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-12",
     title: "Vertical Operations Cutaway",
-    description: "Very short vertical source clip for quick operational context after browser-safe transcode.",
+    description: "Very short vertical clip for quick operational context.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -430,7 +430,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-13",
     title: "Compact Field Clip",
-    description: "Small vertical source clip that may work as a quick private preview after review.",
+    description: "Small vertical field clip for quick private preview.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -444,7 +444,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-14",
     title: "Four-Second Landscape Loop",
-    description: "Ultra-short landscape clip that can become a tiny private loop or poster source if content is safe.",
+    description: "Ultra-short landscape clip capturing a quick field proof point.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -458,7 +458,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-15",
     title: "Short Vertical Field Clip",
-    description: "Five-second vertical source clip for a fast private evidence card after review.",
+    description: "Five-second vertical field clip for fast private review.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -472,7 +472,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-field-video-16",
     title: "Three-Second Vertical Clip",
-    description: "Smallest video source slot for a quick proof point or thumbnail reference after review.",
+    description: "Brief vertical field clip for a quick operational proof point.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "field_videos",
     asset_type: "video",
@@ -499,8 +499,8 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   },
   {
     id: "demo-management-cv-source",
-    title: "Technical Leadership CV Source",
-    description: "Editable source version retained for admin staging and final PDF conversion workflows.",
+    title: "Technical Leadership Background",
+    description: "Supporting background packet for technical leadership credentials.",
     created_at: DEMO_ASSET_CREATED_AT,
     category: "management",
     asset_type: "document",
