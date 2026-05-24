@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Mail, MapPin, Send } from "lucide-react";
 import { toast } from "sonner";
 import { siteConfig } from "@/constants/siteConfig";
@@ -32,13 +33,24 @@ const Contact = () => {
       <div className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-28">
         <div className="text-center">
           <p className="kinetic-label mb-4 text-sm">BAH Oil LLC / Houston, Texas</p>
-          <h2 className="kinetic-heading mx-auto max-w-6xl text-[clamp(3.75rem,10vw,9rem)]">Talk With BAH</h2>
-          <a
-            href={`mailto:${siteConfig.contact.email}`}
-            className="mt-8 inline-flex min-h-[58px] items-center justify-center rounded-full border-2 border-secondary bg-secondary px-9 font-mono text-sm font-bold uppercase tracking-[-0.02em] text-white transition-transform hover:scale-105 hover:bg-white hover:text-secondary"
-          >
-            Email BAH Oil
-          </a>
+          <h2 className="kinetic-heading mx-auto max-w-6xl text-[clamp(3.75rem,10vw,9rem)]">Contact & Login</h2>
+          <p className="mx-auto mt-4 max-w-3xl font-body text-lg font-semibold leading-tight text-secondary/75">
+            General contact starts the relationship. Investor login is reserved for known, credentialed relationships with assigned private materials.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href={`mailto:${siteConfig.contact.email}`}
+              className="inline-flex min-h-[58px] items-center justify-center rounded-full border-2 border-secondary bg-secondary px-9 font-mono text-sm font-bold uppercase tracking-[-0.02em] text-white transition-transform hover:scale-105 hover:bg-white hover:text-secondary"
+            >
+              Contact BAH
+            </a>
+            <Link
+              to="/login"
+              className="inline-flex min-h-[58px] items-center justify-center rounded-full border-2 border-secondary bg-white px-9 font-mono text-sm font-bold uppercase tracking-[-0.02em] text-secondary transition-transform hover:scale-105 hover:bg-secondary hover:text-primary"
+            >
+              Investor Login
+            </Link>
+          </div>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">

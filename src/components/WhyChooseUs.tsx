@@ -4,18 +4,18 @@ const WhyChooseUs = () => {
   const features = [
     {
       icon: FileCheck,
-      title: "Well Record Review",
-      description: "BAH reviews well history, production context, operating records, maps, and field evidence.",
+      title: "Well Record Control",
+      description: "BAH builds project context from well history, production data, operating records, maps, and field evidence.",
     },
     {
       icon: Gauge,
-      title: "Technical Review Path",
+      title: "Technical Development Path",
       description: "Engineering and geology input supports reserves context, production assumptions, and redevelopment planning.",
     },
     {
       icon: LockKeyhole,
       title: "Field Constraints",
-      description: "BAH reviews timing, vendors, field conditions, and operating constraints tied to the work plan.",
+      description: "BAH accounts for timing, vendors, field conditions, and operating constraints tied to the work plan.",
     },
     {
       icon: ShieldCheck,

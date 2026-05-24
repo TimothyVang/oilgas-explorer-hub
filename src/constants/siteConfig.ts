@@ -10,7 +10,7 @@ export const siteConfig = {
   company: {
     name: "BAH Oil LLC",
     legalName: "BAH Oil LLC",
-    description: "Houston-based oil and gas field review using well records, maps, field evidence, cost support, and redevelopment planning.",
+    description: "South Texas conventional oil and gas operator and developer focused on Zapata County redevelopment.",
   },
 
   contact: {

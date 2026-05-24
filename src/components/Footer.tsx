@@ -15,8 +15,8 @@ const Footer = () => {
           <div className="flex flex-wrap gap-4 md:justify-end">
             {[
               ["About", "/about"],
-              ["Field Review", "/#services"],
-              ["Team", "/#team"],
+              ["Approach", "/#services"],
+              ["Governance", "/#governance"],
               ["Investor Login", "/login"],
               [siteConfig.contact.email, `mailto:${siteConfig.contact.email}`],
             ].map(([label, href]) => (

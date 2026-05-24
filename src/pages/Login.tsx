@@ -15,7 +15,7 @@ import { siteConfig } from "@/constants/siteConfig";
 
 const loginInstructions = [
   ["01", "Already approved?", "Sign in with the username or email address connected to your BAH investor account."],
-  ["02", "Need access?", "Email BAH with your name, firm, and reason for requesting investor review access."],
+  ["02", "Need access?", "Email BAH with your name, firm, and relationship context for private portal credentials."],
   ["03", "Access pending?", "The portal keeps confidential materials locked until approval requirements are satisfied."],
   ["04", "Missing materials?", "Approved accounts show only the files BAH has assigned for that investor."],
 ];
@@ -109,7 +109,7 @@ const Login = () => {
             <p className="kinetic-label text-xs text-primary">Investor access instructions</p>
             <h2 className="kinetic-heading mt-3 text-5xl text-white md:text-6xl">Private Portal Access</h2>
             <p className="mt-4 text-sm font-semibold leading-relaxed text-white/65 md:text-base">
-              Sign in to complete access requirements and review the materials BAH has assigned to your account.
+              Sign in to complete access requirements and view the confidential materials BAH has assigned to your account.
             </p>
 
             <div className="mt-6 space-y-3">
@@ -163,7 +163,7 @@ const Login = () => {
 
                 <div className="mb-6 rounded-none border border-primary/40 bg-primary/10 p-4">
                   <p className="text-sm text-white/70">
-                    Use the username or email address associated with your BAH investor account. Credentials are provided directly by BAH after review.
+                    Use the username or email address associated with your BAH investor account. Credentials are provided directly by BAH after approval.
                   </p>
                 </div>
 

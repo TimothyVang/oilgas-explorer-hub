@@ -62,8 +62,8 @@ const Navigation = () => {
           <Link to="/about" className="rounded-full px-4 py-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-white transition-colors hover:bg-white hover:text-secondary">
             About
           </Link>
-          <NavLink onClick={() => scrollToSection("services")}>Field Review</NavLink>
-          <NavLink onClick={() => scrollToSection("team")}>Team</NavLink>
+          <NavLink onClick={() => scrollToSection("services")}>Approach</NavLink>
+          <NavLink onClick={() => scrollToSection("governance")}>Governance</NavLink>
           <NavLink onClick={() => scrollToSection("contact")}>Contact</NavLink>
         </div>
 
@@ -134,8 +134,8 @@ const Navigation = () => {
               <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="kinetic-heading min-h-[44px] min-w-[44px] px-4 py-2 text-5xl transition-transform hover:translate-x-4">
                 About
               </Link>
-              <MobileNavLink onClick={() => scrollToSection("services")}>Field Review</MobileNavLink>
-              <MobileNavLink onClick={() => scrollToSection("team")}>Team</MobileNavLink>
+              <MobileNavLink onClick={() => scrollToSection("services")}>Approach</MobileNavLink>
+              <MobileNavLink onClick={() => scrollToSection("governance")}>Governance</MobileNavLink>
               <MobileNavLink onClick={() => scrollToSection("contact")}>Contact</MobileNavLink>
 
               <div className="my-2 h-0.5 w-24 bg-secondary" />

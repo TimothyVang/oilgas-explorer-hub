@@ -5,8 +5,8 @@ const About = () => {
   const highlights = [
     {
       icon: FileCheck,
-      title: "Well Record Review",
-      description: "BAH reviews well history, operating records, maps, production context, and field evidence.",
+      title: "Project Origination",
+      description: "BAH focuses on controlled South Texas conventional opportunities with defined redevelopment logic.",
     },
     {
       icon: LockKeyhole,
@@ -16,7 +16,7 @@ const About = () => {
     {
       icon: ShieldCheck,
       title: "Cost Discipline",
-      description: "Cost support, timing, and execution sequence are reviewed before field work moves forward.",
+      description: "Cost support, timing, and execution sequence are built before field work moves forward.",
     },
     {
       icon: Users,
@@ -50,11 +50,10 @@ const About = () => {
           {/* Content Section */}
           <div className="animate-fade-in">
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
-              Houston-Based Oil and Gas Project Review
+              South Texas Conventional Operator and Developer
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              BAH Oil LLC coordinates oil and gas field review with well records, maps,
-              petroleum engineering, geology, operating context, and redevelopment planning.
+              BAH Oil LLC originates, owns, de-risks, and develops conventional oil and gas projects with well records, maps, petroleum engineering, geology, operating context, and redevelopment planning.
             </p>
             <p className="text-lg text-muted-foreground mb-8">
               The work centers on what can be checked: records, field conditions, technical

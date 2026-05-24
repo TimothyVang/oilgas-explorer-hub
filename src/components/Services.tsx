@@ -3,21 +3,33 @@ import { ArrowRight } from "lucide-react";
 const services = [
   {
     id: "01",
-    title: "Review Well & Field Records",
-    summary: "BAH reviews well history, operating records, maps, production context, and field evidence before a project moves forward.",
-    tags: ["Well History", "Operating Records", "Maps"],
+    title: "Subsurface & Geoscience",
+    summary: "Project work starts with maps, well control, reservoir context, and geologic interpretation in the South Texas conventional trend.",
+    tags: ["Maps", "Well Control", "Geoscience"],
   },
   {
     id: "02",
-    title: "Plan Redevelopment Work",
-    summary: "Petroleum engineering and geology input supports production improvement assumptions, reserves context, work sequence, and field constraints.",
-    tags: ["Engineering", "Geology", "Work Plan"],
+    title: "Engineering & Reserves",
+    summary: "Petroleum engineering and reserves assessment shape production assumptions, redevelopment logic, and practical operating limits.",
+    tags: ["Engineering", "Reserves", "Production"],
   },
   {
     id: "03",
-    title: "Check Costs & Execution",
-    summary: "BAH reviews cost support, timing, operating constraints, vendor sequence, and field execution assumptions tied to the work plan.",
-    tags: ["Costs", "Timing", "Execution"],
+    title: "AFE Cost Control",
+    summary: "Cost construction is built from field work scopes, vendor timing, mechanical requirements, and disciplined capital deployment.",
+    tags: ["AFE", "Costs", "Capital"],
+  },
+  {
+    id: "04",
+    title: "Field Verification",
+    summary: "Operating records are tested against field conditions, surface access, equipment realities, and execution constraints.",
+    tags: ["Field", "Access", "Equipment"],
+  },
+  {
+    id: "05",
+    title: "Operator Execution",
+    summary: "BAH advances projects with Trinity Sands Holdings as operator of record, linking planning, vendors, and field work.",
+    tags: ["Operator", "Vendors", "Field Work"],
   },
 ];
 
@@ -27,29 +39,29 @@ const Services = () => {
       <div className="mx-auto max-w-7xl min-w-0">
         <div className="mb-10 grid min-w-0 gap-5 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
           <div className="min-w-0">
-            <p className="kinetic-label text-sm text-primary">Oilfield Review</p>
+            <p className="kinetic-label text-sm text-primary">Development Approach</p>
             <h2 className="kinetic-heading mt-3 text-[clamp(3rem,13vw,8rem)] leading-[0.82] text-white sm:text-[clamp(3.75rem,8vw,8rem)]">
-              <span className="block">Review</span>
-              <span className="block">The</span>
-              <span className="block">Project</span>
+              <span className="block">How</span>
+              <span className="block">We</span>
+              <span className="block">Develop</span>
             </h2>
           </div>
           <p className="min-w-0 max-w-2xl font-body text-lg font-semibold leading-snug text-white/70 lg:justify-self-end lg:text-xl">
-            BAH does three things before a project moves forward: reviews the oilfield records, checks the redevelopment plan, and tests the cost and execution assumptions.
+            BAH advances its own conventional redevelopment projects through a disciplined workflow: subsurface work, engineering, cost control, field verification, and operator execution.
           </p>
         </div>
 
-        <div className="grid min-w-0 gap-4 md:grid-cols-3">
+        <div className="grid min-w-0 gap-4 md:grid-cols-2 xl:grid-cols-5">
           {services.map((service) => (
             <article
               key={service.id}
-              className="group flex min-h-[330px] min-w-0 flex-col overflow-hidden border-2 border-primary/70 bg-[#08263F] p-5 transition-colors duration-300 hover:bg-primary hover:text-secondary"
+              className="group flex min-h-[360px] min-w-0 flex-col overflow-hidden border-2 border-primary/70 bg-[#08263F] p-5 transition-colors duration-300 hover:bg-primary hover:text-secondary"
             >
               <div className="mb-10 flex items-center justify-between font-mono text-sm font-bold uppercase text-primary group-hover:text-secondary">
                 <span>{service.id}</span>
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </div>
-              <h3 className="kinetic-heading min-w-0 break-words text-4xl transition-transform duration-300 group-hover:translate-x-2 md:text-5xl">
+              <h3 className="kinetic-heading min-w-0 break-words text-3xl transition-transform duration-300 group-hover:translate-x-2 md:text-4xl">
                 {service.title}
               </h3>
               <p className="mt-5 flex-1 font-body text-sm font-semibold leading-relaxed text-white/70 group-hover:text-secondary/80 md:text-base">

@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { siteConfig } from "@/constants/siteConfig";
 
 const bahStrengths = [
-  ["Records", "BAH reviews well history, operating records, maps, field evidence, and technical questions around each project."],
-  ["Work Plan", "Engineering and geology support focuses on redevelopment planning, production improvement, reserves context, and field constraints."],
-  ["Operations", "BAH connects field conditions, cost awareness, vendor timing, and execution sequence before a project moves forward."],
+  ["Originate", "BAH identifies and controls conventional South Texas oil and gas opportunities before they are brought to capital relationships."],
+  ["De-risk", "Subsurface work, petroleum engineering, field evidence, and costed work plans shape each redevelopment decision."],
+  ["Execute", "BAH connects ownership, operator-grade cost control, vendor timing, and field execution through Trinity Sands Holdings."],
 ];
 
-const trustPoints = ["Houston, Texas", "Well records", "Field evidence", "Costs & maps", "Redevelopment work"];
+const trustPoints = ["Zapata County", "South Texas trend", "Conventional wells", "Operator-grade costs", "Private investor access"];
 
 const Hero = () => {
   return (
@@ -27,17 +27,17 @@ const Hero = () => {
           <div className="mb-6 inline-flex flex-wrap items-center gap-2 border-2 border-secondary bg-white px-3 py-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] shadow-[5px_5px_0_#C09B4C]">
             <span>BAH Oil LLC</span>
             <span className="h-2 w-2 bg-primary" />
-            <span>Houston oil and gas field review</span>
+            <span>South Texas operator and developer</span>
           </div>
 
           <h1 className="kinetic-heading max-w-4xl text-[clamp(3.1rem,13vw,7.25rem)] leading-[0.82] sm:text-[clamp(4rem,8vw,7.25rem)]">
-            <span className="block">Wells.</span>
-            <span className="block">Costs.</span>
-            <span className="block">Work.</span>
+            <span className="block">South Texas.</span>
+            <span className="block">Conventional.</span>
+            <span className="block">Operator.</span>
           </h1>
 
           <p className="mt-6 max-w-2xl font-body text-lg font-semibold leading-snug text-secondary/80 md:text-2xl">
-            BAH Oil LLC reviews oil and gas projects using well records, maps, petroleum engineering and geology input, operating context, cost support, and field redevelopment planning.
+            BAH Oil LLC is a conventional oil and gas operator and developer focused on Zapata County redevelopment. We prospect, de-risk, and execute projects with engineering discipline and operator-grade cost control.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -72,8 +72,8 @@ const Hero = () => {
         >
           <div className="mb-5 flex items-start justify-between gap-4 border-b-2 border-secondary pb-5">
             <div>
-              <p className="kinetic-label text-xs text-primary">What BAH Handles</p>
-              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">What BAH Reviews Before Field Work Moves Forward</h2>
+              <p className="kinetic-label text-xs text-primary">Principal-Led Development</p>
+              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">BAH Owns, De-risks, and Builds Conventional Projects</h2>
             </div>
             <span className="rounded-full border-2 border-secondary bg-secondary px-3 py-1 font-mono text-xs font-bold uppercase text-white">
               BAH
@@ -95,7 +95,7 @@ const Hero = () => {
           </div>
 
           <div className="mt-4 border-2 border-primary bg-primary p-3 font-body text-sm font-bold leading-snug text-secondary">
-            BAH looks at the records, the field conditions, the work plan, and the cost picture before a project is advanced.
+            Public materials establish capability. Project-specific materials remain available only through approved investor login.
           </div>
         </motion.aside>
       </div>

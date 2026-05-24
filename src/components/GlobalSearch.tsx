@@ -156,19 +156,19 @@ export function GlobalSearch() {
   const sectionItems: SearchItem[] = [
     {
       id: "services",
-      name: "Field Review",
-      description: "Well records, maps, cost support, field context, and redevelopment planning",
+      name: "Approach",
+      description: "Subsurface work, engineering, cost control, field verification, and operator execution",
       icon: Briefcase,
       action: () => scrollToSection("services"),
-      keywords: ["services", "technical", "engineering", "geology", "operations"],
+      keywords: ["services", "technical", "engineering", "geology", "operations", "development"],
     },
     {
-      id: "team",
-      name: "Team",
-      description: "View public-facing BAH Oil LLC team contacts",
+      id: "governance",
+      name: "Governance",
+      description: "View BAH Oil LLC ownership, operator, and technical oversight roles",
       icon: Users,
-      action: () => scrollToSection("team"),
-      keywords: ["bryant", "alfredo", "coo", "technical advisor"],
+      action: () => scrollToSection("governance"),
+      keywords: ["operator", "ownership", "trinity", "technical oversight"],
     },
     {
       id: "contact",
