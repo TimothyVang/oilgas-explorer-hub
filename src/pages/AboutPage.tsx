@@ -2,9 +2,9 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const values = [
-  ["01", "Technical Perspective", "BAH brings petroleum engineering, geology, and operating context to oil and gas opportunity review."],
-  ["02", "Disciplined Communication", "Investor communication stays direct, measured, and focused on materials that belong in private review."],
-  ["03", "Confidential Standard", "Sensitive technical, financial, and field materials are handled through controlled account access."],
+  ["01", "Upstream Opportunities", "BAH reviews private oil and gas opportunities where geology, engineering, operations, and capital planning all matter."],
+  ["02", "Technical Support", "Petroleum engineering and geology input supports reserves context, production assumptions, redevelopment planning, and field review."],
+  ["03", "Controlled Investor Access", "Financial materials, maps, records, and field media are released only to approved accounts after BAH review."],
 ];
 
 const AboutPage = () => {
@@ -16,11 +16,11 @@ const AboutPage = () => {
         <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-end">
           <div>
             <p className="kinetic-label mb-4 text-sm">About / BAH Oil LLC</p>
-            <h1 className="kinetic-heading text-[clamp(3.75rem,10vw,9rem)]">Oilfield Discipline, Private Review</h1>
+            <h1 className="kinetic-heading text-[clamp(3.75rem,10vw,9rem)]">Houston Upstream Project Review</h1>
           </div>
           <div className="border-2 border-secondary bg-white p-6">
             <p className="font-body text-xl font-semibold leading-tight">
-              BAH Oil LLC presents oil and gas opportunities with technical restraint, practical operating context, and a clear boundary between public information and private investor materials.
+              BAH Oil LLC coordinates private upstream opportunity review around technical files, operating records, financial support, field materials, and approved investor access.
             </p>
           </div>
         </div>

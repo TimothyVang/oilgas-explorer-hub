@@ -92,10 +92,10 @@ test.describe('Form Validation - Invite-only Restrictions', () => {
   });
 
   test('does not expose signup-only fields or buttons', async ({ page }) => {
-    await expect(page.getByText(/new accounts are provisioned by BAH/i)).toBeVisible();
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
     await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
     await expect(page.getByLabel(/password/i)).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /name|full name/i })).not.toBeVisible();
+    await expect(page.getByLabel(/full name/i)).not.toBeVisible();
     await expect(page.getByRole('button', { name: /sign up|create account/i })).not.toBeVisible();
     await expect(page.getByRole('button', { name: /create one/i })).not.toBeVisible();
   });
@@ -266,7 +266,7 @@ test.describe('Form Responsive Design', () => {
     await page.goto('/login');
 
     await expect(page.getByRole('textbox', { name: /email/i })).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /name|full name/i })).not.toBeVisible();
+    await expect(page.getByLabel(/full name/i)).not.toBeVisible();
     await expect(page.getByRole('button', { name: /create account|sign up/i })).not.toBeVisible();
   });
 });

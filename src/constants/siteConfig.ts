@@ -10,7 +10,7 @@ export const siteConfig = {
   company: {
     name: "BAH Oil LLC",
     legalName: "BAH Oil LLC",
-    description: "Private investor access for confidential oil and gas opportunity materials.",
+    description: "Houston-based oil and gas project review, technical support, operations coordination, and private investor materials.",
   },
 
   contact: {

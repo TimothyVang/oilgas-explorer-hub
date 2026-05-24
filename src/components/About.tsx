@@ -5,13 +5,13 @@ const About = () => {
   const highlights = [
     {
       icon: FileCheck,
-      title: "Access Review",
-      description: "Investor accounts are reviewed before confidential materials are assigned.",
+      title: "Opportunity Review",
+      description: "BAH reviews private upstream opportunities before investor materials are assigned.",
     },
     {
       icon: LockKeyhole,
       title: "Private Portal",
-      description: "Private files remain inside the controlled investor portal workflow.",
+      description: "Detailed files remain inside the controlled investor portal workflow.",
     },
     {
       icon: ShieldCheck,
@@ -20,8 +20,8 @@ const About = () => {
     },
     {
       icon: Users,
-      title: "Direct Coordination",
-      description: "Approved investors review materials through a focused portal workflow.",
+      title: "Investor Coordination",
+      description: "Approved investors review only the materials released to their account.",
     },
   ];
 
@@ -50,15 +50,15 @@ const About = () => {
           {/* Content Section */}
           <div className="animate-fade-in">
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
-              Private Investor Access for Oil and Gas Review
+              Houston-Based Oil and Gas Project Review
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              BAH Oil LLC uses a secure portal to coordinate approved investor access and
-              assigned opportunity materials.
+              BAH Oil LLC coordinates private upstream opportunity review with petroleum
+              engineering, geology, operating context, and assigned investor materials.
             </p>
             <p className="text-lg text-muted-foreground mb-8">
-              Public pages explain the access process. Detailed technical, financial, mapping, and
-              media files stay inside the portal for approved accounts.
+              Public pages stay high-level. Detailed technical, financial, mapping, and media
+              files stay inside the portal for approved accounts.
             </p>
 
             {/* Highlights Grid */}

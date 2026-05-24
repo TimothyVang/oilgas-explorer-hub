@@ -14,7 +14,7 @@ import { TwoFactorVerify } from "@/components/auth/TwoFactorVerify";
 import { siteConfig } from "@/constants/siteConfig";
 
 const loginInstructions = [
-  ["01", "Already approved?", "Sign in with the credentials connected to your BAH investor account."],
+  ["01", "Already approved?", "Sign in with the username or email address connected to your BAH investor account."],
   ["02", "Need access?", "Email BAH with your name, firm, and reason for requesting investor review access."],
   ["03", "NDA not complete?", "The portal keeps confidential materials locked until NDA requirements are satisfied."],
   ["04", "Missing materials?", "Approved accounts show only the files BAH has assigned for that investor."],

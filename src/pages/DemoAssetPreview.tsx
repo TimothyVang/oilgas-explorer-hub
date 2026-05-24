@@ -13,7 +13,7 @@ const DemoAssetPreview = () => {
       <div className="flex min-h-screen items-center justify-center bg-secondary p-6 text-white">
         <div className="max-w-lg border-2 border-primary bg-[#08263F] p-8 text-center">
           <h1 className="kinetic-heading text-4xl text-white">Asset Not Found</h1>
-          <p className="mt-3 text-sm text-white/60">This demo asset is not in the staged Deal Room list.</p>
+          <p className="mt-3 text-sm text-white/60">This asset is not in the assigned Deal Room list.</p>
           <Button asChild className="mt-6 rounded-full border-primary bg-primary text-secondary hover:bg-white">
             <Link to="/investor-documents">Back to Deal Room</Link>
           </Button>
@@ -40,7 +40,7 @@ const DemoAssetPreview = () => {
         <section className="grid gap-6 border-2 border-primary bg-[#08263F] p-6 md:grid-cols-[1fr_320px] md:p-8">
           <div>
             <div className="mb-5 flex flex-wrap items-center gap-2">
-              <Badge className="border-primary/40 bg-primary/10 text-primary">Investor Demo</Badge>
+              <Badge className="border-primary/40 bg-primary/10 text-primary">Investor Preview</Badge>
               <Badge variant="outline" className="border-white/20 text-white/70">{asset.category.replace("_", " ")}</Badge>
               <Badge variant="outline" className="border-white/20 text-white/70">{asset.asset_type}</Badge>
             </div>
@@ -54,7 +54,7 @@ const DemoAssetPreview = () => {
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/65">{asset.description}</p>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <Meta label="File" value={asset.original_filename || "Staged asset"} />
+              <Meta label="File" value={asset.original_filename || "Private asset"} />
               <Meta label="Size" value={formatFileSize(asset.file_size)} />
               <Meta label="Delivery" value="Signed URL ready" />
             </div>
@@ -67,7 +67,7 @@ const DemoAssetPreview = () => {
               </div>
               <h2 className="font-mono text-lg font-bold uppercase text-white">Demo delivery shell</h2>
               <p className="mt-3 text-sm leading-relaxed text-white/60">
-                This confirms the investor flow, categories, access state, and asset metadata. When Supabase storage is connected, this action will open the real private file with a short-lived signed URL.
+                This preview confirms the investor flow, categories, access state, and asset metadata. Final private file delivery uses approved account access.
               </p>
             </div>
 
@@ -99,7 +99,7 @@ const getIcon = (asset: typeof demoInvestorDocuments[number]) => {
 };
 
 const formatFileSize = (size: number | null) => {
-  if (!size) return "Staged asset";
+  if (!size) return "Private asset";
   if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
   return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 };

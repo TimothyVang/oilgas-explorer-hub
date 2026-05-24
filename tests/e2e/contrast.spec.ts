@@ -43,7 +43,7 @@ test.describe('Color Contrast Verification', () => {
 
     test('navigation text is readable', async ({ page }) => {
       // Nav links should be visible
-      const navLinks = page.locator('nav a, nav button');
+      const navLinks = page.locator('nav a:visible, nav button:visible');
       const count = await navLinks.count();
       expect(count).toBeGreaterThan(0);
 
@@ -134,7 +134,7 @@ test.describe('Color Contrast Verification', () => {
     });
 
     test('secondary invite guidance is readable', async ({ page }) => {
-      const inviteText = page.getByText(/need access\?|new accounts are provisioned/i);
+      const inviteText = page.getByText(/credentials are provided directly|request access/i);
       await expect(inviteText.first()).toBeVisible();
     });
   });

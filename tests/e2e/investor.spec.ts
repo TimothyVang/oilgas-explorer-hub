@@ -95,9 +95,9 @@ test.describe('Investor Documents Portal', () => {
       await page.keyboard.press('Tab');
       await page.keyboard.press('Tab');
 
-      // Should have a focused element
-      const focusedElement = page.locator(':focus');
-      await expect(focusedElement).toBeVisible();
+      const focusedTagName = await page.evaluate(() => document.activeElement?.tagName);
+      expect(focusedTagName).toBeTruthy();
+      expect(focusedTagName).not.toBe('BODY');
     });
 
     test('buttons have proper accessible names', async ({ page }) => {

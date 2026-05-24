@@ -3,21 +3,21 @@ import { ArrowRight } from "lucide-react";
 const services = [
   {
     id: "01",
-    title: "Technical Discipline",
-    summary: "BAH approaches oil and gas review with petroleum engineering, geology, and practical field context in view.",
-    tags: ["Engineering", "Geology", "Field Context"],
+    title: "Opportunity Review",
+    summary: "BAH reviews private upstream opportunities for redevelopment potential, production improvement, cost exposure, and investor fit.",
+    tags: ["Redevelopment", "Production", "Capital Fit"],
   },
   {
     id: "02",
-    title: "Operating Judgment",
-    summary: "Opportunity materials are handled with attention to execution risk, budget discipline, and the realities of oilfield work.",
-    tags: ["Operations", "Cost Awareness", "Execution"],
+    title: "Technical Files",
+    summary: "Petroleum engineering and geology support covers reservoir behavior, operating history, reserves context, and field evidence.",
+    tags: ["Reservoir", "Geology", "Field Evidence"],
   },
   {
     id: "03",
-    title: "Private Capital Communication",
-    summary: "BAH keeps investor communication focused, direct, and controlled so sensitive opportunity materials stay in the right hands.",
-    tags: ["Investor Relations", "Controlled Access", "Confidential"],
+    title: "Investor Materials",
+    summary: "BAH organizes supporting documents for approved investors while keeping sensitive deal materials out of public view.",
+    tags: ["Financials", "Maps", "Field Media"],
   },
 ];
 
@@ -25,15 +25,17 @@ const Services = () => {
   return (
     <section id="services" className="overflow-hidden bg-secondary px-4 py-20 text-white md:px-8 md:py-28">
       <div className="mx-auto max-w-7xl min-w-0">
-        <div className="mb-10 grid min-w-0 gap-5 md:grid-cols-[0.85fr_1.15fr] md:items-end">
+        <div className="mb-10 grid min-w-0 gap-5 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
           <div className="min-w-0">
-            <p className="kinetic-label text-sm text-primary">BAH focus</p>
-            <h2 className="kinetic-heading mt-3 break-words text-[clamp(3rem,13vw,8rem)] text-white sm:text-[clamp(3.75rem,8vw,8rem)]">
-              Serious Oilfield Perspective
+            <p className="kinetic-label text-sm text-primary">What BAH Does</p>
+            <h2 className="kinetic-heading mt-3 text-[clamp(3rem,13vw,8rem)] leading-[0.82] text-white sm:text-[clamp(3.75rem,8vw,8rem)]">
+              <span className="block">Review.</span>
+              <span className="block">Operate.</span>
+              <span className="block">Coordinate.</span>
             </h2>
           </div>
-          <p className="min-w-0 max-w-2xl font-body text-lg font-semibold leading-snug text-white/70 md:justify-self-end md:text-xl">
-            The front page should tell investors who BAH is before asking them to log in. Access details now sit where they are most useful: the investor login screen.
+          <p className="min-w-0 max-w-2xl font-body text-lg font-semibold leading-snug text-white/70 lg:justify-self-end lg:text-xl">
+            BAH connects technical oilfield work with private investor review: opportunities are screened, supporting files are organized, and access is controlled account by account.
           </p>
         </div>
 
@@ -55,7 +57,7 @@ const Services = () => {
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {service.tags.map((tag) => (
-                  <span key={tag} className="rounded-full border border-white/30 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-[-0.02em] text-white group-hover:border-secondary/40 group-hover:text-secondary">
+                  <span key={tag} className="rounded-full border border-white/30 px-3 py-1 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-white group-hover:border-secondary/40 group-hover:text-secondary">
                     {tag}
                   </span>
                 ))}

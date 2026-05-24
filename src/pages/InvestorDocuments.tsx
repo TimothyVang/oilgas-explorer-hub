@@ -1,6 +1,6 @@
 import { PageLoadingSkeleton } from "@/components/loading/PageLoadingSkeleton";
 import { Link, Navigate } from "react-router-dom";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, FileText, ShieldCheck, UserRound } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { DocumentsTab } from "@/components/dashboard/DocumentsTab";
@@ -17,54 +17,69 @@ const InvestorDocuments = () => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-midnight text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,20,40,1)_0%,rgba(2,4,16,1)_100%)]" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-[100px]" />
-      <div className="pointer-events-none absolute inset-0 flex select-none items-center justify-center overflow-hidden">
-        <span className="bg-gradient-to-b from-white to-white/50 bg-clip-text text-[12vw] font-black tracking-tighter text-transparent opacity-[0.03]">
-          DEAL ROOM
-        </span>
+    <div className="relative min-h-screen overflow-hidden bg-secondary text-white">
+      <div className="fixed inset-0 z-0 bg-[linear-gradient(rgba(192,155,76,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.12)_1px,transparent_1px)] bg-[size:56px_56px]" />
+      <div className="pointer-events-none fixed inset-0 z-0 flex select-none items-center justify-center overflow-hidden">
+        <span className="kinetic-heading text-[16vw] text-primary opacity-[0.06]">DEAL ROOM</span>
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 py-8 pt-32">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-4 md:px-6 md:py-6">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex items-center justify-between"
+          className="mb-4 flex flex-col gap-3 border-2 border-primary bg-[#08263F] p-4 sm:flex-row sm:items-center sm:justify-between"
         >
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-white/50 transition-colors hover:text-white"
+            className="kinetic-label inline-flex min-h-[44px] items-center gap-2 text-xs text-primary transition-transform hover:translate-x-2 hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
           </Link>
+          <div className="flex items-center gap-3 border border-primary/40 bg-secondary px-3 py-2">
+            <UserRound className="h-4 w-4 text-primary" />
+            <span className="max-w-[220px] truncate font-mono text-xs uppercase text-white/70">
+              {user.email || "Investor"}
+            </span>
+          </div>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mx-auto max-w-6xl"
+          className="w-full flex-1"
         >
-          <div className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
-                <FileText className="h-6 w-6 text-white" />
+          <section className="mb-6 grid gap-4 border-2 border-primary bg-[#08263F] p-5 md:grid-cols-[1fr_auto] md:items-end md:p-6">
+            <div>
+              <p className="kinetic-label text-xs text-primary">Private investor workspace</p>
+              <h1 className="kinetic-heading mt-2 text-5xl text-white md:text-7xl">Investor Deal Room</h1>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">
+                Review assigned BAH materials in one controlled workspace. Start with the featured item, then move through the category tabs below.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 border-2 border-primary md:w-[360px]">
+              <div className="border-r-2 border-primary p-4">
+                <div className="mb-2 flex h-9 w-9 items-center justify-center border border-primary bg-primary text-secondary">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <p className="kinetic-label text-[10px] text-white/50">Access</p>
+                <p className="font-mono text-sm font-bold uppercase text-primary">Active</p>
               </div>
-              <div>
-                <h1 className="mb-1 text-2xl font-bold text-white">Investor Deal Room</h1>
-                <p className="text-sm text-white/60">
-                  NDA-gated access to assigned BAH investor materials
-                </p>
+              <div className="p-4">
+                <div className="mb-2 flex h-9 w-9 items-center justify-center border border-primary bg-secondary text-primary">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <p className="kinetic-label text-[10px] text-white/50">Delivery</p>
+                <p className="font-mono text-sm font-bold uppercase text-primary">Secure Links</p>
               </div>
             </div>
-          </div>
+          </section>
 
           <DocumentsTab />
         </motion.div>
 
-        <p className="mt-12 text-center text-sm text-white/30">
+        <p className="kinetic-label mt-10 pb-6 text-center text-xs text-primary/70">
           © {new Date().getFullYear()} BAH Oil LLC. All rights reserved.
         </p>
       </div>

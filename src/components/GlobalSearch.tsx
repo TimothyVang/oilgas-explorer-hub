@@ -156,11 +156,11 @@ export function GlobalSearch() {
   const sectionItems: SearchItem[] = [
     {
       id: "services",
-      name: "BAH Focus",
-      description: "Technical discipline, operating context, and private investor communication",
+      name: "What BAH Does",
+      description: "Services for oil and gas project review, operations, technical support, and investor materials",
       icon: Briefcase,
       action: () => scrollToSection("services"),
-      keywords: ["technical", "engineering", "geology", "operations"],
+      keywords: ["services", "technical", "engineering", "geology", "operations"],
     },
     {
       id: "team",

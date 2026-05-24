@@ -68,7 +68,7 @@ export const useInvestorDashboard = () => {
               },
               {
                 id: "demo-assets",
-                action: "deal_room_assets_staged",
+                action: "deal_room_assets_available",
                 created_at: "2026-05-24T00:00:00Z",
                 metadata: { count: demoInvestorDocuments.length },
               },

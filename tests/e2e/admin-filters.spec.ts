@@ -33,7 +33,7 @@ test.describe("Admin Dashboard Advanced Filtering", () => {
 
     test("homepage loads without errors", async ({ page }) => {
       // Verify homepage is accessible - check for primary heading
-      const heading = page.getByRole("heading", { name: "Energy Evolved Evolved" });
+      const heading = page.getByRole("heading", { name: /BAH Oil LLC Projects/i });
       await expect(heading).toBeVisible();
       // Check no console errors
       const errors: string[] = [];

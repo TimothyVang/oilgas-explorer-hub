@@ -240,7 +240,7 @@ const handler = async (req: Request): Promise<Response> => {
             },
             body: JSON.stringify({
               to: signer.email,
-              subject: "NDA Signed - Access Granted | BAH Oil and Gas",
+              subject: "NDA Signed - Access Granted | BAH Oil LLC",
               template: "nda-complete",
               data: { name: profile.full_name || signer.name },
             }),

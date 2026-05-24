@@ -187,7 +187,7 @@ export const NOTIFICATION_PREFERENCE_INFO: Record<keyof NotificationPreferences,
   },
   emailMarketingUpdates: {
     label: "News & Announcements",
-    description: "Stay updated on company news and new features",
+    description: "Receive BAH Oil LLC account notices and portal updates",
     category: "updates",
   },
 };

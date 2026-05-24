@@ -186,7 +186,7 @@ Check vertical rhythm:
 // Check: Custom gradients should be defined in tailwind.config.ts
 ```
 
-**Custom Animations** (BAH Energy specific):
+**Custom Animations** (BAH Oil LLC specific):
 - Available: `animate-fade-in`, `animate-fade-in-up`, `animate-scale-in`, `animate-pulse-glow`
 - Check usage matches project patterns
 
@@ -254,7 +254,7 @@ I noticed you're using [what they're doing wrong]. This creates [problem] and br
 **Why This Matters**:
 [Explain benefit: consistency, maintainability, theme support]
 
-**Design System Reference**: {Reference to BAH Energy patterns}
+**Design System Reference**: {Reference to BAH Oil LLC patterns}
 
 💡 Tip: [Additional suggestion or 2026 enhancement opportunity]
 ```
@@ -433,7 +433,7 @@ This will provide detailed analysis of:
 1. **Be Encouraging**: Celebrate good patterns while suggesting improvements
 2. **Be Specific**: Always show exact code with line numbers
 3. **Explain Benefits**: Why design tokens matter, not just "you should"
-4. **Reference Project**: Use BAH Energy design system as the source of truth
+4. **Reference Project**: Use BAH Oil LLC design system as the source of truth
 5. **Suggest 2026 Trends**: Glassmorphism, gradients, micro-animations
 6. **Balance**: Don't overwhelm - prioritize most impactful fixes
 

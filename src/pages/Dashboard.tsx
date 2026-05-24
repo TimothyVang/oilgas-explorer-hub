@@ -240,12 +240,12 @@ const StartHerePanel = ({
   onOpenDealRoom: () => void;
 }) => {
   const status = !ndaSigned
-    ? {
-        label: "Access setup",
-        title: "Deal room is ready for investor walkthrough",
-        body: "Use the portal credentials to review the staged private categories. BAH can finalize account-level controls after Supabase is connected.",
-        cta: "Open Deal Room",
-      }
+      ? {
+          label: "Access setup",
+          title: "Deal room access is active",
+          body: "Use your portal credentials to review the private categories BAH has made available to your account.",
+          cta: "Open Deal Room",
+        }
     : assignedDocuments === 0
       ? {
           label: "Awaiting assignment",

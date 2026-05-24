@@ -2,7 +2,7 @@ import type { Session, User } from "@supabase/supabase-js";
 
 export const DEMO_INVESTOR_USERNAME = "investor";
 export const DEMO_INVESTOR_EMAIL = "investor@bahoil.demo";
-export const DEMO_INVESTOR_PASSWORD = "BAHdemo2026!";
+const DEMO_INVESTOR_PASSWORD = import.meta.env.VITE_DEMO_INVESTOR_PASSWORD || "";
 export const DEMO_INVESTOR_ID = "00000000-0000-4000-8000-000000000001";
 export const DEMO_SESSION_STORAGE_KEY = "bah_investor_demo_session";
 
@@ -31,13 +31,13 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-start-here",
     title: "Start Here: Investor Review Path",
-    description: "A plain-English orientation for how approved investors should review the private deck, financial model, mapping support, field evidence, and management materials.",
+    description: "Plain-English orientation for how approved investors review private overview, financial, technical, operating, field, and management materials.",
     created_at: "2026-05-24T00:00:00Z",
     category: "overview",
     asset_type: "document",
     file_size: 92 * 1024,
     mime_type: "application/pdf",
-    original_filename: "Pitch Deck Word Version.pdf",
+    original_filename: "Investor Review Path.pdf",
     thumbnail_path: null,
     sort_order: 1,
     is_featured: true,
@@ -45,7 +45,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-deal-snapshot",
     title: "Opportunity Snapshot",
-    description: "Concise investor snapshot covering structure, review sequence, and core private materials staged for the BAH deal room.",
+    description: "Concise investor snapshot covering structure, review sequence, and core private materials available in the BAH deal room.",
     created_at: "2026-05-24T00:00:00Z",
     category: "pitch",
     asset_type: "document",
@@ -59,7 +59,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-pitch-deck",
     title: "Investor Overview Deck",
-    description: "Primary investor deck preview slot. Final PDF/PPTX delivery will use Supabase private storage and signed URLs.",
+    description: "Primary investor overview deck for approved private review.",
     created_at: "2026-05-24T00:00:00Z",
     category: "pitch",
     asset_type: "document",
@@ -73,7 +73,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
   {
     id: "demo-afe",
     title: "Budget Support",
-    description: "Spreadsheet slot for project cost detail, capital-call support, and staged expenditure review.",
+    description: "Spreadsheet-style support for project cost detail, capital-call support, and expenditure review.",
     created_at: "2026-05-24T00:00:00Z",
     category: "financials",
     asset_type: "document",
@@ -173,6 +173,7 @@ export const demoInvestorDocuments: DemoInvestorDocument[] = [
 export const isDemoLogin = (identifier: string, password: string) => {
   const normalizedIdentifier = identifier.trim().toLowerCase();
   return (
+    DEMO_INVESTOR_PASSWORD.length > 0 &&
     password === DEMO_INVESTOR_PASSWORD &&
     (normalizedIdentifier === DEMO_INVESTOR_USERNAME || normalizedIdentifier === DEMO_INVESTOR_EMAIL)
   );

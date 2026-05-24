@@ -12,26 +12,26 @@ interface Milestone {
 const milestones: Milestone[] = [
     {
         year: "01",
-        title: "Request Access",
-        description: "Qualified investors request an account through the public website.",
+        title: "Review the Asset",
+        description: "BAH starts with the oil and gas asset, available records, field context, and technical questions.",
         side: "left"
     },
     {
         year: "02",
-        title: "Protect Sensitive Materials",
-        description: "Confidential technical and financial materials are kept out of public pages.",
+        title: "Build the File",
+        description: "Technical, financial, mapping, operating, and media materials are organized for private review.",
         side: "right"
     },
     {
         year: "03",
-        title: "Receive Assigned Materials",
-        description: "BAH assigns the specific documents, media, and supporting files approved for each account.",
+        title: "Approve Investor Access",
+        description: "BAH controls which investors receive access and which files are assigned to each account.",
         side: "left"
     },
     {
         year: "04",
-        title: "Review in the Portal",
-        description: "Approved investors review available materials through the investor deal room.",
+        title: "Support the Review",
+        description: "Approved investors use the portal to review the materials BAH has prepared and released.",
         side: "right"
     }
 ];

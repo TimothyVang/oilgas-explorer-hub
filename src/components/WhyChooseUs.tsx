@@ -4,13 +4,13 @@ const WhyChooseUs = () => {
   const features = [
     {
       icon: FileCheck,
-      title: "Reviewed Investor Access",
-      description: "BAH reviews account requests before releasing any confidential investor materials.",
+      title: "Reviewed Access",
+      description: "BAH reviews account requests before releasing confidential investor materials.",
     },
     {
       icon: Gauge,
-      title: "Clear Review Path",
-      description: "Approved investors can move through assigned overview, financial, mapping, operations, video, and management materials.",
+      title: "Technical Review Path",
+      description: "Approved investors can move through assigned technical, financial, mapping, operations, media, and management materials.",
     },
     {
       icon: LockKeyhole,
@@ -29,10 +29,10 @@ const WhyChooseUs = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Why Investors Use This Portal
+            Why BAH Controls the Portal
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            BAH pairs oilfield context with controlled investor communication and a disciplined private-review standard.
+            BAH organizes private upstream materials around technical work, operating context, cost support, and approved investor access.
           </p>
         </div>
 

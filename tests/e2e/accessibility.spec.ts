@@ -356,7 +356,7 @@ test.describe('WCAG 2.2 Level AA - Color Contrast References', () => {
     await expect(signInButton).toBeVisible();
 
     // Check invite-only guidance text instead of public third-party auth.
-    await expect(page.getByText(/new accounts are provisioned by BAH/i)).toBeVisible();
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
   });
 
   test('1.4.11 - UI components have sufficient contrast', async ({ page }) => {

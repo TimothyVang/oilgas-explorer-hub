@@ -27,7 +27,7 @@ test.describe('Design Review Screenshots', () => {
     await page.goto('http://localhost:8080/login');
     await page.waitForLoadState('networkidle');
 
-    await expect(page.getByText(/new accounts are provisioned by BAH/i)).toBeVisible();
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
     await expect(page.getByRole('button', { name: /sign up|create account/i })).not.toBeVisible();
     await page.screenshot({ path: 'screenshots/review-invite-login.png', fullPage: true });
   });

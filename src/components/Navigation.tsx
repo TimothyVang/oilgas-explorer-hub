@@ -51,23 +51,23 @@ const Navigation = () => {
             <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-secondary bg-white">
               <img src={bahLogo} alt="BAH Oil LLC" className="h-full w-full object-cover" />
             </div>
-            <span className="hidden font-mono text-xs font-bold uppercase tracking-[-0.02em] text-secondary md:block">
+            <span className="hidden font-mono text-xs font-bold uppercase tracking-[-0.02em] text-secondary lg:block">
               BAH OIL LLC
             </span>
           </Link>
         </div>
 
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center rounded-full border-2 border-secondary bg-secondary p-1 md:flex">
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center rounded-full border-2 border-secondary bg-secondary p-1 lg:flex">
           <NavLink onClick={() => scrollToSection("home")}>Home</NavLink>
           <Link to="/about" className="rounded-full px-4 py-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-white transition-colors hover:bg-white hover:text-secondary">
             About
           </Link>
-          <NavLink onClick={() => scrollToSection("services")}>BAH Focus</NavLink>
+          <NavLink onClick={() => scrollToSection("services")}>What BAH Does</NavLink>
           <NavLink onClick={() => scrollToSection("team")}>Team</NavLink>
           <NavLink onClick={() => scrollToSection("contact")}>Contact</NavLink>
         </div>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <a href={`mailto:${siteConfig.contact.email}`} className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-secondary bg-white text-secondary transition-all hover:scale-105 hover:bg-secondary hover:text-primary" aria-label="Email BAH Oil">
             <Mail className="h-4 w-4" />
           </a>
@@ -104,7 +104,7 @@ const Navigation = () => {
           )}
         </div>
 
-        <div className="z-50 md:hidden">
+        <div className="z-50 lg:hidden">
           <Button
             variant="ghost"
             size="icon"
@@ -127,14 +127,14 @@ const Navigation = () => {
             animate={{ opacity: 1, scaleY: 1 }}
             exit={{ opacity: 0, scaleY: 0 }}
             style={{ transformOrigin: "top" }}
-            className="fixed inset-0 z-40 overflow-hidden bg-primary md:hidden"
+            className="fixed inset-0 z-40 overflow-hidden bg-primary lg:hidden"
           >
             <div className="flex h-full flex-col items-center justify-center gap-6 p-4 text-secondary">
               <MobileNavLink onClick={() => scrollToSection("home")}>Home</MobileNavLink>
               <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="kinetic-heading min-h-[44px] min-w-[44px] px-4 py-2 text-5xl transition-transform hover:translate-x-4">
                 About
               </Link>
-              <MobileNavLink onClick={() => scrollToSection("services")}>BAH Focus</MobileNavLink>
+              <MobileNavLink onClick={() => scrollToSection("services")}>What BAH Does</MobileNavLink>
               <MobileNavLink onClick={() => scrollToSection("team")}>Team</MobileNavLink>
               <MobileNavLink onClick={() => scrollToSection("contact")}>Contact</MobileNavLink>
 

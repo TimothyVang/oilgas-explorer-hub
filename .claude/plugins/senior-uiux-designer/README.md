@@ -392,7 +392,7 @@ See the full implementation plan at `C:\Users\newbi\.claude\plans\binary-gliding
 
 ## Contributing
 
-This plugin is tailored for the BAH Energy website (React + TypeScript + Tailwind + shadcn-ui) but can be adapted for any modern web project.
+This plugin is tailored for the BAH Oil LLC website (React + TypeScript + Tailwind + shadcn-ui) but can be adapted for any modern web project.
 
 ### Customizing for Your Project
 

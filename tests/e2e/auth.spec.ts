@@ -14,16 +14,16 @@ test.describe("Authentication - Login Page", () => {
 
   test("displays login form by default", async ({ page }) => {
     // Verify login page title/header
-    await expect(page.getByText("Investor Portal")).toBeVisible();
+    await expect(page.getByText("Approved Investor Login")).toBeVisible();
     await expect(page.getByText("Invitation-only access to confidential materials")).toBeVisible();
 
     // Verify form elements
-    await expect(page.getByLabel(/email address/i)).toBeVisible();
+    await expect(page.getByLabel(/username or email/i)).toBeVisible();
     await expect(page.getByLabel(/^password$/i)).toBeVisible();
     await expect(page.getByRole("button", { name: /^sign in$/i })).toBeVisible();
 
     // Verify invite-only elements
-    await expect(page.getByText(/new accounts are provisioned by BAH/i)).toBeVisible();
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
     await expect(page.getByRole("button", { name: /continue with google/i })).not.toBeVisible();
     await expect(page.getByRole("button", { name: /create one/i })).not.toBeVisible();
     await expect(page.getByRole("link", { name: /forgot password/i })).toBeVisible();
@@ -39,20 +39,20 @@ test.describe("Authentication - Login Page", () => {
     await expect(page).toHaveURL("/");
   });
 
-  test("validates empty email field", async ({ page }) => {
-    // Try to submit with empty email
+  test("validates empty username field", async ({ page }) => {
+    // Try to submit with empty username/email
     await page.getByLabel(/^password$/i).fill("password123");
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
     // Form should not submit - HTML5 validation
-    // The email input should be invalid
-    const emailInput = page.getByLabel(/email address/i);
+    // The username/email input should be invalid
+    const emailInput = page.getByLabel(/username or email/i);
     const isValid = await emailInput.evaluate((el: HTMLInputElement) => el.validity.valid);
     expect(isValid).toBe(false);
   });
 
-  test("validates invalid email format", async ({ page }) => {
-    await page.getByLabel(/email address/i).fill("invalid-email");
+  test("validates invalid login identifier", async ({ page }) => {
+    await page.getByLabel(/username or email/i).fill("x");
     await page.getByLabel(/^password$/i).fill("password123");
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
@@ -61,7 +61,7 @@ test.describe("Authentication - Login Page", () => {
   });
 
   test("validates empty password field", async ({ page }) => {
-    await page.getByLabel(/email address/i).fill("test@example.com");
+    await page.getByLabel(/username or email/i).fill("test@example.com");
     // Leave password empty
     await page.getByRole("button", { name: /^sign in$/i }).click();
 
@@ -72,7 +72,7 @@ test.describe("Authentication - Login Page", () => {
   });
 
   test("shows loading state during login attempt", async ({ page }) => {
-    await page.getByLabel(/email address/i).fill("test@example.com");
+    await page.getByLabel(/username or email/i).fill("test@example.com");
     await page.getByLabel(/^password$/i).fill("password123");
 
     // Click sign in
@@ -109,11 +109,11 @@ test.describe("Authentication - Invite-only Restrictions", () => {
   });
 
   test("does not expose public signup controls", async ({ page }) => {
-    await expect(page.getByText("Investor Portal")).toBeVisible();
-    await expect(page.getByText(/need access\? contact BAH Oil/i)).toBeVisible();
+    await expect(page.getByText("Approved Investor Login")).toBeVisible();
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
     await expect(page.getByText("Create your account")).not.toBeVisible();
     await expect(page.getByLabel(/full name/i)).not.toBeVisible();
-    await expect(page.getByLabel(/email address/i)).toBeVisible();
+    await expect(page.getByLabel(/username or email/i)).toBeVisible();
     await expect(page.getByLabel(/^password$/i)).toBeVisible();
     await expect(page.getByRole("button", { name: /create account/i })).not.toBeVisible();
     await expect(page.getByRole("button", { name: /create one/i })).not.toBeVisible();
@@ -169,21 +169,21 @@ test.describe("Authentication - Accessibility", () => {
     await page.goto("/login");
 
     // Check that inputs have associated labels
-    const emailInput = page.getByLabel(/email address/i);
+    const emailInput = page.getByLabel(/username or email/i);
     const passwordInput = page.getByLabel(/^password$/i);
 
     await expect(emailInput).toBeVisible();
     await expect(passwordInput).toBeVisible();
 
     // Verify inputs have proper types
-    await expect(emailInput).toHaveAttribute("type", "email");
+    await expect(emailInput).toHaveAttribute("type", "text");
     await expect(passwordInput).toHaveAttribute("type", "password");
   });
 
   test("invite-only login does not expose signup-only labels", async ({ page }) => {
     await page.goto("/login");
 
-    const emailInput = page.getByLabel(/email address/i);
+    const emailInput = page.getByLabel(/username or email/i);
     const passwordInput = page.getByLabel(/^password$/i);
 
     await expect(page.getByLabel(/full name/i)).not.toBeVisible();
@@ -191,7 +191,7 @@ test.describe("Authentication - Accessibility", () => {
     await expect(passwordInput).toBeVisible();
 
     // Verify input types
-    await expect(emailInput).toHaveAttribute("type", "email");
+    await expect(emailInput).toHaveAttribute("type", "text");
     await expect(passwordInput).toHaveAttribute("type", "password");
   });
 
@@ -201,8 +201,8 @@ test.describe("Authentication - Accessibility", () => {
     // Click on page first to ensure it's focused, then tab through form elements
     await page.click("body");
 
-    // Focus on the email input directly and verify keyboard navigation works
-    const emailInput = page.getByLabel(/email address/i);
+    // Focus on the username/email input directly and verify keyboard navigation works
+    const emailInput = page.getByLabel(/username or email/i);
     await emailInput.focus();
     await expect(emailInput).toBeFocused();
 
@@ -235,14 +235,14 @@ test.describe("Authentication - Visual", () => {
     await page.goto("/login");
 
     // Check for brand element
-    await expect(page.getByText("Investor Portal")).toBeVisible();
+    await expect(page.getByText("Approved Investor Login")).toBeVisible();
 
     // Check for form container (card)
     const formContainer = page.locator(".bg-white\\/5, [class*='glassmorphism'], [class*='card']").first();
     await expect(formContainer).toBeVisible();
 
     // Check for invite-only guidance instead of public auth affordances
-    await expect(page.getByText(/new accounts are provisioned by BAH/i)).toBeVisible();
+    await expect(page.getByText(/credentials are provided directly/i)).toBeVisible();
   });
 
   test("signup password requirements are not shown", async ({ page }) => {
@@ -264,8 +264,8 @@ test.describe("Authentication - Visual", () => {
     await page.goto("/login");
 
     // Check for copyright text
-    await expect(page.getByText(/BAH Oil and Gas/i)).toBeVisible();
-    await expect(page.getByText(/All rights reserved/i)).toBeVisible();
+    const copyright = page.locator("p").filter({ hasText: /All rights reserved/i });
+    await expect(copyright).toContainText(/BAH Oil LLC/i);
   });
 });
 
@@ -275,7 +275,7 @@ test.describe("Authentication - Mobile Responsiveness", () => {
     await page.goto("/login");
 
     // Form should be visible and usable
-    await expect(page.getByLabel(/email address/i)).toBeVisible();
+    await expect(page.getByLabel(/username or email/i)).toBeVisible();
     await expect(page.getByLabel(/^password$/i)).toBeVisible();
     await expect(page.getByRole("button", { name: /^sign in$/i })).toBeVisible();
 
@@ -302,7 +302,7 @@ test.describe("Authentication - Mobile Responsiveness", () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/login");
 
-    await expect(page.getByLabel(/email address/i)).toBeVisible();
+    await expect(page.getByLabel(/username or email/i)).toBeVisible();
     await expect(page.getByLabel(/^password$/i)).toBeVisible();
     await expect(page.getByLabel(/full name/i)).not.toBeVisible();
     await expect(page.getByRole("button", { name: /create account/i })).not.toBeVisible();
@@ -327,7 +327,7 @@ test.describe("Authentication - Edge Cases", () => {
   test("does not offer form mode toggling", async ({ page }) => {
     await page.goto("/login");
 
-    await expect(page.getByLabel(/email address/i)).toBeVisible();
+    await expect(page.getByLabel(/username or email/i)).toBeVisible();
     await expect(page.getByRole("button", { name: /^sign in$/i })).toBeVisible();
     await expect(page.getByRole("button", { name: /create one/i })).not.toBeVisible();
   });
@@ -336,10 +336,10 @@ test.describe("Authentication - Edge Cases", () => {
     await page.goto("/login");
 
     // Fill login form
-    await page.getByLabel(/email address/i).fill("test@example.com");
+    await page.getByLabel(/username or email/i).fill("test@example.com");
     await page.getByLabel(/^password$/i).fill("password123");
 
-    const emailInput = page.getByLabel(/email address/i);
+    const emailInput = page.getByLabel(/username or email/i);
     await expect(emailInput).toBeVisible();
     await expect(emailInput).toHaveValue("test@example.com");
     await expect(page.getByRole("button", { name: /create one/i })).not.toBeVisible();
@@ -349,13 +349,13 @@ test.describe("Authentication - Edge Cases", () => {
     await page.goto("/login");
 
     // Fill form
-    await page.getByLabel(/email address/i).fill("test@example.com");
+    await page.getByLabel(/username or email/i).fill("test@example.com");
 
     // Refresh page
     await page.reload();
 
     // Form should be in initial state
-    await expect(page.getByLabel(/email address/i)).toBeVisible();
+    await expect(page.getByLabel(/username or email/i)).toBeVisible();
     await expect(page.getByText("Invitation-only access to confidential materials")).toBeVisible();
   });
 });
