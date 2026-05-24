@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { siteConfig } from "@/constants/siteConfig";
 
 const bahStrengths = [
-  ["Projects", "BAH coordinates private upstream opportunities from initial review through approved investor materials."],
-  ["Technical", "Engineering and geology input supports redevelopment planning, reserves context, and field review."],
-  ["Access", "Qualified investors review maps, records, financial support, and field media through approved accounts."],
+  ["Records", "BAH reviews well history, operating records, maps, field evidence, and technical questions around each project."],
+  ["Work Plan", "Engineering and geology support focuses on redevelopment planning, production improvement, reserves context, and field constraints."],
+  ["Operations", "BAH connects field conditions, cost awareness, vendor timing, and execution sequence before a project moves forward."],
 ];
 
-const trustPoints = ["Houston, Texas", "Petroleum engineering", "Geology", "Operations", "Investor materials"];
+const trustPoints = ["Houston, Texas", "Well records", "Field evidence", "Costs & maps", "Redevelopment work"];
 
 const Hero = () => {
   return (
@@ -27,22 +27,22 @@ const Hero = () => {
           <div className="mb-6 inline-flex flex-wrap items-center gap-2 border-2 border-secondary bg-white px-3 py-2 font-mono text-xs font-bold uppercase tracking-[-0.02em] shadow-[5px_5px_0_#C09B4C]">
             <span>BAH Oil LLC</span>
             <span className="h-2 w-2 bg-primary" />
-            <span>Houston-based upstream oil and gas</span>
+            <span>Houston oil and gas field review</span>
           </div>
 
           <h1 className="kinetic-heading max-w-4xl text-[clamp(3.1rem,13vw,7.25rem)] leading-[0.82] sm:text-[clamp(4rem,8vw,7.25rem)]">
-            <span className="block">Private</span>
-            <span className="block">Upstream</span>
-            <span className="block">Review</span>
+            <span className="block">Wells.</span>
+            <span className="block">Costs.</span>
+            <span className="block">Work.</span>
           </h1>
 
           <p className="mt-6 max-w-2xl font-body text-lg font-semibold leading-snug text-secondary/80 md:text-2xl">
-            BAH Oil LLC is a Houston-based oil and gas company focused on private upstream opportunities. BAH coordinates technical review, redevelopment planning, operating support, and investor materials for approved investors.
+            BAH Oil LLC reviews oil and gas projects using well records, maps, petroleum engineering and geology input, operating context, cost support, and field redevelopment planning.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href={`mailto:${siteConfig.contact.email}?subject=Investor%20Portal%20Access%20Request`}
+              href={`mailto:${siteConfig.contact.email}?subject=BAH%20Oil%20Project%20Inquiry`}
               className="inline-flex min-h-[58px] items-center justify-center rounded-full border-2 border-secondary bg-secondary px-8 font-mono text-xs font-bold uppercase tracking-[-0.02em] text-white transition-transform hover:scale-105 hover:bg-[#08263F]"
             >
               Contact BAH
@@ -73,7 +73,7 @@ const Hero = () => {
           <div className="mb-5 flex items-start justify-between gap-4 border-b-2 border-secondary pb-5">
             <div>
               <p className="kinetic-label text-xs text-primary">What BAH Handles</p>
-              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">Technical Files, Field Work, Investor Materials</h2>
+              <h2 className="kinetic-heading mt-2 text-4xl md:text-5xl">What BAH Reviews Before Field Work Moves Forward</h2>
             </div>
             <span className="rounded-full border-2 border-secondary bg-secondary px-3 py-1 font-mono text-xs font-bold uppercase text-white">
               BAH
@@ -95,7 +95,7 @@ const Hero = () => {
           </div>
 
           <div className="mt-4 border-2 border-primary bg-primary p-3 font-body text-sm font-bold leading-snug text-secondary">
-            Public pages stay high-level. Approved investors can review detailed financial, mapping, operating, and field materials inside the portal.
+            BAH looks at the records, the field conditions, the work plan, and the cost picture before a project is advanced.
           </div>
         </motion.aside>
       </div>

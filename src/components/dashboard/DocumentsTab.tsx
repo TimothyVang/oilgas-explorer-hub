@@ -297,6 +297,7 @@ const getAssetActionLabel = (doc: InvestorDocument) => {
   if (doc.asset_type === "image") return "Open Image";
   if (doc.mime_type?.includes("spreadsheet") || doc.original_filename?.match(/\.(xls|xlsx)$/i)) return "Download Workbook";
   if (doc.original_filename?.match(/\.(ppt|pptx)$/i)) return "Open Deck";
+  if (doc.original_filename?.match(/\.(doc|docx)$/i)) return "Open Document";
   return "Open PDF";
 };
 

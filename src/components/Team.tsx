@@ -6,7 +6,7 @@ const team = [
     initials: "BM",
     name: "Bryant Mook",
     role: "Senior Technical Advisor, Petroleum Engineering & Geology",
-    body: "Supports technical review, field redevelopment, reserves, EOR, and production optimization for BAH Oil LLC opportunities.",
+    body: "Supports well-record review, field redevelopment, reserves context, EOR, and production optimization for BAH Oil LLC projects.",
     icon: HardHat,
   },
   {
@@ -14,7 +14,7 @@ const team = [
     initials: "AG",
     name: "Alfredo Guilamo",
     role: "Chief Operating Officer",
-    body: "Supports operations, coordination, and the investor access workflow for approved BAH Oil LLC materials.",
+    body: "Supports operations coordination, field context, timing, and execution planning for BAH Oil LLC projects.",
     icon: BriefcaseBusiness,
   },
 ];
@@ -26,7 +26,7 @@ const Team = () => {
         <div className="mb-12 grid gap-4 md:grid-cols-[0.9fr_1.1fr] md:items-end">
           <h2 className="kinetic-heading break-words text-[clamp(3rem,13vw,9rem)] sm:text-[clamp(3.5rem,8vw,9rem)]">BAH Team</h2>
           <p className="font-body text-lg font-semibold leading-tight md:text-xl">
-            BAH combines operating coordination with senior petroleum engineering and geology support for private oil and gas opportunities.
+            BAH combines operations coordination with senior petroleum engineering and geology support for oil and gas field review.
           </p>
         </div>
 

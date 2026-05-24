@@ -1,7 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import KineticMarquee from "@/components/KineticMarquee";
-import InvestorPortalPreview from "@/components/InvestorPortalPreview";
+import ProjectReviewPreview from "@/components/ProjectReviewPreview";
 
 import Services from "@/components/Services";
 import Team from "@/components/Team";
@@ -16,7 +16,7 @@ const Index = () => {
         <Hero />
         <KineticMarquee />
         <Services />
-        <InvestorPortalPreview />
+        <ProjectReviewPreview />
         <Team />
         <Contact />
       </main>

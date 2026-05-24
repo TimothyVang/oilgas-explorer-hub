@@ -15,7 +15,7 @@ const Footer = () => {
           <div className="flex flex-wrap gap-4 md:justify-end">
             {[
               ["About", "/about"],
-              ["What BAH Does", "/#services"],
+              ["Field Review", "/#services"],
               ["Team", "/#team"],
               ["Investor Login", "/login"],
               [siteConfig.contact.email, `mailto:${siteConfig.contact.email}`],
@@ -32,7 +32,7 @@ const Footer = () => {
           <div className="flex gap-4">
             {siteConfig.social.linkedin && <a href={siteConfig.social.linkedin} className="inline-flex min-h-[40px] items-center px-2 hover:underline">LinkedIn</a>}
             <a href={`mailto:${siteConfig.contact.email}`} className="inline-flex min-h-[40px] items-center px-2 hover:underline">Email</a>
-            <Link to="/login" className="inline-flex min-h-[40px] items-center px-2 hover:underline">Portal</Link>
+            <Link to="/login" className="inline-flex min-h-[40px] items-center px-2 hover:underline">Login</Link>
           </div>
         </div>
       </div>

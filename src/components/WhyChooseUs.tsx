@@ -4,23 +4,23 @@ const WhyChooseUs = () => {
   const features = [
     {
       icon: FileCheck,
-      title: "Reviewed Access",
-      description: "BAH reviews account requests before releasing confidential investor materials.",
+      title: "Well Record Review",
+      description: "BAH reviews well history, production context, operating records, maps, and field evidence.",
     },
     {
       icon: Gauge,
       title: "Technical Review Path",
-      description: "Approved investors can move through assigned technical, financial, mapping, operations, media, and management materials.",
+      description: "Engineering and geology input supports reserves context, production assumptions, and redevelopment planning.",
     },
     {
       icon: LockKeyhole,
-      title: "Private Materials",
-      description: "Confidential opportunity files stay inside controlled investor access workflows.",
+      title: "Field Constraints",
+      description: "BAH reviews timing, vendors, field conditions, and operating constraints tied to the work plan.",
     },
     {
       icon: ShieldCheck,
-      title: "Assigned Access Only",
-      description: "Each account sees only the materials BAH has approved and assigned for review.",
+      title: "Cost & Execution",
+      description: "Cost support and execution sequence are checked before a project moves forward.",
     },
   ];
 
@@ -29,10 +29,10 @@ const WhyChooseUs = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Why BAH Controls the Portal
+            Records, Costs, Field Work
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            BAH organizes private upstream materials around technical work, operating context, cost support, and approved investor access.
+            BAH checks well records, technical assumptions, operating context, cost support, and field execution.
           </p>
         </div>
 

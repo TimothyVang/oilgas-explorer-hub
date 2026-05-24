@@ -16,7 +16,7 @@ import { siteConfig } from "@/constants/siteConfig";
 const loginInstructions = [
   ["01", "Already approved?", "Sign in with the username or email address connected to your BAH investor account."],
   ["02", "Need access?", "Email BAH with your name, firm, and reason for requesting investor review access."],
-  ["03", "NDA not complete?", "The portal keeps confidential materials locked until NDA requirements are satisfied."],
+  ["03", "Access pending?", "The portal keeps confidential materials locked until approval requirements are satisfied."],
   ["04", "Missing materials?", "Approved accounts show only the files BAH has assigned for that investor."],
 ];
 
@@ -109,7 +109,7 @@ const Login = () => {
             <p className="kinetic-label text-xs text-primary">Investor access instructions</p>
             <h2 className="kinetic-heading mt-3 text-5xl text-white md:text-6xl">Private Portal Access</h2>
             <p className="mt-4 text-sm font-semibold leading-relaxed text-white/65 md:text-base">
-              Public pages introduce BAH. This private screen explains how approved investors sign in, complete NDA requirements, and review assigned materials.
+              Sign in to complete access requirements and review the materials BAH has assigned to your account.
             </p>
 
             <div className="mt-6 space-y-3">

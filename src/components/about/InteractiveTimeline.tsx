@@ -18,20 +18,20 @@ const milestones: Milestone[] = [
     },
     {
         year: "02",
-        title: "Build the File",
-        description: "Technical, financial, mapping, operating, and media materials are organized for private review.",
+        title: "Check the Records",
+        description: "Technical, mapping, operating, cost, and field evidence are reviewed against the project plan.",
         side: "right"
     },
     {
         year: "03",
-        title: "Approve Investor Access",
-        description: "BAH controls which investors receive access and which files are assigned to each account.",
+        title: "Review the Work Plan",
+        description: "Engineering, geology, operating context, timing, and field constraints shape the redevelopment plan.",
         side: "left"
     },
     {
         year: "04",
-        title: "Support the Review",
-        description: "Approved investors use the portal to review the materials BAH has prepared and released.",
+        title: "Coordinate Execution",
+        description: "BAH connects the technical review, cost support, field conditions, and operating sequence before work advances.",
         side: "right"
     }
 ];
@@ -58,9 +58,9 @@ export const InteractiveTimeline = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <span className="kinetic-label mb-4 block text-sm text-primary">Access Flow</span>
+                        <span className="kinetic-label mb-4 block text-sm text-primary">Project Flow</span>
                         <h2 className="kinetic-heading text-6xl text-white md:text-8xl">
-                            Investor Review Path
+                            Field Review Path
                         </h2>
                     </motion.div>
                 </div>
