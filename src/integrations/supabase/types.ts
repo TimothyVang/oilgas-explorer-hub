@@ -221,6 +221,7 @@ export type Database = {
           phone: string | null
           updated_at: string
           user_id: string
+          username: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -234,6 +235,7 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           user_id: string
+          username?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -247,6 +249,7 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           user_id?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -317,6 +320,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      resolve_login_identifier: {
+        Args: { _identifier: string }
+        Returns: string | null
       }
       sync_user_emails: { Args: never; Returns: undefined }
     }

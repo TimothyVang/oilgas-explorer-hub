@@ -159,9 +159,6 @@ manager.export_to_markdown()
 1. Visit [Lovable Project](https://lovable.dev/projects/4d5ff142-a81f-4da5-b4e1-4178857d6f53)
 2. Click Share → Publish
 
-### Via Netlify
-The project includes `netlify.toml` for Netlify deployment.
-
 ### Via Git
 Push changes to trigger CI/CD (GitHub Actions to be configured).
 

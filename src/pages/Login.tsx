@@ -216,11 +216,7 @@ const Login = () => {
                     <FormError message={errors.password} />
                   </div>
 
-                  <div className="flex items-center justify-between font-mono text-xs uppercase">
-                    <label className="flex cursor-pointer items-center gap-2">
-                      <input type="checkbox" className="rounded border-white/20 bg-white/5 text-primary" />
-                      <span className="text-white/60">Remember me</span>
-                    </label>
+                  <div className="flex justify-end font-mono text-xs uppercase">
                     <Link
                       to="/forgot-password"
                       className="text-primary transition-transform hover:translate-x-2"
