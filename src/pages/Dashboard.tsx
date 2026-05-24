@@ -26,7 +26,7 @@ const Dashboard = () => {
 
   const menuItems = [
     { icon: HomeIcon, label: "Overview", action: () => setActiveTab("Overview") },
-    { icon: DocsIcon, label: "Deal Room", action: () => setActiveTab("Deal Room") },
+    { icon: DocsIcon, label: "Files", action: () => setActiveTab("Files") },
     { icon: User, label: "Profile", action: () => navigate("/profile") },
     ...(isAdmin ? [{ icon: Shield, label: "Admin", action: () => navigate("/admin") }] : []),
   ];
@@ -59,7 +59,7 @@ const Dashboard = () => {
           <TooltipProvider delayDuration={0}>
             <nav className="flex flex-1 flex-col gap-3">
               {menuItems.map((item) => {
-                const isActive = (item.label === "Overview" || item.label === "Deal Room") && activeTab === item.label;
+                const isActive = (item.label === "Overview" || item.label === "Files") && activeTab === item.label;
                 return (
                   <Tooltip key={item.label}>
                     <TooltipTrigger asChild>
@@ -87,7 +87,7 @@ const Dashboard = () => {
           <motion.header initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="border-2 border-primary bg-[#08263F] p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="kinetic-label mb-2 text-xs text-primary">Investor command deck</p>
+                <p className="kinetic-label mb-2 text-xs text-primary">Investor Dashboard</p>
                 <h1 className="kinetic-heading text-5xl text-white md:text-7xl">{activeTab}</h1>
                 <p className="kinetic-label mt-2 text-xs text-white/60">
                   {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
@@ -110,10 +110,10 @@ const Dashboard = () => {
               {activeTab === "Overview" && (
                 <motion.div key="overview" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-6">
                   <div className="grid grid-cols-2 border-2 border-primary bg-[#08263F] lg:grid-cols-4">
-                    <StatCard label="Access Status" value={stats.ndaSigned ? "Active" : "Pending"} />
-                    <StatCard label="Assets" value={String(stats.assignedDocuments)} />
-                    <StatCard label="Activity" value={String(stats.recentActivity.length)} />
-                    <StatCard label="Access" value={isAdmin ? "Admin" : "Investor"} />
+                    <StatCard label="Status" value={stats.ndaSigned ? "Active" : "Pending"} />
+                    <StatCard label="Files" value={String(stats.assignedDocuments)} />
+                    <StatCard label="Recent" value={String(stats.recentActivity.length)} />
+                    <StatCard label="Role" value={isAdmin ? "Admin" : "Investor"} />
                   </div>
 
                   <StartHerePanel
@@ -125,7 +125,7 @@ const Dashboard = () => {
                   <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     <section className="border-2 border-primary bg-[#08263F] p-5 lg:col-span-2">
                       <div className="mb-4 flex items-center justify-between">
-                        <h3 className="kinetic-label text-sm text-primary">Recent Activity</h3>
+                        <h3 className="kinetic-label text-sm text-primary">Recent</h3>
                         {stats.recentActivity.length > 5 && (
                           <button onClick={() => setShowAllActivity(!showAllActivity)} className="kinetic-label text-xs text-white transition-transform hover:translate-x-2 hover:text-primary">
                             {showAllActivity ? "Show Less" : "View All"}
@@ -137,7 +137,7 @@ const Dashboard = () => {
                         {statsLoading ? (
                           <ActivitySkeleton count={5} />
                         ) : stats.recentActivity.length === 0 ? (
-                          <div className="border-2 border-white/20 py-12 text-center font-mono text-sm uppercase text-white/50">No activity yet</div>
+                          <div className="border-2 border-white/20 py-12 text-center font-mono text-sm uppercase text-white/50">No recent activity</div>
                         ) : (
                           (showAllActivity ? stats.recentActivity : stats.recentActivity.slice(0, 5)).map((activity, index) => (
                             <motion.div
@@ -161,14 +161,14 @@ const Dashboard = () => {
                     </section>
 
                     <section className="border-2 border-primary bg-[#08263F] p-5">
-                      <h3 className="kinetic-label mb-4 text-sm text-primary">Tasks</h3>
+                      <h3 className="kinetic-label mb-4 text-sm text-primary">Next</h3>
                       <div className="space-y-2">
                         {statsLoading ? (
                           <ActivitySkeleton count={4} />
                         ) : stats.pendingTasks.length === 0 ? (
                           <div className="border-2 border-white/20 py-8 text-center">
                             <CheckCircle className="mx-auto mb-2 h-8 w-8 text-primary" />
-                            <p className="font-mono text-sm uppercase text-white/60">All clear</p>
+                            <p className="font-mono text-sm uppercase text-white/60">Nothing to do</p>
                           </div>
                         ) : (
                           stats.pendingTasks.map((task) => (
@@ -182,7 +182,6 @@ const Dashboard = () => {
                               <div className={`h-2 w-2 rounded-full ${task.status === "critical" ? "bg-red-500" : task.status === "pending" ? "bg-primary" : "bg-white"}`} />
                               <div className="min-w-0 flex-1">
                                 <p className="truncate font-mono text-sm font-bold uppercase text-white transition-transform group-hover:translate-x-2">{task.title}</p>
-                                <p className="font-mono text-xs uppercase text-primary">{task.status}</p>
                               </div>
                               <span className="text-primary">-&gt;</span>
                             </button>
@@ -191,20 +190,14 @@ const Dashboard = () => {
                       </div>
 
                       <Button onClick={() => navigate("/investor-documents")} className="mt-4 w-full border-primary bg-primary text-secondary hover:bg-white">
-                        Open Deal Room
+                        View Files
                       </Button>
                     </section>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-4 border-2 border-primary bg-[#08263F] p-4 md:grid-cols-3">
-                    <QuickAction onClick={() => navigate("/investor-documents")} icon={<DocsIcon className="h-5 w-5" />} label="Open Deal Room" />
-                    <QuickAction onClick={() => navigate("/profile")} icon={<User className="h-5 w-5" />} label="Edit Profile" />
-                    {isAdmin && <QuickAction onClick={() => navigate("/admin")} icon={<Shield className="h-5 w-5" />} label="Admin Dashboard" />}
                   </div>
                 </motion.div>
               )}
 
-              {activeTab === "Deal Room" && <DocumentsTab />}
+              {activeTab === "Files" && <DocumentsTab />}
             </AnimatePresence>
           </main>
         </div>
@@ -215,7 +208,7 @@ const Dashboard = () => {
           <Home className="h-5 w-5" />
         </Link>
         {menuItems.map((item) => {
-          const isActive = (item.label === "Overview" || item.label === "Deal Room") && activeTab === item.label;
+          const isActive = (item.label === "Overview" || item.label === "Files") && activeTab === item.label;
           return (
             <button key={item.label} onClick={item.action} className={`rounded-full p-3 ${isActive ? "bg-primary text-secondary" : "text-white/60 hover:text-primary"}`}>
               <item.icon className="h-5 w-5" />
@@ -241,23 +234,23 @@ const StartHerePanel = ({
 }) => {
   const status = !ndaSigned
       ? {
-          label: "Access setup",
-          title: "Deal room access is active",
-          body: "Use your portal credentials to review the private categories BAH has made available to your account.",
-          cta: "Open Deal Room",
+          label: "Action needed",
+          title: "Access is pending",
+          body: "BAH will notify you when your files are ready.",
+          cta: "Check Files",
         }
     : assignedDocuments === 0
       ? {
           label: "Awaiting assignment",
-          title: "Access verified. BAH will assign assets next.",
-          body: "You can enter the deal room now. Assigned pitch, financial, mapping, and video assets will appear as BAH releases them to your account.",
-          cta: "Check Deal Room",
+          title: "No files assigned yet",
+          body: "BAH will add files here when they are ready.",
+          cta: "View Files",
         }
       : {
           label: "Ready for review",
-          title: `${assignedDocuments} private asset${assignedDocuments === 1 ? "" : "s"} assigned`,
-          body: "Start with the featured asset, then move through Pitch, Financials, Mapping, Operations, Field Videos, and Management.",
-          cta: "Open Deal Room",
+          title: `${assignedDocuments} file${assignedDocuments === 1 ? "" : "s"} ready`,
+          body: "Open your assigned files and start with the first item.",
+          cta: "View Files",
         };
 
   return (
@@ -279,13 +272,6 @@ const StatCard = ({ label, value }: { label: string; value: string }) => (
     <div className="kinetic-heading mb-2 break-words text-3xl leading-none text-primary sm:text-4xl md:text-5xl">{value}</div>
     <p className="kinetic-label text-xs text-white/70">{label}</p>
   </div>
-);
-
-const QuickAction = ({ onClick, icon, label }: { onClick: () => void; icon: React.ReactNode; label: string }) => (
-  <button onClick={onClick} className="group flex items-center gap-3 border border-white/20 p-4 transition-colors hover:border-primary hover:bg-white/[0.05]">
-    <span className="text-primary">{icon}</span>
-    <span className="font-mono text-sm font-bold uppercase text-white transition-transform group-hover:translate-x-2">{label}</span>
-  </button>
 );
 
 export default Dashboard;

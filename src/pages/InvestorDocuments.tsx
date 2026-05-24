@@ -55,7 +55,7 @@ const InvestorDocuments = () => {
               <p className="kinetic-label text-xs text-primary">Private investor workspace</p>
               <h1 className="kinetic-heading mt-2 text-5xl text-white md:text-7xl">Investor Deal Room</h1>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65 md:text-base">
-                Review assigned BAH materials in one controlled workspace. Start with the featured item, then move through the category tabs below.
+                Your assigned BAH files are below. Start with the recommended item, then use the section buttons to review only what you need.
               </p>
             </div>
             <div className="grid grid-cols-2 border-2 border-primary md:w-[360px]">
@@ -70,8 +70,8 @@ const InvestorDocuments = () => {
                 <div className="mb-2 flex h-9 w-9 items-center justify-center border border-primary bg-secondary text-primary">
                   <FileText className="h-5 w-5" />
                 </div>
-                <p className="kinetic-label text-[10px] text-white/50">Delivery</p>
-                <p className="font-mono text-sm font-bold uppercase text-primary">Secure Links</p>
+                <p className="kinetic-label text-[10px] text-white/50">Files</p>
+                <p className="font-mono text-sm font-bold uppercase text-primary">Private Links</p>
               </div>
             </div>
           </section>
