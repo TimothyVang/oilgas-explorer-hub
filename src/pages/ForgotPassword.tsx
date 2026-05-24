@@ -43,16 +43,10 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-midnight flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background - matches homepage Hero */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,20,40,1)_0%,rgba(2,4,16,1)_100%)]" />
-      
-      {/* Single centered glow orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
-      
-      {/* Bold background typography */}
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-secondary px-4 py-8 text-white">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(192,155,76,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.16)_1px,transparent_1px)] bg-[size:48px_48px]" />
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <span className="text-[15vw] font-black tracking-tighter bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent opacity-[0.03]">
+        <span className="kinetic-heading text-[20vw] text-primary opacity-[0.08]">
           RESET
         </span>
       </div>
@@ -61,23 +55,22 @@ const ForgotPassword = () => {
         {/* Back Link */}
         <Link 
           to="/login" 
-          className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors"
+          className="kinetic-label mb-8 inline-flex items-center gap-2 text-primary transition-transform hover:translate-x-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Login
         </Link>
 
-        {/* Card - Clean glassmorphism */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
+        <div className="border-2 border-primary bg-[#08263F] p-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-white/10 flex items-center justify-center font-bold text-lg text-white">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center border-2 border-primary bg-primary font-mono text-lg font-bold text-secondary">
               B
             </div>
-            <h1 className="text-2xl font-bold text-white mb-1">
+            <h1 className="kinetic-heading mb-1 text-5xl text-white">
               Reset Password
             </h1>
-            <p className="text-white/60 text-sm">
+            <p className="kinetic-label text-xs text-primary">
               {isSubmitted 
                 ? "Check your email for a reset link" 
                 : "Enter your email to receive a password reset link"}
@@ -87,7 +80,7 @@ const ForgotPassword = () => {
           {!isSubmitted ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-white/70 text-sm">
+                <Label htmlFor="email" className="kinetic-label text-xs text-primary">
                   Email Address
                 </Label>
                 <div className="relative">
@@ -98,7 +91,7 @@ const ForgotPassword = () => {
                     placeholder="you@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                    className="h-11 rounded-none border-2 border-primary/60 bg-secondary pl-10 text-white placeholder:text-white/30 focus:border-primary"
                     required
                     autoComplete="email"
                     enterKeyHint="send"
@@ -108,7 +101,7 @@ const ForgotPassword = () => {
 
               <Button 
                 type="submit" 
-                className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg"
+                className="h-12 w-full rounded-full border-primary bg-primary text-secondary hover:bg-white"
                 disabled={isLoading}
               >
                 {isLoading ? "Sending..." : "Send Reset Link"}
@@ -116,8 +109,8 @@ const ForgotPassword = () => {
             </form>
           ) : (
             <div className="text-center space-y-4">
-              <div className="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center mx-auto">
-                <Mail className="w-7 h-7 text-white" />
+              <div className="mx-auto flex h-14 w-14 items-center justify-center border-2 border-primary bg-primary text-secondary">
+                <Mail className="h-7 w-7" />
               </div>
               <p className="text-white/60 text-sm">
                 We've sent a password reset link to <strong className="text-white">{email}</strong>. 
@@ -125,7 +118,7 @@ const ForgotPassword = () => {
               </p>
               <Button 
                 variant="outline" 
-                className="w-full h-11 border-white/10 text-white hover:bg-white/10 rounded-lg"
+                className="h-12 w-full rounded-full border-primary text-primary hover:bg-primary hover:text-secondary"
                 onClick={() => {
                   setIsSubmitted(false);
                   setEmail("");
@@ -137,10 +130,10 @@ const ForgotPassword = () => {
           )}
 
           {/* Back to sign in */}
-          <div className="mt-6 pt-6 border-t border-white/10 text-center">
+          <div className="mt-6 border-t-2 border-primary/50 pt-6 text-center">
             <p className="text-white/50 text-sm">
               Remember your password?{" "}
-              <Link to="/login" className="text-white hover:text-white/80 font-medium transition-colors">
+              <Link to="/login" className="font-bold text-primary transition-transform hover:translate-x-2">
                 Sign in
               </Link>
             </p>
@@ -148,8 +141,8 @@ const ForgotPassword = () => {
         </div>
 
         {/* Company Name */}
-        <p className="text-center text-white/30 mt-8 text-sm">
-          © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
+        <p className="kinetic-label mt-8 text-center text-xs text-primary/70">
+          © {new Date().getFullYear()} BAH Oil LLC. All rights reserved.
         </p>
       </div>
     </div>

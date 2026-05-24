@@ -191,9 +191,8 @@ test.describe('WCAG 2.2 Level AA - Login Page', () => {
     const submitButton = page.getByRole('button', { name: /sign in/i });
     await expect(submitButton).toBeVisible();
 
-    // Check Google OAuth button has accessible name
-    const googleButton = page.getByRole('button', { name: /google/i });
-    await expect(googleButton).toBeVisible();
+    // Public third-party auth is intentionally hidden for invite-only access.
+    await expect(page.getByRole('button', { name: /google/i })).not.toBeVisible();
   });
 });
 
@@ -356,9 +355,8 @@ test.describe('WCAG 2.2 Level AA - Color Contrast References', () => {
     const signInButton = page.getByRole('button', { name: /sign in/i });
     await expect(signInButton).toBeVisible();
 
-    // Check secondary button text (Google)
-    const googleButton = page.getByRole('button', { name: /google/i });
-    await expect(googleButton).toBeVisible();
+    // Check invite-only guidance text instead of public third-party auth.
+    await expect(page.getByText(/new accounts are provisioned by BAH/i)).toBeVisible();
   });
 
   test('1.4.11 - UI components have sufficient contrast', async ({ page }) => {

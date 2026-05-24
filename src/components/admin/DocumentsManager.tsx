@@ -37,7 +37,15 @@ interface InvestorDocument {
   id: string;
   title: string;
   description: string | null;
-  file_url: string;
+  file_url: string | null;
+  storage_path: string | null;
+  category: string;
+  asset_type: string;
+  file_size: number | null;
+  mime_type: string | null;
+  original_filename: string | null;
+  sort_order: number;
+  is_featured: boolean;
   created_at: string;
   updated_at: string;
   assigned_count?: number;
@@ -121,13 +129,11 @@ export const DocumentsManager = () => {
     setAssignmentOpen(true);
   };
 
-  const deleteFileFromStorage = async (fileUrl: string) => {
+  const deleteFileFromStorage = async (doc: InvestorDocument) => {
     try {
-      const urlParts = fileUrl.split("/investor-documents/");
-      if (urlParts.length > 1) {
-        const filePath = urlParts[1];
-        await supabase.storage.from("investor-documents").remove([filePath]);
-      }
+      const legacyPath = doc.file_url?.split("/investor-documents/")[1];
+      const filePath = doc.storage_path || legacyPath;
+      if (filePath) await supabase.storage.from("investor-documents").remove([filePath]);
     } catch (error) {
       console.error("Error deleting file from storage:", error);
     }
@@ -139,9 +145,7 @@ export const DocumentsManager = () => {
     setIsDeleting(true);
     try {
       // Delete file from storage first
-      if (documentToDelete.file_url) {
-        await deleteFileFromStorage(documentToDelete.file_url);
-      }
+      await deleteFileFromStorage(documentToDelete);
 
       // Delete document record
       const { error } = await supabase
@@ -185,18 +189,38 @@ export const DocumentsManager = () => {
     });
   };
 
-  const getFileExtension = (url: string) => {
-    const parts = url.split(".");
+  const getFileLabel = (doc: InvestorDocument) => {
+    if (doc.asset_type === "video") return "VIDEO";
+    if (doc.asset_type === "image") return "IMAGE";
+    const source = doc.original_filename || doc.storage_path || doc.file_url || "";
+    const parts = source.split(".");
     return parts[parts.length - 1]?.toUpperCase() || "FILE";
+  };
+
+  const handleDownload = async (doc: InvestorDocument) => {
+    const { data, error } = await supabase.functions.invoke<{ signed_url?: string; error?: string }>("create-asset-access-url", {
+      body: { document_id: doc.id },
+    });
+
+    if (error || !data?.signed_url) {
+      toast({
+        title: "Access failed",
+        description: data?.error || error?.message || "Unable to create a secure download link.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    window.open(data.signed_url, "_blank", "noopener,noreferrer");
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Investor Documents</h3>
-          <p className="text-sm text-muted-foreground">
-            Manage documents available to investors who have signed the NDA.
+          <h3 className="kinetic-heading text-4xl text-white">Investor Assets</h3>
+          <p className="kinetic-label text-xs text-primary">
+            Manage private deal-room assets available to NDA-approved investors.
           </p>
         </div>
         <div className="flex gap-2">
@@ -206,12 +230,12 @@ export const DocumentsManager = () => {
           </Button>
           <Button size="sm" onClick={handleAddDocument}>
             <Plus className="w-4 h-4 mr-2" />
-            Add Document
+            Add Asset
           </Button>
         </div>
       </div>
 
-      <div className="border rounded-lg overflow-x-auto">
+        <div className="overflow-x-auto border-2 border-primary bg-secondary">
         <Table className="min-w-[600px]">
           <TableHeader>
             <TableRow>
@@ -233,23 +257,33 @@ export const DocumentsManager = () => {
             ) : documents.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-8">
-                  <FileText className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-                  <p className="text-muted-foreground">No documents yet</p>
+                  <FileText className="mx-auto mb-2 h-8 w-8 text-primary" />
+                  <p className="font-mono text-sm uppercase text-white/60">No assets yet</p>
                   <Button variant="link" size="sm" onClick={handleAddDocument}>
-                    Add your first document
+                    Add your first asset
                   </Button>
                 </TableCell>
               </TableRow>
             ) : (
               documents.map((doc) => (
                 <TableRow key={doc.id}>
-                  <TableCell className="font-medium">{doc.title}</TableCell>
+                  <TableCell className="font-medium">
+                    <div>
+                      <p>{doc.title}</p>
+                      {doc.original_filename && (
+                        <p className="font-normal text-muted-foreground text-xs">{doc.original_filename}</p>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell className="max-w-[300px] truncate text-muted-foreground">
                     {doc.description || "—"}
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className="font-mono text-xs">
-                      {getFileExtension(doc.file_url)}
+                      {getFileLabel(doc)}
+                    </Badge>
+                    <Badge variant="outline" className="ml-2 text-xs capitalize">
+                      {doc.category?.replace("_", " ") || "overview"}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -277,16 +311,9 @@ export const DocumentsManager = () => {
                           <Users className="w-4 h-4 mr-2" />
                           Assign Users
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                          <a
-                            href={doc.file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center"
-                          >
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </a>
+                        <DropdownMenuItem onClick={() => handleDownload(doc)}>
+                          <Download className="w-4 h-4 mr-2" />
+                          Secure Download
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleEditDocument(doc)}>
@@ -332,7 +359,7 @@ export const DocumentsManager = () => {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Document</AlertDialogTitle>
+            <AlertDialogTitle>Delete Asset</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete "{documentToDelete?.title}"? This will
               permanently remove the document and its file. This action cannot be undone.

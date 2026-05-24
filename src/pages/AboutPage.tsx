@@ -1,192 +1,45 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import Team from "@/components/Team";
-import { ArrowDown } from "lucide-react";
-import { ScaleIcon, LeafIcon, FlameIcon, VisionIcon, MissionIcon, ValuesIcon } from "@/components/Icons";
-import heroImage from "@/assets/pump-jacks.jpg";
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
-import { InteractiveTimeline } from "@/components/about/InteractiveTimeline";
-import { useRef } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-interface ValueCard3DProps {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  desc: string;
-  delay: number;
-}
-
+const values = [
+  ["01", "Technical Perspective", "BAH brings petroleum engineering, geology, and operating context to oil and gas opportunity review."],
+  ["02", "Disciplined Communication", "Investor communication stays direct, measured, and focused on materials that belong in private review."],
+  ["03", "Confidential Standard", "Sensitive technical, financial, and field materials are handled through controlled account access."],
+];
 
 const AboutPage = () => {
-  const isMobile = useIsMobile();
-  const { scrollYProgress } = useScroll();
-  // Disable scroll-driven scale on mobile for performance
-  const scale = useTransform(scrollYProgress, [0, 1], isMobile ? [1, 1] : [1, 1.2]);
-
   return (
-    <div className="min-h-screen bg-midnight overflow-hidden relative">
+    <div className="min-h-screen overflow-hidden bg-primary text-secondary">
       <Navigation />
 
-      {/* FLUID BACKGROUND - Optimized for mobile */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[#020410]" />
-        {/* CSS-based noise pattern - hidden on mobile */}
-        <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1Ii8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc=')] pointer-events-none hidden md:block" />
-        {/* Reduced blur on mobile (50px vs 150px) */}
-        <div className="absolute top-0 right-0 w-[500px] md:w-[1000px] h-[500px] md:h-[1000px] bg-primary/20 rounded-full blur-[50px] md:blur-[150px] md:animate-blob mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-accent/20 rounded-full blur-[50px] md:blur-[150px] md:animate-blob md:animation-delay-4000 mix-blend-screen" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none hidden md:block" />
-      </div>
-
-      {/* Cinematic Hero */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden z-10">
-        <motion.div style={{ scale }} className="absolute inset-0 z-0 opacity-50">
-          <img
-            src={heroImage}
-            loading="lazy"
-            decoding="async"
-            alt="Oil field operations"
-            className="w-full h-full object-cover grayscale contrast-125"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-midnight via-transparent to-midnight" />
-        </motion.div>
-
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ height: 0 }}
-            animate={{ height: "100px" }}
-            transition={{ duration: 1 }}
-            className="w-1 bg-gradient-to-b from-primary to-transparent mx-auto mb-8 relative"
-          >
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-primary rounded-full animate-pulse shadow-[0_0_20px_rgba(37,99,235,0.8)]" />
-          </motion.div>
-
-          <h1 className="text-6xl sm:text-7xl md:text-9xl font-black text-white mb-6 uppercase tracking-tighter drop-shadow-[0_0_50px_rgba(0,0,0,1)]">
-            <TextDecode text="Legacy of" /> <br />
-            <span className="text-primary font-bold">
-              Excellence
-            </span>
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2 }}
-            className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed"
-          >
-            Decades of defining the <span className="text-primary font-medium">energy frontier</span> through sustainable innovation and unwavering integrity.
-          </motion.p>
-        </div>
-
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-          <ArrowDown className="text-white/50 w-8 h-8" />
-        </div>
-      </section>
-
-      {/* Values Grid - Premium 3D Glassmorphism */}
-      <section className="py-32 relative">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-3 gap-8 translate-y-[-100px]">
-            <ValueCard3D
-              icon={VisionIcon}
-              title="Vision"
-              desc="To be the premier independent energy powerhouse, setting global benchmarks for operational mastery."
-              delay={0}
-            />
-            <ValueCard3D
-              icon={MissionIcon}
-              title="Mission"
-              desc="We acquire and optimize high-value assets with a relentless focus on efficiency, safety, and superior returns."
-              delay={0.2}
-            />
-            <ValueCard3D
-              icon={ValuesIcon}
-              title="Values"
-              desc="Integrity, transparency, and environmental stewardship are the immutable laws guiding every decision we make."
-              delay={0.4}
-            />
+      <section className="flex min-h-screen items-center border-b-2 border-secondary px-4 pt-28 md:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-end">
+          <div>
+            <p className="kinetic-label mb-4 text-sm">About / BAH Oil LLC</p>
+            <h1 className="kinetic-heading text-[clamp(3.75rem,10vw,9rem)]">Oilfield Discipline, Private Review</h1>
+          </div>
+          <div className="border-2 border-secondary bg-white p-6">
+            <p className="font-body text-xl font-semibold leading-tight">
+              BAH Oil LLC presents oil and gas opportunities with technical restraint, practical operating context, and a clear boundary between public information and private investor materials.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Interactive Timeline Story */}
-      <InteractiveTimeline />
+      <section className="bg-secondary text-white">
+        <div className="mx-auto grid max-w-7xl border-x-2 border-primary md:grid-cols-3">
+          {values.map(([index, title, description]) => (
+            <article key={index} className="group border-b-2 border-primary p-6 transition-colors hover:bg-white/[0.05] md:border-b-0 md:border-r-2 md:last:border-r-0">
+              <p className="kinetic-label text-xs text-primary">{index}</p>
+              <h2 className="kinetic-heading mt-10 text-5xl text-white transition-transform group-hover:translate-x-4">{title}</h2>
+              <p className="mt-6 text-sm font-semibold leading-relaxed text-white/65">{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-      <Team />
       <Footer />
     </div>
-  );
-};
-
-// Cyberpunk Text Decode Effect
-const TextDecode = ({ text }: { text: string }) => {
-  return (
-    <motion.span
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-    >
-      {text}
-    </motion.span>
-  ); // Simplifying for MVP, full decode logic is complex to inline without extra hook. Visual impact comes from font size/weight here.
-};
-
-const ValueCard3D = ({ icon: Icon, title, desc, delay }: ValueCard3DProps) => {
-  const isMobile = useIsMobile();
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-
-  // Disable 3D mouse tracking on mobile for performance
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile) return;
-    const rect = ref.current?.getBoundingClientRect();
-    if (rect) {
-      const width = rect.width;
-      const height = rect.height;
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-      const xPct = mouseX / width - 0.5;
-      const yPct = mouseY / height - 0.5;
-      x.set(xPct * 20);
-      y.set(yPct * -20);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={isMobile ? undefined : {
-        rotateY: mouseXSpring,
-        rotateX: mouseYSpring,
-        transformStyle: "preserve-3d"
-      }}
-      className="p-10 bg-white/5 backdrop-blur-md md:backdrop-blur-xl border border-white/10 rounded-3xl hover:bg-white/10 transition-colors group cursor-pointer shadow-xl relative overflow-hidden"
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-      <div className="relative z-10">
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(37,99,235,0.4)]">
-          <Icon className="w-10 h-10 text-white" />
-        </div>
-        <h3 className="text-3xl font-bold text-white mb-4 tracking-tight">{title}</h3>
-        <p className="text-gray-400 leading-relaxed text-lg">{desc}</p>
-      </div>
-    </motion.div>
   );
 };
 

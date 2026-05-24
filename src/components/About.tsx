@@ -1,27 +1,27 @@
-import { HardHat, Award, Globe, Users } from "lucide-react";
+import { FileCheck, LockKeyhole, ShieldCheck, Users } from "lucide-react";
 import pumpJacksImage from "@/assets/pump-jacks.jpg";
 
 const About = () => {
   const highlights = [
     {
-      icon: HardHat,
-      title: "Safety First",
-      description: "Industry-leading safety standards and protocols",
+      icon: FileCheck,
+      title: "Access Review",
+      description: "Investor accounts are reviewed before confidential materials are assigned.",
     },
     {
-      icon: Award,
-      title: "Excellence",
-      description: "Decades of proven expertise and innovation",
+      icon: LockKeyhole,
+      title: "NDA-Gated",
+      description: "Private files remain locked until NDA requirements are complete.",
     },
     {
-      icon: Globe,
-      title: "Global Reach",
-      description: "Operations across multiple continents",
+      icon: ShieldCheck,
+      title: "Controlled Release",
+      description: "BAH controls which materials each approved account can review.",
     },
     {
       icon: Users,
-      title: "Expert Team",
-      description: "Skilled professionals dedicated to success",
+      title: "Direct Coordination",
+      description: "Approved investors review materials through a focused portal workflow.",
     },
   ];
 
@@ -42,23 +42,23 @@ const About = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-primary/50 to-transparent" />
             </div>
             <div className="absolute -bottom-6 -right-6 glass-effect rounded-2xl p-6 max-w-xs border border-border shadow-card">
-              <p className="text-4xl font-bold text-accent mb-1">45+</p>
-              <p className="text-muted-foreground">Years of Excellence</p>
+              <p className="text-4xl font-bold text-accent mb-1">NDA</p>
+              <p className="text-muted-foreground">Required for private materials</p>
             </div>
           </div>
 
           {/* Content Section */}
           <div className="animate-fade-in">
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
-              Leading the Energy Industry Forward
+              Private Investor Access for Oil and Gas Review
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              BAH Oil and Gas has been at the forefront of the oil and gas industry for over four decades,
-              delivering reliable energy solutions that power communities and industries worldwide.
+              BAH Oil LLC uses a secure portal to coordinate approved investor access, NDA review,
+              and assigned opportunity materials.
             </p>
             <p className="text-lg text-muted-foreground mb-8">
-              Our commitment to operational excellence, environmental stewardship, and technological 
-              innovation sets us apart as a trusted partner in the global energy landscape.
+              Public pages explain the access process. Detailed technical, financial, mapping, and
+              media files stay inside the portal for approved accounts.
             </p>
 
             {/* Highlights Grid */}

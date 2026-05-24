@@ -104,9 +104,8 @@ test.describe('Investor Documents Portal', () => {
       const signInButton = page.getByRole('button', { name: /sign in/i });
       await expect(signInButton).toBeVisible();
 
-      // Google OAuth button
-      const googleButton = page.getByRole('button', { name: /google/i });
-      await expect(googleButton).toBeVisible();
+      await expect(page.getByRole('button', { name: /google/i })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: /create/i })).toHaveCount(0);
     });
 
     test('page has dark theme enabled', async ({ page }) => {

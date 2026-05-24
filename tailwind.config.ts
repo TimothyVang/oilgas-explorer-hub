@@ -15,8 +15,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Montserrat', 'sans-serif'],
-        body: ['Open Sans', 'sans-serif'],
+        display: ['Archivo Black', 'sans-serif'],
+        heading: ['Archivo Black', 'sans-serif'],
+        mono: ['Space Mono', 'monospace'],
+        body: ['Inter', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -63,12 +65,16 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         midnight: {
-          DEFAULT: "hsl(216 50% 18%)",
-          light: "hsl(216 40% 25%)",
+          DEFAULT: "hsl(209 65% 20%)",
+          light: "hsl(209 58% 29%)",
         },
         gold: {
-          DEFAULT: "hsl(43 50% 58%)",
-          light: "hsl(43 60% 70%)",
+          DEFAULT: "hsl(41 48% 53%)",
+          light: "hsl(41 52% 62%)",
+        },
+        navy: {
+          DEFAULT: "hsl(209 65% 20%)",
+          deep: "hsl(208 77% 14%)",
         },
       },
       borderRadius: {
@@ -148,6 +154,18 @@ export default {
           "0%": { transform: "rotate(360deg)" },
           "100%": { transform: "rotate(0deg)" }
         },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        "marquee-reverse": {
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "kinetic-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -161,6 +179,9 @@ export default {
         "gradient": "gradient 3s ease infinite",
         "data-rain": "data-rain 4s linear infinite",
         "reverse-spin": "reverse-spin 8s linear infinite",
+        "marquee": "marquee 24s linear infinite",
+        "marquee-reverse": "marquee-reverse 28s linear infinite",
+        "kinetic-spin": "kinetic-spin 12s linear infinite",
       },
       backgroundImage: {
         "noise-pattern": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",

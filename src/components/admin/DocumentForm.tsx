@@ -37,7 +37,15 @@ interface DocumentFormProps {
     id: string;
     title: string;
     description: string | null;
-    file_url: string;
+    file_url?: string | null;
+    storage_path?: string | null;
+    category?: string;
+    asset_type?: string;
+    file_size?: number | null;
+    mime_type?: string | null;
+    original_filename?: string | null;
+    sort_order?: number;
+    is_featured?: boolean;
   } | null;
   onSuccess: () => void;
   preSelectedUserId?: string | null;
@@ -53,6 +61,10 @@ export const DocumentForm = ({
   const { user } = useAuth();
   const [title, setTitle] = useState(document?.title || "");
   const [description, setDescription] = useState(document?.description || "");
+  const [category, setCategory] = useState(document?.category || "overview");
+  const [assetType, setAssetType] = useState(document?.asset_type || "document");
+  const [sortOrder, setSortOrder] = useState(String(document?.sort_order || 0));
+  const [isFeatured, setIsFeatured] = useState(document?.is_featured || false);
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -100,6 +112,10 @@ export const DocumentForm = ({
   const resetForm = () => {
     setTitle("");
     setDescription("");
+    setCategory("overview");
+    setAssetType("document");
+    setSortOrder("0");
+    setIsFeatured(false);
     setFile(null);
     setIsUploading(false);
     setSelectedUserId(preSelectedUserId || "");
@@ -142,22 +158,28 @@ export const DocumentForm = ({
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "application/vnd.ms-powerpoint",
       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "video/mp4",
+      "video/quicktime",
+      "video/webm",
     ];
 
     if (!allowedTypes.includes(file.type)) {
       toast({
         title: "Invalid file type",
-        description: "Please upload a PDF, Word, Excel, or PowerPoint file.",
+        description: "Please upload a PDF, Office file, image, or web-ready video.",
         variant: "destructive",
       });
       return false;
     }
 
-    // 20MB limit
-    if (file.size > 20 * 1024 * 1024) {
+    // 500MB limit for compressed portal videos. Originals should stay outside the repo.
+    if (file.size > 500 * 1024 * 1024) {
       toast({
         title: "File too large",
-        description: "Please upload a file smaller than 20MB.",
+        description: "Please upload a compressed file smaller than 500MB.",
         variant: "destructive",
       });
       return false;
@@ -175,10 +197,10 @@ export const DocumentForm = ({
     }
   };
 
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File): Promise<{ storagePath: string; originalFilename: string; mimeType: string; fileSize: number }> => {
     const fileExt = file.name.split(".").pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
-    const filePath = `documents/${fileName}`;
+    const filePath = `${assetType}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("investor-documents")
@@ -186,21 +208,19 @@ export const DocumentForm = ({
 
     if (uploadError) throw uploadError;
 
-    const { data } = supabase.storage
-      .from("investor-documents")
-      .getPublicUrl(filePath);
-
-    return data.publicUrl;
+    return {
+      storagePath: filePath,
+      originalFilename: file.name,
+      mimeType: file.type || "application/octet-stream",
+      fileSize: file.size,
+    };
   };
 
-  const deleteOldFile = async (fileUrl: string) => {
+  const deleteOldFile = async (storagePath?: string | null, fileUrl?: string | null) => {
     try {
-      // Extract the file path from the URL
-      const urlParts = fileUrl.split("/investor-documents/");
-      if (urlParts.length > 1) {
-        const filePath = urlParts[1];
-        await supabase.storage.from("investor-documents").remove([filePath]);
-      }
+      const legacyPath = fileUrl?.split("/investor-documents/")[1];
+      const filePath = storagePath || legacyPath;
+      if (filePath) await supabase.storage.from("investor-documents").remove([filePath]);
     } catch (error) {
       console.error("Error deleting old file:", error);
     }
@@ -230,25 +250,43 @@ export const DocumentForm = ({
     setIsUploading(true);
 
     try {
-      let fileUrl = document?.file_url || "";
+      let storagePath = document?.storage_path || document?.file_url?.split("/investor-documents/")[1] || null;
+      let originalFilename = document?.original_filename || null;
+      let mimeType = document?.mime_type || null;
+      let fileSize = document?.file_size || null;
 
       // Upload new file if provided
       if (file) {
         // Delete old file if editing and replacing
-        if (isEditing && document?.file_url) {
-          await deleteOldFile(document.file_url);
+        if (isEditing && (document?.storage_path || document?.file_url)) {
+          await deleteOldFile(document.storage_path, document.file_url);
         }
-        fileUrl = await uploadFile(file);
+        const uploaded = await uploadFile(file);
+        storagePath = uploaded.storagePath;
+        originalFilename = uploaded.originalFilename;
+        mimeType = uploaded.mimeType;
+        fileSize = uploaded.fileSize;
       }
+
+      const metadata = {
+        title: title.trim(),
+        description: description.trim() || null,
+        file_url: file ? null : document?.file_url || null,
+        storage_path: storagePath,
+        original_filename: originalFilename,
+        mime_type: mimeType,
+        file_size: fileSize,
+        category,
+        asset_type: assetType,
+        sort_order: Number.parseInt(sortOrder, 10) || 0,
+        is_featured: isFeatured,
+        uploaded_by: user?.id || null,
+      };
 
       if (isEditing) {
         const { error } = await supabase
           .from("investor_documents")
-          .update({
-            title: title.trim(),
-            description: description.trim() || null,
-            file_url: fileUrl,
-          })
+          .update(metadata)
           .eq("id", document.id);
 
         if (error) throw error;
@@ -261,11 +299,7 @@ export const DocumentForm = ({
         // Insert the document
         const { data: newDoc, error } = await supabase
           .from("investor_documents")
-          .insert({
-            title: title.trim(),
-            description: description.trim() || null,
-            file_url: fileUrl,
-          })
+          .insert(metadata)
           .select("id")
           .single();
 
@@ -322,6 +356,10 @@ export const DocumentForm = ({
     if (open) {
       setTitle(document?.title || "");
       setDescription(document?.description || "");
+      setCategory(document?.category || "overview");
+      setAssetType(document?.asset_type || "document");
+      setSortOrder(String(document?.sort_order || 0));
+      setIsFeatured(document?.is_featured || false);
       setFile(null);
       setSelectedUserId(preSelectedUserId || "");
     }
@@ -338,7 +376,7 @@ export const DocumentForm = ({
             <DialogDescription>
               {isEditing
                 ? "Update the document details. Upload a new file to replace the existing one."
-                : "Upload a new investor document. Supported formats: PDF, Word, Excel, PowerPoint."}
+                : "Upload a new investor asset. Supported formats: PDF, Office files, images, and compressed videos."}
             </DialogDescription>
           </DialogHeader>
 
@@ -349,7 +387,7 @@ export const DocumentForm = ({
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., Investment Deck Q4 2024"
+                      placeholder="e.g., Investor Review Package"
               />
             </div>
 
@@ -362,6 +400,62 @@ export const DocumentForm = ({
                 placeholder="Brief description of the document..."
                 rows={3}
               />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-2">
+                <Label htmlFor="category">Deal Room Category</Label>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger id="category">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="overview">Overview</SelectItem>
+                    <SelectItem value="pitch">Pitch Materials</SelectItem>
+                    <SelectItem value="financials">Financials</SelectItem>
+                    <SelectItem value="mapping">Mapping</SelectItem>
+                    <SelectItem value="operations">Operations</SelectItem>
+                    <SelectItem value="field_videos">Field Videos</SelectItem>
+                    <SelectItem value="management">Management</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="asset-type">Asset Type</Label>
+                <Select value={assetType} onValueChange={setAssetType}>
+                  <SelectTrigger id="asset-type">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="document">Document</SelectItem>
+                    <SelectItem value="video">Video</SelectItem>
+                    <SelectItem value="image">Image</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-2">
+                <Label htmlFor="sort-order">Sort Order</Label>
+                <Input
+                  id="sort-order"
+                  type="number"
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  placeholder="0"
+                />
+              </div>
+              <label className="flex items-center gap-2 rounded-md border p-3 text-sm">
+                <input
+                  type="checkbox"
+                  checked={isFeatured}
+                  onChange={(e) => setIsFeatured(e.target.checked)}
+                  className="h-4 w-4"
+                />
+                Feature this asset in the deal room
+              </label>
             </div>
 
             {/* User Assignment (only for new documents) */}
@@ -395,7 +489,7 @@ export const DocumentForm = ({
 
             <div className="grid gap-2">
               <Label>
-                {isEditing ? "Replace File (optional)" : "Upload File *"}
+                {isEditing ? "Replace File (optional)" : "Upload Asset *"}
               </Label>
               <div
                 className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
@@ -440,16 +534,16 @@ export const DocumentForm = ({
                       ref={fileInputRef}
                       type="file"
                       className="hidden"
-                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp,.mp4,.mov,.webm"
                       onChange={handleFileChange}
                     />
                     <p className="text-xs text-muted-foreground mt-2">
-                      PDF, Word, Excel, PowerPoint (max 20MB)
+                      PDF, Office, image, or compressed video (max 500MB)
                     </p>
                   </>
                 )}
               </div>
-              {isEditing && document?.file_url && !file && (
+              {isEditing && (document?.storage_path || document?.file_url) && !file && (
                 <p className="text-xs text-muted-foreground">
                   Current file will be kept if no new file is uploaded.
                 </p>
@@ -470,7 +564,7 @@ export const DocumentForm = ({
               ) : isEditing ? (
                 "Update Document"
               ) : (
-                "Add Document"
+                "Add Asset"
               )}
             </Button>
           </DialogFooter>

@@ -252,7 +252,7 @@ const handler = async (req: Request): Promise<Response> => {
     let html: string;
     // Sanitize name to prevent XSS - only allow alphanumeric, spaces, and basic punctuation
     const rawName = data?.name || "Valued Client";
-    const name = rawName.replace(/[<>\"'&]/g, '').substring(0, 100);
+    const name = rawName.replace(/[<>"'&]/g, '').substring(0, 100);
 
     switch (template) {
       case "welcome":

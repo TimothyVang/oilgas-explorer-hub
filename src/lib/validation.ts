@@ -10,6 +10,15 @@ export const emailSchema = z
   .min(1, "Email is required")
   .email("Please enter a valid email address");
 
+export const loginIdentifierSchema = z
+  .string()
+  .trim()
+  .min(1, "Username or email is required")
+  .refine((value) => {
+    if (value.includes("@")) return emailSchema.safeParse(value).success;
+    return /^[a-z0-9._-]{3,}$/i.test(value);
+  }, "Please enter a valid username or email address");
+
 // Password validation for login
 export const passwordSchema = z
   .string()
@@ -41,7 +50,7 @@ export const companyNameSchema = z
 
 // Login form schema
 export const loginSchema = z.object({
-  email: emailSchema,
+  email: loginIdentifierSchema,
   password: passwordSchema,
 });
 

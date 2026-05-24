@@ -142,7 +142,7 @@ describe("Validation Schemas", () => {
 
     it("rejects invalid email in login", () => {
       const result = loginSchema.safeParse({
-        email: "invalid-email",
+        email: "invalid-email@",
         password: "password123",
       });
       expect(result.success).toBe(false);

@@ -89,7 +89,7 @@ export const UserFilters = ({
             placeholder="Search by name, email, or company..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10"
+            className="border-primary/60 bg-secondary pl-10 text-white placeholder:text-white/40 focus:border-primary"
           />
         </div>
         <Select value={roleFilter} onValueChange={onRoleFilterChange}>
@@ -120,10 +120,7 @@ export const UserFilters = ({
             variant="outline"
             size="sm"
             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-            className={cn(
-              "gap-2 min-w-[120px]",
-              showAdvancedFilters && "bg-primary/10 border-primary/30"
-            )}
+            className={cn("min-w-[120px] gap-2 border-primary text-primary hover:bg-primary hover:text-secondary", showAdvancedFilters && "bg-primary text-secondary")}
           >
             <Filter className="w-4 h-4" />
             {showAdvancedFilters ? "Hide Filters" : "More Filters"}
@@ -133,11 +130,11 @@ export const UserFilters = ({
 
       {/* Advanced Filters Row */}
       {showAdvanced && showAdvancedFilters && (
-        <div className="flex flex-col sm:flex-row gap-4 p-4 bg-white/5 border border-white/10 rounded-lg">
+        <div className="flex flex-col gap-4 border-2 border-primary/60 bg-secondary p-4 sm:flex-row">
           {/* Date Range Picker */}
           {onDateRangeChange && (
             <div className="flex flex-col gap-2">
-              <label className="text-xs text-gray-400 font-medium">Join Date Range</label>
+              <label className="kinetic-label text-xs text-primary">Join Date Range</label>
               <div className="flex gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -165,7 +162,7 @@ export const UserFilters = ({
                   </PopoverContent>
                 </Popover>
 
-                <span className="flex items-center text-gray-400">to</span>
+                <span className="flex items-center font-mono text-xs uppercase text-primary">to</span>
 
                 <Popover>
                   <PopoverTrigger asChild>
@@ -200,7 +197,7 @@ export const UserFilters = ({
                     variant="ghost"
                     size="icon"
                     onClick={clearDateRange}
-                    className="text-gray-400 hover:text-white"
+                    className="text-primary hover:bg-primary hover:text-secondary"
                   >
                     <X className="w-4 h-4" />
                   </Button>
@@ -213,7 +210,7 @@ export const UserFilters = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => setQuickDateRange(7)}
-                  className="text-xs h-7 px-2 text-gray-400 hover:text-white hover:bg-white/10"
+                  className="h-7 px-2 text-xs text-primary hover:bg-primary hover:text-secondary"
                 >
                   Last 7 days
                 </Button>
@@ -221,7 +218,7 @@ export const UserFilters = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => setQuickDateRange(30)}
-                  className="text-xs h-7 px-2 text-gray-400 hover:text-white hover:bg-white/10"
+                  className="h-7 px-2 text-xs text-primary hover:bg-primary hover:text-secondary"
                 >
                   Last 30 days
                 </Button>
@@ -229,7 +226,7 @@ export const UserFilters = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => setQuickDateRange(90)}
-                  className="text-xs h-7 px-2 text-gray-400 hover:text-white hover:bg-white/10"
+                  className="h-7 px-2 text-xs text-primary hover:bg-primary hover:text-secondary"
                 >
                   Last 90 days
                 </Button>
@@ -240,7 +237,7 @@ export const UserFilters = ({
           {/* Account Status Filter */}
           {onStatusFilterChange && (
             <div className="flex flex-col gap-2">
-              <label className="text-xs text-gray-400 font-medium">Account Status</label>
+              <label className="kinetic-label text-xs text-primary">Account Status</label>
               <Select value={statusFilter || "all"} onValueChange={onStatusFilterChange}>
                 <SelectTrigger className="w-full sm:w-40">
                   <SelectValue placeholder="Status" />
@@ -260,10 +257,10 @@ export const UserFilters = ({
       {/* Active Filters Summary */}
       {hasActiveFilters && (
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-gray-400">Active filters:</span>
+          <span className="kinetic-label text-xs text-primary">Active filters:</span>
 
           {searchQuery && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-primary/20 text-primary rounded-full text-xs">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary px-2 py-1 font-mono text-xs text-primary">
               Search: "{searchQuery.slice(0, 15)}{searchQuery.length > 15 ? '...' : ''}"
               <button onClick={() => onSearchChange("")} className="hover:text-white">
                 <X className="w-3 h-3" />
@@ -272,7 +269,7 @@ export const UserFilters = ({
           )}
 
           {roleFilter !== "all" && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-primary/20 text-primary rounded-full text-xs">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary px-2 py-1 font-mono text-xs text-primary">
               Role: {roleFilter}
               <button onClick={() => onRoleFilterChange("all")} className="hover:text-white">
                 <X className="w-3 h-3" />
@@ -281,7 +278,7 @@ export const UserFilters = ({
           )}
 
           {ndaFilter !== "all" && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-primary/20 text-primary rounded-full text-xs">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary px-2 py-1 font-mono text-xs text-primary">
               NDA: {ndaFilter}
               <button onClick={() => onNdaFilterChange("all")} className="hover:text-white">
                 <X className="w-3 h-3" />
@@ -290,7 +287,7 @@ export const UserFilters = ({
           )}
 
           {(dateRange?.from || dateRange?.to) && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-primary/20 text-primary rounded-full text-xs">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary px-2 py-1 font-mono text-xs text-primary">
               Date: {dateRange?.from ? format(dateRange.from, "MMM d") : "..."} - {dateRange?.to ? format(dateRange.to, "MMM d") : "..."}
               <button onClick={clearDateRange} className="hover:text-white">
                 <X className="w-3 h-3" />
@@ -311,7 +308,7 @@ export const UserFilters = ({
             variant="ghost"
             size="sm"
             onClick={clearAllFilters}
-            className="text-xs h-6 px-2 text-gray-400 hover:text-white"
+              className="h-6 px-2 text-xs text-primary hover:bg-primary hover:text-secondary"
           >
             Clear all
           </Button>

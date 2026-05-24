@@ -33,8 +33,11 @@ __pycache__/
 .Python
 *.so
 
-# Environment files (keep .env.example)
-.env.production
+# Environment files (keep examples)
+.env
+.env.*
+!.env.example
+!.env.*.example
 
 # Test outputs
 coverage/
@@ -44,6 +47,14 @@ playwright-report/
 # Build artifacts
 .cache
 .parcel-cache
+
+# Local tooling/state
+.omx/
+.supabase/
+supabase/.temp/
+supabase/.branches/
+.vercel/
+.netlify/
 
 # OS files
 Thumbs.db

@@ -11,9 +11,9 @@ interface HolographicCardProps {
 
 export const HolographicCard = ({ children, className, delay = 0, variant = "default" }: HolographicCardProps) => {
     const variants = {
-        default: "bg-white/5 border-white/10 hover:border-white/20",
-        elevated: "bg-white/[0.07] border-white/10 hover:border-primary/30",
-        subtle: "bg-white/[0.03] border-white/[0.06] hover:border-white/10"
+        default: "bg-[#08263F] border-white/20 hover:bg-secondary",
+        elevated: "bg-secondary border-primary hover:bg-[#08263F]",
+        subtle: "bg-[#08263F] border-white/10 hover:bg-secondary"
     };
 
     return (
@@ -23,20 +23,14 @@ export const HolographicCard = ({ children, className, delay = 0, variant = "def
             transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
                 "relative group",
-                "backdrop-blur-md",
-                "border rounded-3xl",
+                "border-2 rounded-none",
                 "overflow-hidden",
-                "transition-all duration-500 ease-out",
+                "transition-all duration-300 ease-out",
                 variants[variant],
-                "hover:shadow-[0_0_40px_rgba(0,102,255,0.15)]",
                 className
             )}
         >
-            {/* Subtle grid on hover - matches homepage Services cards */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-            {/* Top highlight - subtle accent */}
-            <div className="absolute top-0 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:32px_32px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
             {/* Content */}
             <div className="relative z-10 h-full">

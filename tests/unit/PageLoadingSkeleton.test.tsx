@@ -16,8 +16,8 @@ import {
 describe('PageLoadingSkeleton', () => {
   it('renders with loading spinner', () => {
     render(<PageLoadingSkeleton />);
-    // The spinner has animate-spin class
-    const spinner = document.querySelector('.animate-spin');
+    // The spinner uses the app's kinetic spin animation.
+    const spinner = document.querySelector('.animate-kinetic-spin');
     expect(spinner).toBeInTheDocument();
   });
 
@@ -25,7 +25,7 @@ describe('PageLoadingSkeleton', () => {
     const { container } = render(<PageLoadingSkeleton />);
     const wrapper = container.firstChild as HTMLElement;
     expect(wrapper).toHaveClass('min-h-screen');
-    expect(wrapper).toHaveClass('bg-midnight');
+    expect(wrapper).toHaveClass('bg-secondary');
   });
 
   it('is centered on screen', () => {

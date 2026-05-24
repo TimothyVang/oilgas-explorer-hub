@@ -146,21 +146,20 @@ export function useMFA() {
     }
   }, [fetchMFAStatus]);
 
-  // Generate backup codes (Supabase doesn't have native backup codes, so we track this via metadata)
+  // Generate local backup codes. Supabase does not provide native backup-code management.
   const generateBackupCodes = useCallback((): string[] => {
-    const codes: string[] = [];
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const randomValues = new Uint32Array(8 * 8);
+    crypto.getRandomValues(randomValues);
 
-    for (let i = 0; i < 8; i++) {
-      let code = "";
-      for (let j = 0; j < 8; j++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      // Format as XXXX-XXXX
-      codes.push(code.slice(0, 4) + "-" + code.slice(4));
-    }
+    return Array.from({ length: 8 }, (_, codeIndex) => {
+      const start = codeIndex * 8;
+      const code = Array.from({ length: 8 }, (_, charIndex) => (
+        chars[randomValues[start + charIndex] % chars.length]
+      )).join("");
 
-    return codes;
+      return `${code.slice(0, 4)}-${code.slice(4)}`;
+    });
   }, []);
 
   // Check if MFA is required for the current session

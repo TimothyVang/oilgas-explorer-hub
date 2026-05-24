@@ -2,6 +2,13 @@ import { createContext, useContext, useEffect, useState, useCallback, ReactNode 
 import { User, Session, AuthenticatorAssuranceLevels } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { setSentryUser } from "@/lib/sentry";
+import {
+  clearDemoSession,
+  createDemoSession,
+  hasStoredDemoSession,
+  isDemoLogin,
+  storeDemoSession,
+} from "@/lib/demoInvestorPortal";
 
 interface AuthContextType {
   user: User | null;
@@ -50,6 +57,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
+    if (hasStoredDemoSession()) {
+      const demoSession = createDemoSession();
+      setSession(demoSession);
+      setUser(demoSession.user);
+      setLoading(false);
+      setMfaRequired(false);
+      setCurrentAAL("aal1");
+      setSentryUser({
+        id: demoSession.user.id,
+        email: demoSession.user.email,
+        role: "investor",
+      });
+      return;
+    }
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -112,6 +134,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (isDemoLogin(email, password)) {
+      const demoSession = createDemoSession();
+      storeDemoSession();
+      setSession(demoSession);
+      setUser(demoSession.user);
+      setMfaRequired(false);
+      setCurrentAAL("aal1");
+      setSentryUser({
+        id: demoSession.user.id,
+        email: demoSession.user.email,
+        role: "investor",
+      });
+      return { error: null, mfaRequired: false };
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -131,6 +168,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     // Clear Sentry user context on sign out
+    clearDemoSession();
+    setUser(null);
+    setSession(null);
+    setMfaRequired(false);
+    setCurrentAAL(null);
     setSentryUser(null);
     await supabase.auth.signOut();
   };

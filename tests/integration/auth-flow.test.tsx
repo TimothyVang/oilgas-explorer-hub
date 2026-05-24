@@ -2,7 +2,7 @@
  * Integration Tests for Authentication Flow
  *
  * Tests the complete auth flow including:
- * - Signup process and verification message
+ * - Invite-only login page restrictions
  * - Login with valid/invalid credentials
  * - Redirect to dashboard after login
  * - Protected route access
@@ -40,6 +40,7 @@ const mockSignUp = vi.fn();
 const mockSignInWithPassword = vi.fn();
 const mockSignOut = vi.fn();
 const mockSignInWithOAuth = vi.fn();
+const mockGetAuthenticatorAssuranceLevel = vi.fn();
 const mockFrom = vi.fn();
 
 vi.mock("@/integrations/supabase/client", () => ({
@@ -52,6 +53,9 @@ vi.mock("@/integrations/supabase/client", () => ({
         mockSignInWithPassword(...args),
       signOut: () => mockSignOut(),
       signInWithOAuth: (...args: unknown[]) => mockSignInWithOAuth(...args),
+      mfa: {
+        getAuthenticatorAssuranceLevel: () => mockGetAuthenticatorAssuranceLevel(),
+      },
     },
     from: (...args: unknown[]) => mockFrom(...args),
   },
@@ -173,6 +177,10 @@ describe("Auth Flow Integration Tests", () => {
 
     // Default: No existing session
     mockGetSession.mockResolvedValue({ data: { session: null } });
+    mockGetAuthenticatorAssuranceLevel.mockResolvedValue({
+      data: { currentLevel: "aal1", nextLevel: "aal1" },
+      error: null,
+    });
 
     // Set up auth state change listener
     mockOnAuthStateChange.mockImplementation((callback) => {
@@ -186,9 +194,8 @@ describe("Auth Flow Integration Tests", () => {
     delete (globalThis as Record<string, unknown>).__authCallback;
   });
 
-  describe("Signup Flow", () => {
-    it("renders signup form when toggled", async () => {
-      const user = userEvent.setup();
+  describe("Invite-only Access", () => {
+    it("renders only the provisioned investor sign-in form", async () => {
       const Wrapper = createTestWrapper(["/login"]);
 
       render(
@@ -204,181 +211,21 @@ describe("Auth Flow Integration Tests", () => {
         ).not.toBeInTheDocument();
       });
 
-      // Click "Create one" to switch to signup mode
-      const createButton = screen.getByRole("button", { name: /create one/i });
-      await user.click(createButton);
-
-      // Verify signup form is shown
-      expect(screen.getByText("Create your account")).toBeInTheDocument();
-      expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
+      expect(screen.getByText("Approved Investor Login")).toBeInTheDocument();
+      expect(
+        screen.getByText("Invitation-only access to confidential materials")
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/use the temporary demo credentials now/i)
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText(/username or email/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
-    });
-
-    it("shows validation error for invalid email", async () => {
-      const user = userEvent.setup();
-      const Wrapper = createTestWrapper(["/login"]);
-
-      render(
-        <Wrapper>
-          <TestRoutes />
-        </Wrapper>
-      );
-
-      await waitFor(() => {
-        expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
-      });
-
-      // Switch to signup
-      await user.click(screen.getByRole("button", { name: /create one/i }));
-
-      // Fill form with invalid email
-      await user.type(screen.getByLabelText(/full name/i), "Test User");
-      await user.type(screen.getByLabelText(/email address/i), "invalid-email");
-      await user.type(screen.getByLabelText(/^password$/i), "password123");
-
-      // Submit form
-      await user.click(
-        screen.getByRole("button", { name: /create account/i })
-      );
-
-      // Wait for toast error (sonner toasts appear in DOM)
-      await waitFor(
-        () => {
-          expect(mockSignUp).not.toHaveBeenCalled();
-        },
-        { timeout: 1000 }
-      );
-    });
-
-    it("shows validation error for short password", async () => {
-      const user = userEvent.setup();
-      const Wrapper = createTestWrapper(["/login"]);
-
-      render(
-        <Wrapper>
-          <TestRoutes />
-        </Wrapper>
-      );
-
-      await waitFor(() => {
-        expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
-      });
-
-      // Switch to signup
-      await user.click(screen.getByRole("button", { name: /create one/i }));
-
-      // Fill form with short password
-      await user.type(screen.getByLabelText(/full name/i), "Test User");
-      await user.type(
-        screen.getByLabelText(/email address/i),
-        "test@example.com"
-      );
-      await user.type(screen.getByLabelText(/^password$/i), "12345");
-
-      // Submit form
-      await user.click(
-        screen.getByRole("button", { name: /create account/i })
-      );
-
-      // Wait for validation to prevent API call
-      await waitFor(
-        () => {
-          expect(mockSignUp).not.toHaveBeenCalled();
-        },
-        { timeout: 1000 }
-      );
-    });
-
-    it("calls signUp and shows verification message on success", async () => {
-      const user = userEvent.setup();
-      const Wrapper = createTestWrapper(["/login"]);
-
-      mockSignUp.mockResolvedValue({ error: null });
-
-      render(
-        <Wrapper>
-          <TestRoutes />
-        </Wrapper>
-      );
-
-      await waitFor(() => {
-        expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
-      });
-
-      // Switch to signup
-      await user.click(screen.getByRole("button", { name: /create one/i }));
-
-      // Fill valid signup form
-      await user.type(screen.getByLabelText(/full name/i), "Test User");
-      await user.type(
-        screen.getByLabelText(/email address/i),
-        "test@example.com"
-      );
-      await user.type(screen.getByLabelText(/^password$/i), "password123");
-
-      // Submit form
-      await user.click(
-        screen.getByRole("button", { name: /create account/i })
-      );
-
-      // Wait for signUp to be called
-      await waitFor(() => {
-        expect(mockSignUp).toHaveBeenCalledWith({
-          email: "test@example.com",
-          password: "password123",
-          options: {
-            emailRedirectTo: "http://localhost:8080/",
-            data: { full_name: "Test User" },
-          },
-        });
-      });
-
-      // Verify verification message is shown
-      await waitFor(() => {
-        expect(screen.getByText(/check your email/i)).toBeInTheDocument();
-        expect(screen.getByText(/test@example.com/i)).toBeInTheDocument();
-      });
-    });
-
-    it("shows error message when email is already registered", async () => {
-      const user = userEvent.setup();
-      const Wrapper = createTestWrapper(["/login"]);
-
-      mockSignUp.mockResolvedValue({
-        error: new Error("User already registered"),
-      });
-
-      render(
-        <Wrapper>
-          <TestRoutes />
-        </Wrapper>
-      );
-
-      await waitFor(() => {
-        expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
-      });
-
-      // Switch to signup
-      await user.click(screen.getByRole("button", { name: /create one/i }));
-
-      // Fill form
-      await user.type(screen.getByLabelText(/full name/i), "Test User");
-      await user.type(
-        screen.getByLabelText(/email address/i),
-        "existing@example.com"
-      );
-      await user.type(screen.getByLabelText(/^password$/i), "password123");
-
-      // Submit form
-      await user.click(
-        screen.getByRole("button", { name: /create account/i })
-      );
-
-      // Verify signUp was called
-      await waitFor(() => {
-        expect(mockSignUp).toHaveBeenCalled();
-      });
+      expect(screen.queryByLabelText(/full name/i)).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /create one/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /create account/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /continue with google/i })).not.toBeInTheDocument();
+      expect(mockSignUp).not.toHaveBeenCalled();
+      expect(mockSignInWithOAuth).not.toHaveBeenCalled();
     });
   });
 
@@ -396,18 +243,18 @@ describe("Auth Flow Integration Tests", () => {
         expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
       });
 
-      expect(screen.getByText("Investor Portal")).toBeInTheDocument();
+      expect(screen.getByText("Approved Investor Login")).toBeInTheDocument();
       expect(
-        screen.getByText("Sign in to access your account")
+        screen.getByText("Invitation-only access to confidential materials")
       ).toBeInTheDocument();
-      expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/username or email/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
       expect(
         screen.getByRole("button", { name: /sign in/i })
       ).toBeInTheDocument();
     });
 
-    it("shows validation error for invalid email on login", async () => {
+    it("shows validation error for invalid login identifier", async () => {
       const user = userEvent.setup();
       const Wrapper = createTestWrapper(["/login"]);
 
@@ -421,14 +268,14 @@ describe("Auth Flow Integration Tests", () => {
         expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
       });
 
-      // Fill with invalid email
-      await user.type(screen.getByLabelText(/email address/i), "invalid");
+      // Fill with invalid username/email identifier
+      await user.type(screen.getByLabelText(/username or email/i), "x");
       await user.type(screen.getByLabelText(/^password$/i), "password123");
 
       // Submit
       await user.click(screen.getByRole("button", { name: /^sign in$/i }));
 
-      // SignIn should not be called with invalid email
+      // SignIn should not be called with invalid identifier
       await waitFor(
         () => {
           expect(mockSignInWithPassword).not.toHaveBeenCalled();
@@ -455,7 +302,7 @@ describe("Auth Flow Integration Tests", () => {
 
       // Fill login form
       await user.type(
-        screen.getByLabelText(/email address/i),
+        screen.getByLabelText(/username or email/i),
         "test@example.com"
       );
       await user.type(screen.getByLabelText(/^password$/i), "password123");
@@ -492,7 +339,7 @@ describe("Auth Flow Integration Tests", () => {
 
       // Fill login form
       await user.type(
-        screen.getByLabelText(/email address/i),
+        screen.getByLabelText(/username or email/i),
         "test@example.com"
       );
       await user.type(screen.getByLabelText(/^password$/i), "wrongpassword");
@@ -526,7 +373,7 @@ describe("Auth Flow Integration Tests", () => {
 
       // Fill login form
       await user.type(
-        screen.getByLabelText(/email address/i),
+        screen.getByLabelText(/username or email/i),
         "unverified@example.com"
       );
       await user.type(screen.getByLabelText(/^password$/i), "password123");
@@ -541,15 +388,9 @@ describe("Auth Flow Integration Tests", () => {
     });
   });
 
-  describe("Google OAuth Flow", () => {
-    it("initiates Google OAuth flow", async () => {
-      const user = userEvent.setup();
+  describe("OAuth Restrictions", () => {
+    it("does not render public OAuth entry points", async () => {
       const Wrapper = createTestWrapper(["/login"]);
-
-      mockSignInWithOAuth.mockResolvedValue({
-        data: { url: "https://accounts.google.com/oauth" },
-        error: null,
-      });
 
       render(
         <Wrapper>
@@ -561,27 +402,8 @@ describe("Auth Flow Integration Tests", () => {
         expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
       });
 
-      // Click Google button
-      const googleButton = screen.getByRole("button", {
-        name: /continue with google/i,
-      });
-      await user.click(googleButton);
-
-      // Verify OAuth was initiated
-      await waitFor(() => {
-        expect(mockSignInWithOAuth).toHaveBeenCalledWith({
-          provider: "google",
-          options: expect.objectContaining({
-            redirectTo: "http://localhost:8080",
-            skipBrowserRedirect: true,
-          }),
-        });
-      });
-
-      // Verify redirect was triggered
-      await waitFor(() => {
-        expect(mockLocation.href).toBe("https://accounts.google.com/oauth");
-      });
+      expect(screen.queryByRole("button", { name: /continue with google/i })).not.toBeInTheDocument();
+      expect(mockSignInWithOAuth).not.toHaveBeenCalled();
     });
   });
 
@@ -598,7 +420,7 @@ describe("Auth Flow Integration Tests", () => {
       // Should redirect to login
       await waitFor(() => {
         // Login page should be visible
-        expect(screen.getByText("Investor Portal")).toBeInTheDocument();
+        expect(screen.getByText("Approved Investor Login")).toBeInTheDocument();
       });
     });
 
@@ -674,7 +496,7 @@ describe("Auth Flow Integration Tests", () => {
 
       // Should redirect to login
       await waitFor(() => {
-        expect(screen.getByText("Investor Portal")).toBeInTheDocument();
+        expect(screen.getByText("Approved Investor Login")).toBeInTheDocument();
       });
     });
   });
@@ -719,9 +541,8 @@ describe("Auth Flow Integration Tests", () => {
     });
   });
 
-  describe("Form Toggling", () => {
-    it("toggles between login and signup forms", async () => {
-      const user = userEvent.setup();
+  describe("Invite-only Form Restrictions", () => {
+    it("does not expose signup toggles or verification screens", async () => {
       const Wrapper = createTestWrapper(["/login"]);
 
       render(
@@ -734,66 +555,12 @@ describe("Auth Flow Integration Tests", () => {
         expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
       });
 
-      // Initially in login mode
       expect(
-        screen.getByText("Sign in to access your account")
+        screen.getByText("Invitation-only access to confidential materials")
       ).toBeInTheDocument();
-
-      // Switch to signup
-      await user.click(screen.getByRole("button", { name: /create one/i }));
-      expect(screen.getByText("Create your account")).toBeInTheDocument();
-
-      // Switch back to login
-      await user.click(screen.getByRole("button", { name: /sign in/i }));
-      expect(
-        screen.getByText("Sign in to access your account")
-      ).toBeInTheDocument();
-    });
-
-    it("can go back to sign in from verification message", async () => {
-      const user = userEvent.setup();
-      const Wrapper = createTestWrapper(["/login"]);
-
-      mockSignUp.mockResolvedValue({ error: null });
-
-      render(
-        <Wrapper>
-          <TestRoutes />
-        </Wrapper>
-      );
-
-      await waitFor(() => {
-        expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
-      });
-
-      // Switch to signup and complete it
-      await user.click(screen.getByRole("button", { name: /create one/i }));
-      await user.type(screen.getByLabelText(/full name/i), "Test User");
-      await user.type(
-        screen.getByLabelText(/email address/i),
-        "test@example.com"
-      );
-      await user.type(screen.getByLabelText(/^password$/i), "password123");
-      await user.click(
-        screen.getByRole("button", { name: /create account/i })
-      );
-
-      // Wait for verification message
-      await waitFor(() => {
-        expect(screen.getByText(/check your email/i)).toBeInTheDocument();
-      });
-
-      // Click "Back to Sign In"
-      await user.click(
-        screen.getByRole("button", { name: /back to sign in/i })
-      );
-
-      // Should be back to login form
-      await waitFor(() => {
-        expect(
-          screen.getByText("Sign in to access your account")
-        ).toBeInTheDocument();
-      });
+      expect(screen.queryByRole("button", { name: /create one/i })).not.toBeInTheDocument();
+      expect(screen.queryByText("Create your account")).not.toBeInTheDocument();
+      expect(screen.queryByText(/check your email/i)).not.toBeInTheDocument();
     });
   });
 });

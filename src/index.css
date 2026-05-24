@@ -1,91 +1,80 @@
+/* Kinetic BAH type system */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Import Fonts */
-/* Montserrat for "Commanding Headers", Open Sans for "Clean Body" matching Eagle5 style */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap');
-
 @layer base {
   :root {
-    /* BAH OIL LLC BRAND PALETTE: Navy Blue & Gold */
+    /* KINETIC BAH PALETTE: logo gold, logo navy, deep navy, warm white */
+    --primary: 41 48% 53%;
+    --primary-foreground: 209 65% 20%;
 
-    /* Primary (Brand Gold) */
-    --primary: 43 50% 58%;
-    /* #c5a962 - Gold from logo */
-    --primary-foreground: 216 50% 23%;
+    --secondary: 209 65% 20%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Secondary (Brand Navy) */
-    --secondary: 216 50% 23%;
-    /* #1a365d - Navy from logo */
-    --secondary-foreground: 43 50% 90%;
-
-    /* Backgrounds */
-    --background: 40 30% 96%;
-    /* Warm off-white */
-    --foreground: 216 50% 18%;
-    /* Dark Navy Text */
+    --background: 43 31% 96%;
+    --foreground: 209 65% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 216 50% 18%;
+    --card-foreground: 209 65% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 216 50% 18%;
+    --popover-foreground: 209 65% 20%;
 
-    --muted: 40 20% 90%;
-    --muted-foreground: 216 30% 40%;
+    --muted: 41 38% 80%;
+    --muted-foreground: 209 65% 20%;
 
-    --accent: 43 60% 50%;
-    /* Brighter gold for accents */
-    --accent-foreground: 216 50% 18%;
+    --accent: 209 65% 20%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
-    --ring: 43 50% 58%;
+    --border: 209 65% 20%;
+    --input: 209 65% 20%;
+    --ring: 41 48% 53%;
 
-    --radius: 0.5rem;
+    --radius: 0rem;
 
     /* Custom Tokens */
-    --midnight: 216 50% 18%;
-    --midnight-light: 216 40% 25%;
-    --gold: 43 50% 58%;
-    --gold-light: 43 60% 70%;
+    --midnight: 209 65% 20%;
+    --midnight-light: 209 58% 29%;
+    --gold: 41 48% 53%;
+    --gold-light: 41 52% 62%;
   }
 
   .dark {
-    --background: 216 50% 10%;
+    --background: 208 77% 14%;
     /* Deepest Navy */
-    --foreground: 40 30% 95%;
+    --foreground: 41 38% 94%;
 
-    --card: 216 45% 15%;
-    /* Lighter Navy */
-    --card-foreground: 40 30% 95%;
+    --card: 208 77% 14%;
+    --card-foreground: 41 38% 94%;
 
-    --popover: 216 50% 12%;
-    --popover-foreground: 40 30% 95%;
+    --popover: 208 77% 14%;
+    --popover-foreground: 41 38% 94%;
 
-    --primary: 43 50% 58%;
+    --primary: 41 48% 53%;
     /* Brand Gold */
-    --primary-foreground: 216 50% 15%;
+    --primary-foreground: 209 65% 20%;
 
-    --secondary: 216 40% 25%;
-    --secondary-foreground: 40 30% 95%;
+    --secondary: 209 65% 20%;
+    --secondary-foreground: 41 38% 94%;
 
-    --muted: 216 40% 22%;
-    --muted-foreground: 40 20% 65%;
+    --muted: 209 48% 24%;
+    --muted-foreground: 41 38% 80%;
 
-    --accent: 43 60% 55%;
-    --accent-foreground: 216 50% 15%;
+    --accent: 41 48% 53%;
+    --accent-foreground: 209 65% 20%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 40 30% 95%;
+    --destructive-foreground: 41 38% 94%;
 
-    --border: 216 40% 22%;
-    --input: 216 40% 22%;
-    --ring: 43 50% 58%;
+    --border: 209 65% 20%;
+    --input: 209 65% 20%;
+    --ring: 41 48% 53%;
   }
 }
 
@@ -98,6 +87,11 @@
     @apply bg-background text-foreground antialiased font-body;
   }
 
+  ::selection {
+    background: #123555;
+    color: hsl(var(--primary));
+  }
+
   /* Removed cursor: none for accessibility - users need native cursor feedback */
 
   h1,
@@ -106,17 +100,37 @@
   h4,
   h5,
   h6 {
-    @apply font-heading uppercase tracking-wide;
+    @apply font-heading uppercase tracking-[-0.04em] leading-[0.9];
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-amber-400 to-accent;
+    @apply text-primary;
   }
 
   .glass-panel {
-    @apply bg-card/60 backdrop-blur-md border border-white/10 shadow-xl;
+    @apply bg-white border-2 border-secondary shadow-none;
+  }
+
+  .kinetic-heading {
+    @apply font-display uppercase tracking-[-0.04em] leading-[0.88];
+  }
+
+  .kinetic-label {
+    @apply font-mono uppercase tracking-[-0.02em];
+  }
+
+  .brutalist-panel {
+    @apply border-2 border-secondary bg-white text-secondary rounded-none;
+  }
+
+  .brutalist-panel-dark {
+    @apply border-2 border-primary bg-secondary text-white rounded-none;
+  }
+
+  .brand-focus {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-secondary;
   }
 
   .text-balance {

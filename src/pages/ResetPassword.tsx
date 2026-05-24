@@ -74,23 +74,17 @@ const ResetPassword = () => {
 
   if (isChecking) {
     return (
-      <div className="min-h-screen bg-midnight flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4"><div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin" /><span className="text-white/60 text-sm">Loading...</span></div>
+      <div className="flex min-h-screen items-center justify-center bg-secondary">
+        <div className="flex flex-col items-center gap-4"><div className="h-12 w-12 animate-kinetic-spin rounded-full border-4 border-primary border-t-white" /><span className="kinetic-label text-sm text-primary">Loading...</span></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-midnight flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background - matches homepage Hero */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,20,40,1)_0%,rgba(2,4,16,1)_100%)]" />
-      
-      {/* Single centered glow orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
-      
-      {/* Bold background typography */}
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-secondary px-4 py-8 text-white">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(192,155,76,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(192,155,76,0.16)_1px,transparent_1px)] bg-[size:48px_48px]" />
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-        <span className="text-[15vw] font-black tracking-tighter bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent opacity-[0.03]">
+        <span className="kinetic-heading text-[20vw] text-primary opacity-[0.08]">
           SECURE
         </span>
       </div>
@@ -99,23 +93,22 @@ const ResetPassword = () => {
         {/* Back Link */}
         <Link 
           to="/login" 
-          className="inline-flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors"
+          className="kinetic-label mb-8 inline-flex items-center gap-2 text-primary transition-transform hover:translate-x-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Login
         </Link>
 
-        {/* Card - Clean glassmorphism */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
+        <div className="border-2 border-primary bg-[#08263F] p-8">
           {/* Header */}
           <div className="text-center mb-6">
-            <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-white/10 flex items-center justify-center font-bold text-lg text-white">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center border-2 border-primary bg-primary font-mono text-lg font-bold text-secondary">
               B
             </div>
-            <h1 className="text-2xl font-bold text-white mb-1">
+            <h1 className="kinetic-heading mb-1 text-5xl text-white">
               {isSuccess ? "Password Updated" : "Set New Password"}
             </h1>
-            <p className="text-white/60 text-sm">
+            <p className="kinetic-label text-xs text-primary">
               {isSuccess 
                 ? "Your password has been successfully updated" 
                 : "Enter your new password below"}
@@ -128,21 +121,21 @@ const ResetPassword = () => {
                 This password reset link is invalid or has expired. Please request a new one.
               </p>
               <Link to="/forgot-password">
-                <Button className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg">
+                <Button className="h-12 w-full rounded-full border-primary bg-primary text-secondary hover:bg-white">
                   Request New Link
                 </Button>
               </Link>
             </div>
           ) : isSuccess ? (
             <div className="text-center space-y-4">
-              <div className="w-14 h-14 bg-emerald-500/20 rounded-xl flex items-center justify-center mx-auto">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center border-2 border-primary bg-primary text-secondary">
                 <CheckCircle className="w-7 h-7 text-emerald-400" />
               </div>
               <p className="text-white/60 text-sm">
                 You can now sign in with your new password.
               </p>
               <Button 
-                className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg"
+                className="h-12 w-full rounded-full border-primary bg-primary text-secondary hover:bg-white"
                 onClick={() => navigate("/login")}
               >
                 Sign In
@@ -151,7 +144,7 @@ const ResetPassword = () => {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-white/70 text-sm">
+                <Label htmlFor="password" className="kinetic-label text-xs text-primary">
                   New Password
                 </Label>
                 <div className="relative">
@@ -162,11 +155,11 @@ const ResetPassword = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                    className="h-11 rounded-none border-2 border-primary/60 bg-secondary pl-10 text-white placeholder:text-white/30 focus:border-primary"
                     required
-                  />
                     autoComplete="new-password"
                     enterKeyHint="next"
+                  />
                 </div>
                 <p className="text-xs text-white/40">
                   Password must be at least 6 characters
@@ -174,7 +167,7 @@ const ResetPassword = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-white/70 text-sm">
+                <Label htmlFor="confirmPassword" className="kinetic-label text-xs text-primary">
                   Confirm New Password
                 </Label>
                 <div className="relative">
@@ -185,17 +178,17 @@ const ResetPassword = () => {
                     placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="pl-10 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-white/20 rounded-lg"
+                    className="h-11 rounded-none border-2 border-primary/60 bg-secondary pl-10 text-white placeholder:text-white/30 focus:border-primary"
                     required
-                  />
                     autoComplete="new-password"
                     enterKeyHint="done"
+                  />
                 </div>
               </div>
 
               <Button 
                 type="submit" 
-                className="w-full h-11 bg-white text-midnight font-semibold hover:bg-white/90 transition-all rounded-lg"
+                className="h-12 w-full rounded-full border-primary bg-primary text-secondary hover:bg-white"
                 disabled={isLoading}
               >
                 {isLoading ? "Updating..." : "Update Password"}
@@ -205,8 +198,8 @@ const ResetPassword = () => {
         </div>
 
         {/* Company Name */}
-        <p className="text-center text-white/30 mt-8 text-sm">
-          © {new Date().getFullYear()} BAH Oil and Gas. All rights reserved.
+        <p className="kinetic-label mt-8 text-center text-xs text-primary/70">
+          © {new Date().getFullYear()} BAH Oil LLC. All rights reserved.
         </p>
       </div>
     </div>
